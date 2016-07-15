@@ -1,0 +1,50 @@
+body {
+  font: 14px "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;
+  padding-top:70px;
+}
+
+a {
+  color: #00B7FF;
+}
+.tags{
+	background:#FAFAFA;
+	padding:10px;
+}
+.tags .tag{
+	border:1px solid #f0f0f0;
+	border-radius: 4px;
+    padding:3px 10px;
+    margin:5px;
+    float:left;
+    text-decoration: none;
+}
+.tags .tag:hover{
+	background:#87B824;
+	color:#fff;
+}
+.tags .current{
+	background:#87B824;
+	color:#fff;
+}
+.movie-box {
+	margin-bottom:20px;
+}
+.movie-box h2{
+	font-size:16px;
+}
+.movie-box a{
+	vertical-align: middle;
+	line-height:1.1;
+}
+.movie-box .category{
+	padding:1px 5px;
+	margin-right:5px;
+	border-radius: 10px;
+	background:#5bc0de;
+	color:#fff;
+	display:inline-block;
+    margin-bottom:5px;
+}
+.pages{
+	text-align:center;
+}

@@ -1,0 +1,74 @@
+extends layout
+
+block content
+  .container
+    .row
+      .col-md-8.col-md-offset-2
+        form.form-horizontal(method="post" enctype="multipart/form-data")
+          .form-group
+            label.col-sm-3.control-label(for="title") 电影名称
+            .col-sm-9
+              input#title.form-control(type="text" name="title")
+          .form-group
+            label.col-sm-3.control-label(for="doctor") 导演
+            .col-sm-9
+              input#doctor.form-control(type="text" name="doctor")
+          .form-group
+            label.col-sm-3.control-label(for="players") 主演
+            .col-sm-9
+              input#players.form-control(type="text" name="players")
+          .form-group
+            label.col-sm-3.control-label(for="country") 国家
+            .col-sm-9
+              input#country.form-control(type="text" name="country")
+          .form-group
+            label.col-sm-3.control-label(for="year") 上映年份
+            .col-sm-9
+              input#year.form-control(type="text" name="year")
+          .form-group
+            label.col-sm-3.control-label 分类
+            .col-sm-9
+              label.checkbox-inline
+                input.types(type="checkbox" value="恐怖" name="types") 
+                | 恐怖  
+              label.checkbox-inline
+                input.types(type="checkbox" value="科幻" name="types") 
+                | 科幻  
+              label.checkbox-inline 
+                input.types(type="checkbox" value="18禁" name="types") 
+                | 18禁
+              label.checkbox-inline
+                input.types(type="checkbox" value="喜剧" name="types") 
+                | 喜剧  
+              label.checkbox-inline
+                input.types(type="checkbox" value="爱情" name="types") 
+                | 爱情  
+              label.checkbox-inline
+                input.types(type="checkbox" value="动作" name="types") 
+                | 动作  
+              label.checkbox-inline
+                input.types(type="checkbox" value="魔幻" name="types") 
+                | 魔幻  
+              label.checkbox-inline
+                input.types(type="checkbox" value="战争" name="types") 
+                | 战争  
+              label.checkbox-inline
+                input.types(type="checkbox" value="奇幻" name="types") 
+                | 奇幻  
+              label.checkbox-inline
+                input.types(type="checkbox" value="剧情" name="types") 
+                | 剧情 
+              label.checkbox-inline
+                input.types(type="checkbox" value="古装" name="types") 
+                | 古装
+          .form-group
+            label.col-sm-3.control-label(for="summary") 剧情简介
+            .col-sm-9
+              textarea#summary.form-control(rows="6" name="summary")
+          .form-group
+            label.col-sm-3.control-label(for="img") 海报
+            .col-sm-9
+              input#img.form-control(type="file" name="img")
+          .form-group
+              .col-sm-offset-2.col-sm-10
+                button(type="submit").btn.btn-default 发布
