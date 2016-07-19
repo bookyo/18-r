@@ -1,0 +1,52 @@
+extends layout
+
+block content
+  .container
+    .row
+      .col-md-3
+        section.tags.clearfix
+          a.tag.current(href="#") 全部
+          a.tag(href="#") 18禁
+          a.tag(href="#") 科幻
+          a.tag(href="#") 喜剧
+          a.tag(href="#") 动作
+          a.tag(href="#") 爱情
+          a.tag(href="#") 18禁
+          a.tag(href="#") 科幻
+          a.tag(href="#") 喜剧
+          a.tag(href="#") 动作
+          a.tag(href="#") 爱情
+          a.tag(href="#") 18禁
+          a.tag(href="#") 科幻
+          a.tag(href="#") 喜剧
+          a.tag(href="#") 动作
+          a.tag(href="#") 爱情
+      .col-md-9.article
+        h1 #{movie.title}
+        .col-md-5
+          img.img-responsive(src="/uploads/400/#{movie.img}")
+        .col-md-7.movie-info
+          dl.clearfix
+            dt 导演:  
+            dd #{movie.doctor}
+          dl.clearfix
+            dt 主演: 
+            dd #{movie.players}
+          dl.clearfix
+            dt 电影类型: 
+            dd
+              each type in movie.types
+                span.category= type
+          dl.clearfix
+            dt 发行国家: 
+            dd #{movie.country}
+          dl.clearfix
+            dt 上映年份: 
+            dd #{movie.year}
+          dl.clearfix
+            dt  电影剧情简介: 
+            - var summary = movie.summary;
+            - var newsummary = summary.replace(/\r?\n/g,"<br />");
+            dd.summary!= newsummary 
+            dd.summary-hidden!=newsummary
+          

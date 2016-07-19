@@ -26,9 +26,9 @@ block content
           each movie in movies
             .col-md-3
               .movie-box
-                img.img-responsive(src="/upload/timg.jpg")
+                img.img-responsive(src="/uploads/400/#{movie.img}")
                 h2 
-                  a(href="#")= movie.title
+                  a(href="/movie/#{movie._id}")= movie.title
                   span.label.label-success.pinfen 评分：8.3
                 p 导演：#{movie.doctor}
                 p 主演：#{movie.players}
