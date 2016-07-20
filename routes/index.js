@@ -1,4 +1,6 @@
 var Movie = require('../models/movie');
+var User = require('../models/user');
+var crypto = require('crypto');
 var multer = require('multer');
 var xss = require('xss');
 var sharp = require('sharp');
@@ -32,6 +34,7 @@ module.exports = function(app) {
       console.log(movies);
       res.render('index', { 
         title: "首页",
+        user: req.session.user,
         movies: movies,
         error: req.flash('error'),
         success: req.flash('success').toString()
@@ -39,15 +42,16 @@ module.exports = function(app) {
     });
   });
 
-  app.get('/post', function(req, res) {
+  app.get('/post', checkLogin, function(req, res) {
     res.render('post', {
       title: '发布电影',
+      user: req.session.user,
       success: req.flash('success').toString(),
       error: req.flash('error')
     });
   });
 
-  app.post('/post',  upload.single('img'), function(req, res) {
+  app.post('/post', checkLogin, upload.single('img'), function(req, res) {
     console.log(req.file);
     req.checkBody({
       'title': {
@@ -128,11 +132,105 @@ module.exports = function(app) {
     Movie.findById(id, function(err, movie) {
       res.render('article', {
         title: movie.title,
+        user: req.session.user,
         movie: movie,
         error: req.flash('error'),
         success: req.flash('success').toString()
       });
     });
   });
+
+  app.get('/reg', checkNotLogin,function(req, res) {
+    res.render('reg', {
+      title: "注册账号",
+      error: req.flash('error'),
+      success: req.flash('success').toString()
+    });
+  });
+
+  app.post('/reg', checkNotLogin,function(req, res) {
+    var email = req.body.email;
+    var password = req.body.password;
+    var password_re = req.body['password-repeat'];
+    if( password != password_re) {
+      req.flash('error', {'msg': '两次输入的密码不一致！'});
+      return res.redirect('/reg');
+    }
+    var md5 = crypto.createHash('md5');
+    var password = md5.update(req.body.password).digest('hex');
+    var newUser = new User({
+      email: email,
+      password: password,
+      name: req.body.name
+    });
+    User.findOne({email: newUser.email}, function(err, user){
+      if(err) {
+        console.log(err);
+        return res.redirect('/');
+      }
+      if(user) {
+        req.flash('error', {'msg': '邮箱已经存在！'});
+        return res.redirect('/reg');
+      }
+      newUser.save(function(err, user){
+        if(err) {
+          console.log(err);
+          return res.redirect('/reg');
+        }
+        req.session.user = newUser;
+        req.flash('success', '注册成功');
+        res.redirect('/');
+      });
+    });
+  });
+
+  app.get('/login', checkNotLogin,function(req,res) {
+    res.render('login', {
+      title: '登陆账号',
+      user: req.session.user,
+      error: req.flash('error'),
+      success: req.flash('success').toString()
+    });
+  });
+
+  app.post('/login',checkNotLogin, function(req, res) {
+    var md5 = crypto.createHash('md5');
+    var password = md5.update(req.body.password).digest('hex');
+    User.findOne({email: req.body.email}, function(err, user) {
+      if(!user) {
+        req.flash('error', {'msg': '邮箱不存在！'});
+        return res.redirect('/login');
+      }
+      if( user.password != password) {
+        req.flash('error', {'msg': '密码错误！'});
+        return res.redirect('/login');
+      }
+      req.session.user = user;
+      req.flash('success', '登陆成功');
+      res.redirect('/');
+    });
+  });
+
+  app.get('/logout', checkLogin, function(req, res) {
+    req.session.user = null;
+    req.flash('success', '登出成功！');
+    res.redirect('/');
+  });
+
+  function checkLogin(req, res, next) {
+    if( !req.session.user ) {
+      req.flash('error', {'msg': '未登录！'});
+      res.redirect('/login');
+    }
+    next();
+  }
+
+  function checkNotLogin(req, res, next) {
+    if(req.session.user) {
+      req.flash('error', {'msg': '已经登陆'});
+      res.redirect('back');
+    }
+    next();
+  }
 
 }

@@ -32,14 +32,20 @@ html(lang="zh-CN")
               a(href="#") 最新电影
             li 
               a(href="#") 热门电影
-          .pull-right
+           if user
+            .pull-right
               a.btn.btn-primary.navbar-btn(href="/post") 发布
-              a.btn.btn-default(href="#",style="margin-left:10px;") 注销
+              a.btn.btn-default(href="/logout",style="margin-left:10px;") 注销
+          else
+            .pull-right
+              a.btn.btn-primary.navbar-btn(href="/reg") 注册
+              a.btn.btn-default(href="/login",style="margin-left:10px;") 登陆
     .flash-message.container
       .row
         .col-md-12
           - if (success)
             .alert.alert-success= success
+              a.close(href='#', data-dismiss='alert', aria-label='close') ×
           - if (error.length)
             .alert.alert-danger
               a.close(href='#', data-dismiss='alert', aria-label='close') ×
