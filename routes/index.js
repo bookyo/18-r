@@ -1,5 +1,6 @@
 var Movie = require('../models/movie');
 var User = require('../models/user');
+var Tag = require('../models/tag');
 var crypto = require('crypto');
 var multer = require('multer');
 var xss = require('xss');
@@ -215,6 +216,44 @@ module.exports = function(app) {
     req.session.user = null;
     req.flash('success', '登出成功！');
     res.redirect('/');
+  });
+
+  app.get('/18r/tags/add',checkLogin, function(req, res) {
+    res.render('addtag', {
+      title: '添加分类标签',
+      error: req.flash('error'),
+      success: req.flash('success').toString()
+    });
+  });
+
+  app.post('/18r/tags/add', checkLogin, function(req, res) {
+    var tags = req.body.tags;
+    var tags_arr = tags.split(',');
+    var tags_object= [];
+    for(i=0;i< tags_arr.length -1; i++) {
+      tags_object.push({tag: tags_arr[i]});
+    }
+    Tag.create(tags_object, function(err) {
+      if(err) console.log(err);
+      req.flash('success', '成功添加电影分类');
+      res.redirect('/tags');
+    });
+  });
+
+  app.get('/tags', function(req,res) {
+    Tag.fetch(function(err, tags){
+      if(err) {
+        console.log(err);
+      }
+      console.log(tags);
+      res.render('tags', { 
+        title: "电影分类页",
+        user: req.session.user,
+        tags: tags,
+        error: req.flash('error'),
+        success: req.flash('success').toString()
+      });
+    });
   });
 
   function checkLogin(req, res, next) {

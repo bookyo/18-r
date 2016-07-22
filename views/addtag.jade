@@ -1,0 +1,15 @@
+extends layout
+
+block content
+   .container
+    .row
+      .col-md-8.col-md-offset-2
+        form.form-horizontal(method="post")
+          .form-group
+            label.col-sm-3.control-label(for="tags") 分类名称
+            .col-sm-9
+              input#tags.form-control(type="text" name="tags" placeholder="标签之间用英文半角逗号隔开")
+          .form-group
+              .col-sm-offset-3.col-sm-8
+                button(type="submit").btn.btn-default 确认添加
+  
