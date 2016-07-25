@@ -5,22 +5,9 @@ block content
     .row
       .col-md-3
         section.tags.clearfix
-          a.tag.current(href="#") 全部
-          a.tag(href="#") 18禁
-          a.tag(href="#") 科幻
-          a.tag(href="#") 喜剧
-          a.tag(href="#") 动作
-          a.tag(href="#") 爱情
-          a.tag(href="#") 18禁
-          a.tag(href="#") 科幻
-          a.tag(href="#") 喜剧
-          a.tag(href="#") 动作
-          a.tag(href="#") 爱情
-          a.tag(href="#") 18禁
-          a.tag(href="#") 科幻
-          a.tag(href="#") 喜剧
-          a.tag(href="#") 动作
-          a.tag(href="#") 爱情
+          a.tag.current(href="/") 全部
+          each tag in tags 
+            a.tag(href="/tag/#{tag._id}") #{tag.tag}
       .col-md-9.article
         h1 #{movie.title}
         .col-md-5
@@ -36,7 +23,8 @@ block content
             dt 电影类型: 
             dd
               each type in movie.types
-                span.category= type
+                a(href="/tag/#{type._id}")
+                  span.category #{type.tag}
           dl.clearfix
             dt 发行国家: 
             dd #{movie.country}

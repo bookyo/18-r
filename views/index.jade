@@ -5,22 +5,9 @@ block content
     .row
       .col-md-3
         section.tags.clearfix
-          a.tag.current(href="#") 全部
-          a.tag(href="#") 18禁
-          a.tag(href="#") 科幻
-          a.tag(href="#") 喜剧
-          a.tag(href="#") 动作
-          a.tag(href="#") 爱情
-          a.tag(href="#") 18禁
-          a.tag(href="#") 科幻
-          a.tag(href="#") 喜剧
-          a.tag(href="#") 动作
-          a.tag(href="#") 爱情
-          a.tag(href="#") 18禁
-          a.tag(href="#") 科幻
-          a.tag(href="#") 喜剧
-          a.tag(href="#") 动作
-          a.tag(href="#") 爱情
+          a.tag.current(href="/") 全部
+          each tag in tags 
+            a.tag(href="/tag/#{tag._id}") #{tag.tag}
       .col-md-9
         section#main-body.clearfix
           each movie in movies
@@ -34,7 +21,8 @@ block content
                 p 主演：#{movie.players}
                 p 电影类型：
                   each type in movie.types
-                    span.category= type
+                    a(href="/tag/#{type._id}")
+                      span.category #{type.tag}
           .col-md-3
             .movie-box
               img.img-responsive(src="/upload/timg.jpg")

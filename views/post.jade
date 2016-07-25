@@ -28,39 +28,10 @@ block content
           .form-group
             label.col-sm-3.control-label 分类
             .col-sm-9
-              label.checkbox-inline
-                input.types(type="checkbox" value="恐怖" name="types") 
-                | 恐怖  
-              label.checkbox-inline
-                input.types(type="checkbox" value="科幻" name="types") 
-                | 科幻  
-              label.checkbox-inline 
-                input.types(type="checkbox" value="18禁" name="types") 
-                | 18禁
-              label.checkbox-inline
-                input.types(type="checkbox" value="喜剧" name="types") 
-                | 喜剧  
-              label.checkbox-inline
-                input.types(type="checkbox" value="爱情" name="types") 
-                | 爱情  
-              label.checkbox-inline
-                input.types(type="checkbox" value="动作" name="types") 
-                | 动作  
-              label.checkbox-inline
-                input.types(type="checkbox" value="魔幻" name="types") 
-                | 魔幻  
-              label.checkbox-inline
-                input.types(type="checkbox" value="战争" name="types") 
-                | 战争  
-              label.checkbox-inline
-                input.types(type="checkbox" value="奇幻" name="types") 
-                | 奇幻  
-              label.checkbox-inline
-                input.types(type="checkbox" value="剧情" name="types") 
-                | 剧情 
-              label.checkbox-inline
-                input.types(type="checkbox" value="古装" name="types") 
-                | 古装
+              each tag in tags
+                label.checkbox-inline
+                  input.types(type="checkbox" value="#{tag._id}" name="types")
+                  | #{tag.tag}
           .form-group
             label.col-sm-3.control-label(for="summary") 剧情简介
             .col-sm-9

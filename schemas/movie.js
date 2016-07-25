@@ -1,11 +1,12 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 var MovieSchema = new mongoose.Schema({
 	title: String,
 	doctor: String,
 	country: String,
 	year: { type: Number, min: 1900, max: 2020 },
 	players: String,
-	types: [String],
+	types: [{type: Schema.Types.ObjectId, ref: 'Tag'}],
 	img: String,
 	summary: String,
 	meta: {
@@ -35,12 +36,14 @@ MovieSchema.statics = {
 	fetch: function(cb) {
 		return this
 		  .find({})
+		  .populate('types', 'tag _id')
 		  .sort('-meta.updateAt')
 		  .exec(cb)
 	},
 	findById: function(id, cb) {
 		return this
 		  .findOne({_id: id})
+		  .populate('types','_id tag')
 		  .exec(cb)
 	}
 };

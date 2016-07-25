@@ -28,28 +28,40 @@ var upload = multer({
 /* GET home page. */
 module.exports = function(app) {
   app.get('/', function(req, res, next) {
-    Movie.fetch(function(err, movies){
+    Tag.fetch(function(err, tags) {
       if(err) {
         console.log(err);
       }
-      console.log(movies);
-      res.render('index', { 
-        title: "首页",
-        user: req.session.user,
-        movies: movies,
-        error: req.flash('error'),
-        success: req.flash('success').toString()
+      Movie.fetch(function(err, movies){
+        if(err) {
+          console.log(err);
+        }
+        console.log(tags);
+        console.log(movies);
+        res.render('index', { 
+          title: "首页",
+          user: req.session.user,
+          tags: tags,
+          movies: movies,
+          error: req.flash('error'),
+          success: req.flash('success').toString()
+        });
       });
     });
+    
   });
 
   app.get('/post', checkLogin, function(req, res) {
-    res.render('post', {
-      title: '发布电影',
-      user: req.session.user,
-      success: req.flash('success').toString(),
-      error: req.flash('error')
+    Tag.fetch(function(err, tags) {
+      res.render('post', {
+        title: '发布电影',
+        tags: tags,
+        user: req.session.user,
+        success: req.flash('success').toString(),
+        error: req.flash('error')
+      });
     });
+    
   });
 
   app.post('/post', checkLogin, upload.single('img'), function(req, res) {
@@ -73,7 +85,10 @@ module.exports = function(app) {
       },
       'year': {
         notEmpty: true,
-        errorMessage: '请输入正确的上映日期'
+        isInt: {
+          options: [{ min: 1900, max: 2020 }]
+        },
+        errorMessage: '请输入正确的上映年份'
       },
       'types': {
         notEmpty: true,
@@ -130,15 +145,22 @@ module.exports = function(app) {
 
   app.get('/movie/:id', function(req, res) {
     var id =  req.params.id;
-    Movie.findById(id, function(err, movie) {
-      res.render('article', {
-        title: movie.title,
-        user: req.session.user,
-        movie: movie,
-        error: req.flash('error'),
-        success: req.flash('success').toString()
+    Tag.fetch( function(err, tags) {
+      if(err) {
+        console.log(err);
+      }
+      Movie.findById(id, function(err, movie) {
+        res.render('article', {
+          title: movie.title,
+          user: req.session.user,
+          tags: tags,
+          movie: movie,
+          error: req.flash('error'),
+          success: req.flash('success').toString()
+        });
       });
     });
+    
   });
 
   app.get('/reg', checkNotLogin,function(req, res) {
