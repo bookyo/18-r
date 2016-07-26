@@ -3,6 +3,8 @@ var UserSchema  = new mongoose.Schema({
   email: String,
   password: String,
   name: String,
+  signature: String,
+  avatar: String,
   meta: {
     createAt: {
       type: Date,

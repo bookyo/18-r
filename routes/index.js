@@ -175,16 +175,56 @@ module.exports = function(app) {
     var email = req.body.email;
     var password = req.body.password;
     var password_re = req.body['password-repeat'];
+    var signature  = req.body.signature ;
+    var avatar = req.body.avatar;
     if( password != password_re) {
       req.flash('error', {'msg': '两次输入的密码不一致！'});
       return res.redirect('/reg');
     }
+    req.checkBody({
+      'email': {
+        notEmpty: true,
+        isEmail: true,
+        errorMessage: '请填写正确的邮箱地址'
+      },
+      'password': {
+        notEmpty: true,
+        isLength: {
+          options:  [{ min: 6, max: 15}],
+          errorMessage: '密码必须介于6到15个字符之间'
+        },
+        errorMessage: '请填写正确的密码'
+      },
+      'avatar': {
+        notEmpty: true,
+        isInt: {
+          options: [{ min: 1, max: 16 }]
+        },
+        errorMessage: '请选择正确的头像'
+      },
+      'signature': {
+        notEmpty: true,
+        isLength: {
+          options: [{ min: 10, max: 50}],
+          errorMessage: '请填写10到50个字符之间的个人简介'
+        },
+        errorMessage: '请填写正确的个人简介'
+      }
+
+    });
+    var errors = req.validationErrors();
+    if (errors) {
+      req.flash('error', errors);
+      return res.redirect('/reg');
+    };
     var md5 = crypto.createHash('md5');
     var password = md5.update(req.body.password).digest('hex');
     var newUser = new User({
       email: email,
       password: password,
-      name: req.body.name
+      name: req.body.name,
+      signature: signature,
+      avatar: avatar
     });
     User.findOne({email: newUser.email}, function(err, user){
       if(err) {
