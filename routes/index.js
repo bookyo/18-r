@@ -184,8 +184,10 @@ module.exports = function(app) {
     req.checkBody({
       'email': {
         notEmpty: true,
-        isEmail: true,
-        errorMessage: '请填写正确的邮箱地址'
+        isEmail: {
+          errorMessage: '必须填写正确邮箱地址'
+        },
+        errorMessage: '邮箱地址不能为空'
       },
       'password': {
         notEmpty: true,
@@ -195,10 +197,15 @@ module.exports = function(app) {
         },
         errorMessage: '请填写正确的密码'
       },
+      'name': {
+        notEmpty: true,
+        errorMessage: '请填写昵称'
+      },
       'avatar': {
         notEmpty: true,
         isInt: {
-          options: [{ min: 1, max: 16 }]
+          options: [{ min: 1, max: 16 }],
+          errorMessage: '请选择头像'
         },
         errorMessage: '请选择正确的头像'
       },
@@ -212,6 +219,7 @@ module.exports = function(app) {
       }
 
     });
+    console.log(req.body);
     var errors = req.validationErrors();
     if (errors) {
       req.flash('error', errors);
