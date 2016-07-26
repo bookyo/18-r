@@ -325,7 +325,39 @@ module.exports = function(app) {
       });
     });
   });
-
+ 
+ app.get('/tag/:id', function(req, res) {
+    var typeid = req.params.id;
+    Tag.fetch(function(err, tags) {
+      Movie.find({types: typeid })
+                  .sort('-meta.updateAt')
+                  .populate('types', 'tag _id')
+                  .exec(function(err, movies){
+                    if(err) {
+                      console.log(err);
+                    }
+                    var tagname;
+                    for(var i=0; i<tags.length;i++){
+                      if(tags[i]._id == typeid){
+                          tagname= tags[i].tag;
+                      }
+                    }
+                    res.render('tag', {
+                      title: tagname+'电影大全_迅雷下载,百度云,电驴,磁力链接,种子',
+                      tagname: tagname,
+                      user: req.session.user,
+                      tags: tags,
+                      error: req.flash('error'),
+                      movies: movies,
+                      success: req.flash('success').toString()
+                    });
+                  });
+    });
+    
+   });
+  app.get('/user/:id', function(req, res){
+    
+  });
   function checkLogin(req, res, next) {
     if( !req.session.user ) {
       req.flash('error', {'msg': '未登录！'});

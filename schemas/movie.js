@@ -9,6 +9,7 @@ var MovieSchema = new mongoose.Schema({
 	types: [{type: Schema.Types.ObjectId, ref: 'Tag'}],
 	img: String,
 	summary: String,
+	creator: { type: Schema.Types.ObjectId, ref: 'User'},
 	meta: {
 		createAt: {
 			type: Date,

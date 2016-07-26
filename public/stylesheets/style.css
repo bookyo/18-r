@@ -54,3 +54,12 @@ a {
 .movie-info dd,.movie-info dt{float:left;}
 .movie-info dt{ padding-right:15px; }
 .summary-hidden{ display:none; }
+.avatar{    border: 1px solid #fff;
+    display: inline-block;
+    overflow: hidden;
+    padding:0;
+}
+.avatar img{
+	width:40px;
+	height:40px;
+}

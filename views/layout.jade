@@ -25,17 +25,16 @@ html(lang="zh-CN")
         .collapse.navbar-collapse#18r-navbar
           ul.nav.navbar-nav
             li.active 
-              a(href='#') 首页
+              a(href='/') 首页
             li 
-              a(href="#") 电影分类
-            li 
-              a(href="#") 最新电影
+              a(href="/tags") 电影分类
             li 
               a(href="#") 热门电影
            if user
             .pull-right
               a.btn.btn-primary.navbar-btn(href="/post") 发布
-              a.btn.btn-default(href="/logout",style="margin-left:10px;") 注销
+              a.btn.btn-default.avatar(href="/user/#{user._id}",style="margin-left:10px;") 
+                img(src="/upload/avatar/avatar-#{user.avatar}.jpg")
           else
             .pull-right
               a.btn.btn-primary.navbar-btn(href="/reg") 注册

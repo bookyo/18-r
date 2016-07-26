@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 var UserSchema  = new mongoose.Schema({
   email: String,
   password: String,
@@ -9,6 +10,7 @@ var UserSchema  = new mongoose.Schema({
     type: Number, 
     default: 0 
   },
+  movies: [ {type: Schema.Types.ObjectId, ref: 'Movie'}],
   meta: {
     createAt: {
       type: Date,
