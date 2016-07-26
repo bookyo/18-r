@@ -65,7 +65,7 @@ module.exports = function(app) {
   });
 
   app.post('/post', checkLogin, upload.single('img'), function(req, res) {
-    console.log(req.file);
+
     req.checkBody({
       'title': {
         notEmpty: true,
@@ -122,6 +122,8 @@ module.exports = function(app) {
       stripIgnoreTag: true,
       stripIgnoreTagBody: ['script']
     });
+    var user= req.session.user;
+    console.log(user);
     var movieObj = {
       title: req.body.title,
       doctor: req.body.doctor,
@@ -130,15 +132,22 @@ module.exports = function(app) {
       year: req.body.year,
       types: req.body.types,
       summary: htmlsummary,
-      img: req.file.filename
+      img: req.file.filename,
+      creator: user._id
     };
-    console.log(req.body);
     var movie = new Movie(movieObj);
     movie.save(function(err, movie) {
       if(err) {
         console.log(err);
       }
-
+      User.findById(user._id, function(err, user) {
+        user.movies.push(movie);
+        user.save(function(err){
+          if(err) {
+            console.log(err);
+          }
+        });
+      });
       res.redirect('/');
     });
   });
@@ -356,7 +365,19 @@ module.exports = function(app) {
     
    });
   app.get('/user/:id', function(req, res){
-    
+    var id = req.params.id;
+    Movie.find({creator: id})
+                .sort('-meta.updateAt')
+                .populate('creator', 'name signature avatar')
+                .populate('types', 'tag _id')
+                .exec(function(err, movies){
+                   res.render('user', {
+                      title: movies[0].creator.name+'个人页面,发布的电影',
+                      error: req.flash('error'),
+                      success: req.flash('success').toString(),
+                      movies: movies
+                   });
+                });
   });
   function checkLogin(req, res, next) {
     if( !req.session.user ) {

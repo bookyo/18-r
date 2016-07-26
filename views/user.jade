@@ -1,0 +1,42 @@
+extends layout
+
+block content
+  .container
+    .row
+      .col-md-3
+        img(src="/upload/avatar/avatar-#{movies[0].creator.avatar}.jpg")
+        .h1 #{movies[0].creator.name}
+        .p #{movies[0].creator.signature}
+      .col-md-9
+        section#main-body.clearfix
+          each movie in movies
+            .col-md-3
+              .movie-box
+                img.img-responsive(src="/uploads/400/#{movie.img}")
+                h2 
+                  a(href="/movie/#{movie._id}")= movie.title
+                  span.label.label-success.pinfen 评分：8.3
+                p 导演：#{movie.doctor}
+                p 主演：#{movie.players}
+                p 电影类型：
+                  each type in movie.types
+                    a(href="/tag/#{type._id}")
+                      span.category #{type.tag}
+        nav.pages
+          ul.pagination
+            li
+              a(href="#", aria-label="Previous")
+                span(aria-hidden="true") &laquo;
+            li.active
+              a(href="#") 1
+            li
+              a(href="#") 2
+            li
+              a(href="#") 3
+            li
+              a(href="#") 4
+            li
+              a(href="#") 5
+            li
+              a(href="#", aria-lable="Next")
+                span(aria-hidden="true") &raquo;
