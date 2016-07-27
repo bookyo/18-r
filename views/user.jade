@@ -4,9 +4,14 @@ block content
   .container
     .row
       .col-md-3
-        img(src="/upload/avatar/avatar-#{movies[0].creator.avatar}.jpg")
-        .h1 #{movies[0].creator.name}
-        .p #{movies[0].creator.signature}
+        .user-info
+            img(src="/upload/avatar/avatar-#{visituser.avatar}.jpg")
+            h1.name #{visituser.name}
+            p 个人签名： #{visituser.signature}
+            - if(visituser._id == user._id)
+                .btn-group.text-center(role="group")
+                  a.btn.btn-default.btn-do(type="button" href="/logout") 注销
+                  a.btn.btn-default.btn-do(type="button" href="/user/edit") 编辑资料
       .col-md-9
         section#main-body.clearfix
           each movie in movies

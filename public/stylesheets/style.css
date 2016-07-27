@@ -63,3 +63,16 @@ a {
 	width:40px;
 	height:40px;
 }
+
+.user-info{
+	margin-bottom:30px;
+}
+.btn-group{ width:100%; }
+.user-info h1{text-align:center;}
+.user-info img{display:block;margin: 0 auto;width:150px;height:150px;border-radius:50%;}
+.user-info p{text-align:center;}
+.btn-group>.btn-do { float:none; }
+.author{padding-left:15px;margin-bottom:20px;}
+.author img{display:inline-block; vertical-align: middle;margin-right:5px;}
+.author span{display:inline-block;vertical-align: middle;}
+.author .pubdate{ margin-left:10px; }

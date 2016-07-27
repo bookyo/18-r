@@ -10,6 +10,11 @@ block content
             a.tag(href="/tag/#{tag._id}") #{tag.tag}
       .col-md-9.article
         h1 #{movie.title}
+        .author
+          a(href="/user/#{movie.creator._id}")
+            img(src="/upload/avatar/avatar-#{movie.creator.avatar}.jpg" width="40" height="40")
+            span #{movie.creator.name}
+          span.pubdate 发表于 #{pubdate}
         .col-md-5
           img.img-responsive(src="/uploads/400/#{movie.img}")
         .col-md-7.movie-info

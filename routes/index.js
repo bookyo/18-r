@@ -5,6 +5,7 @@ var crypto = require('crypto');
 var multer = require('multer');
 var xss = require('xss');
 var sharp = require('sharp');
+var moment = require('moment');
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, './public/uploads');
@@ -154,19 +155,27 @@ module.exports = function(app) {
 
   app.get('/movie/:id', function(req, res) {
     var id =  req.params.id;
-    Tag.fetch( function(err, tags) {
+    var tags;
+    Tag.fetch( function(err, tag) {
       if(err) {
         console.log(err);
       }
-      Movie.findById(id, function(err, movie) {
-        res.render('article', {
-          title: movie.title,
-          user: req.session.user,
-          tags: tags,
-          movie: movie,
-          error: req.flash('error'),
-          success: req.flash('success').toString()
-        });
+      tags = tag;
+    });
+    Movie.findById(id, function(err, movie) {
+      if(err) {
+        console.log(err);
+      }
+      var title = movie.title;
+      var pubdate = moment(movie.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
+      res.render('article', {
+        title: title,
+        user: req.session.user,
+        tags: tags,
+        pubdate: pubdate,
+        movie: movie,
+        error: req.flash('error'),
+        success: req.flash('success').toString()
       });
     });
     
@@ -366,18 +375,25 @@ module.exports = function(app) {
    });
   app.get('/user/:id', function(req, res){
     var id = req.params.id;
-    Movie.find({creator: id})
-                .sort('-meta.updateAt')
-                .populate('creator', 'name signature avatar')
-                .populate('types', 'tag _id')
-                .exec(function(err, movies){
-                   res.render('user', {
-                      title: movies[0].creator.name+'个人页面,发布的电影',
-                      error: req.flash('error'),
-                      success: req.flash('success').toString(),
-                      movies: movies
-                   });
-                });
+    User.findById( id, function(err, user) {
+        Movie.find({creator: id})
+                    .sort('-meta.updateAt')
+                    .populate('types', 'tag _id')
+                    .exec(function(err, movies){
+                      if(err) {
+                        console.log(err);
+                      }
+                       res.render('user', {
+                          title: user.name+'个人页面,'+ user.name+'发布的电影',
+                          error: req.flash('error'),
+                          success: req.flash('success').toString(),
+                          user: req.session.user,
+                          visituser: user,
+                          movies: movies
+                       });
+                    });
+    });
+    
   });
   function checkLogin(req, res, next) {
     if( !req.session.user ) {

@@ -45,6 +45,7 @@ MovieSchema.statics = {
 		return this
 		  .findOne({_id: id})
 		  .populate('types','_id tag')
+		  .populate('creator', '_id name avatar')
 		  .exec(cb)
 	}
 };
