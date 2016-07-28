@@ -6,6 +6,7 @@ var multer = require('multer');
 var xss = require('xss');
 var sharp = require('sharp');
 var moment = require('moment');
+var async = require('async');
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, './public/uploads');
@@ -155,31 +156,37 @@ module.exports = function(app) {
 
   app.get('/movie/:id', function(req, res) {
     var id =  req.params.id;
-    var tags;
-    Tag.fetch( function(err, tag) {
-      if(err) {
-        console.log(err);
+    async.parallel({
+      tags: function(callback) {
+        Tag.fetch(function(err, tags) {
+          callback(null, tags);
+       });
+      },
+      movie: function(callback) {
+        Movie.findById(id, function(err, movie) {
+          callback(null,movie);
+        });
       }
-      tags = tag;
-    });
-    Movie.findById(id, function(err, movie) {
-      if(err) {
-        console.log(err);
-      }
-      var title = movie.title;
-      var pubdate = moment(movie.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
-      res.render('article', {
-        title: title,
-        user: req.session.user,
-        tags: tags,
-        pubdate: pubdate,
-        movie: movie,
-        error: req.flash('error'),
-        success: req.flash('success').toString()
+      },
+        function(err, results) {
+          console.log(results);
+          var title = results.movie.title + '_迅雷下载,百度云,360云,电驴,磁力链接'
+          var pubdate = moment(results.movie.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
+          var tags = results.tags;
+          var movie = results.movie;
+          res.render('article', {
+              title: title,
+              user: req.session.user,
+              pubdate: pubdate,
+              tags: tags,
+              movie: movie,
+              error: req.flash('error'),
+              success: req.flash('success').toString()
+          });
+        }
+      );
       });
-    });
     
-  });
 
   app.get('/reg', checkNotLogin,function(req, res) {
     res.render('reg', {

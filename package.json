@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "async": "^2.0.1",
     "body-parser": "~1.13.2",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^1.2.1",
@@ -21,6 +22,7 @@
     "morgan": "~1.6.1",
     "multer": "^1.1.0",
     "serve-favicon": "~2.3.0",
-    "sharp": "^0.15.1"
+    "sharp": "^0.15.1",
+    "xss": "^0.2.13"
   }
 }

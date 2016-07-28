@@ -8,7 +8,7 @@ block content
             img(src="/upload/avatar/avatar-#{visituser.avatar}.jpg")
             h1.name #{visituser.name}
             p 个人签名： #{visituser.signature}
-            - if(visituser._id == user._id)
+            - if(user&&visituser._id == user._id)
                 .btn-group.text-center(role="group")
                   a.btn.btn-default.btn-do(type="button" href="/logout") 注销
                   a.btn.btn-default.btn-do(type="button" href="/user/edit") 编辑资料
