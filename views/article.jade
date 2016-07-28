@@ -11,10 +11,11 @@ block content
       .col-md-9.article
         h1 #{movie.title}
         .author
-          a(href="/user/#{movie.creator._id}")
+          a.author-info(href="/user/#{movie.creator._id}")
             img(src="/upload/avatar/avatar-#{movie.creator.avatar}.jpg" width="40" height="40")
             span #{movie.creator.name}
-          span.pubdate 发表于 #{pubdate}
+          span.pubdate 发表于 #{pubdate} &nbsp&nbsp
+          span  已播放：#{movie.pv} 次
         .col-md-5
           img.img-responsive(src="/uploads/400/#{movie.img}")
         .col-md-7.movie-info

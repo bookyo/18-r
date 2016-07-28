@@ -41,5 +41,12 @@ block content
             .col-sm-9
               input#img.form-control(type="file" name="img")
           .form-group
+            label.col-sm-3.control-label(for="resources") 下载资源
+            .col-sm-9.resources
+              .input-group
+                input#resources.form-control(type="text" name="resources" placeholder="请输入百度云,360云,电驴或者磁力链接!")
+                span.input-group-btn
+                  buttn.btn.btn-default.addrow(type="button") 增加一行
+          .form-group
               .col-sm-offset-2.col-sm-10
                 button(type="submit").btn.btn-default 发布

@@ -75,4 +75,5 @@ a {
 .author{padding-left:15px;margin-bottom:20px;}
 .author img{display:inline-block; vertical-align: middle;margin-right:5px;}
 .author span{display:inline-block;vertical-align: middle;}
-.author .pubdate{ margin-left:10px; }
+.author-info{margin-right:15px;}
+.form-resource{ margin:5px 0; }

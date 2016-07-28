@@ -1,12 +1,14 @@
 var Movie = require('../models/movie');
 var User = require('../models/user');
 var Tag = require('../models/tag');
+var Resource = require('../models/resource');
 var crypto = require('crypto');
 var multer = require('multer');
 var xss = require('xss');
 var sharp = require('sharp');
 var moment = require('moment');
 var async = require('async');
+var cache = require('express-redis-cache')({ expire: 300 });
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, './public/uploads');
@@ -38,8 +40,6 @@ module.exports = function(app) {
         if(err) {
           console.log(err);
         }
-        console.log(tags);
-        console.log(movies);
         res.render('index', { 
           title: "首页",
           user: req.session.user,
@@ -99,10 +99,14 @@ module.exports = function(app) {
       'summary': {
         notEmpty: true,
         errorMessage: '请输入正确的剧情简介'
+      },
+      'resources': {
+        notEmpty: true,
+        errorMessage: '请务必输入下载资源'
       }
 
     });
-
+    console.log(req.body);
     var errors = req.validationErrors();
     if (errors) {
       req.flash('error', errors);
@@ -125,7 +129,6 @@ module.exports = function(app) {
       stripIgnoreTagBody: ['script']
     });
     var user= req.session.user;
-    console.log(user);
     var movieObj = {
       title: req.body.title,
       doctor: req.body.doctor,
@@ -137,6 +140,19 @@ module.exports = function(app) {
       img: req.file.filename,
       creator: user._id
     };
+    var resources_id;
+    if( Array.isArray( req.body.resources) ){
+      for(var i=0; i<req.body.resources.length;i++){
+        
+      }
+       var resources = new Resource({
+        resource: req.body.resources,
+        creator: req.session.user._id,
+       })
+    }
+    else{
+      console.log('资源不是数组');
+    }
     var movie = new Movie(movieObj);
     movie.save(function(err, movie) {
       if(err) {
@@ -154,7 +170,7 @@ module.exports = function(app) {
     });
   });
 
-  app.get('/movie/:id', function(req, res) {
+  app.get('/movie/:id', pvadd, cache.route(), function(req, res) {
     var id =  req.params.id;
     async.parallel({
       tags: function(callback) {
@@ -169,7 +185,6 @@ module.exports = function(app) {
       }
       },
         function(err, results) {
-          console.log(results);
           var title = results.movie.title + '_迅雷下载,百度云,360云,电驴,磁力链接'
           var pubdate = moment(results.movie.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
           var tags = results.tags;
@@ -244,7 +259,6 @@ module.exports = function(app) {
       }
 
     });
-    console.log(req.body);
     var errors = req.validationErrors();
     if (errors) {
       req.flash('error', errors);
@@ -340,7 +354,6 @@ module.exports = function(app) {
       if(err) {
         console.log(err);
       }
-      console.log(tags);
       res.render('tags', { 
         title: "电影分类页",
         user: req.session.user,
@@ -351,7 +364,7 @@ module.exports = function(app) {
     });
   });
  
- app.get('/tag/:id', function(req, res) {
+ app.get('/tag/:id', cache.route(), function(req, res) {
     var typeid = req.params.id;
     Tag.fetch(function(err, tags) {
       Movie.find({types: typeid })
@@ -380,7 +393,7 @@ module.exports = function(app) {
     });
     
    });
-  app.get('/user/:id', function(req, res){
+  app.get('/user/:id', cache.route(), function(req, res){
     var id = req.params.id;
     User.findById( id, function(err, user) {
         Movie.find({creator: id})
@@ -400,7 +413,6 @@ module.exports = function(app) {
                        });
                     });
     });
-    
   });
   function checkLogin(req, res, next) {
     if( !req.session.user ) {
@@ -408,6 +420,14 @@ module.exports = function(app) {
       res.redirect('/login');
     }
     next();
+  }
+
+  function pvadd(req, res, next) {
+     var id = req.params.id;
+     Movie.findByIdAndUpdate(id, {$inc: {pv: 1}}, function(err) {
+            if(err) console.log(err);
+        });
+     next();
   }
 
   function checkNotLogin(req, res, next) {
