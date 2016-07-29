@@ -16,11 +16,13 @@
     "express": "~4.13.1",
     "express-session": "^1.13.0",
     "express-validator": "^2.20.8",
+    "hiredis": "^0.5.0",
     "jade": "~1.11.0",
     "moment": "^2.14.1",
     "mongoose": "^4.5.1",
     "morgan": "~1.6.1",
     "multer": "^1.1.0",
+    "redis": "^2.6.2",
     "serve-favicon": "~2.3.0",
     "sharp": "^0.15.1",
     "xss": "^0.2.13"

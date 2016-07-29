@@ -9,11 +9,13 @@ $(document).ready(function(){
     $(".summary").hide();
     $(".summary-hidden").show();
   });
-  
+  var row = "<div class='form-resource input-group'><input type='text' name='resources' placeholder='请输入百度云,360云,电驴或者磁力链接!' class='form-control'><span class='input-group-btn'><button type='button' class='btn btn-default removerow'>删除此行</button></div>";
+  var addrow = $(".addrow");
+    addrow.click( function(){
+       $(".resources").append(row);
+    });
+    $(".resources").on('click', '.removerow', function() {
+        $(this).parent().parent().remove();
+    });
 
 });
-var row = "<input type='text' name='resources' placeholder='请输入百度云,360云,电驴或者磁力链接!' class='form-resource form-control'>";
-var addrow = $(".addrow");
-  addrow.click( function(){
-     $(".resources").append(row);
-  });

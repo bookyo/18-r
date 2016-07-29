@@ -24,7 +24,7 @@ block content
           .form-group
             label.col-sm-3.control-label(for="year") 上映年份
             .col-sm-9
-              input#year.form-control(type="text" name="year")
+              input#year.form-control(type="text" name="year" placeholder="输入年份数字，必须为纯数字，比如2000")
           .form-group
             label.col-sm-3.control-label 分类
             .col-sm-9
@@ -46,7 +46,7 @@ block content
               .input-group
                 input#resources.form-control(type="text" name="resources" placeholder="请输入百度云,360云,电驴或者磁力链接!")
                 span.input-group-btn
-                  buttn.btn.btn-default.addrow(type="button") 增加一行
+                  button.btn.btn-default.addrow(type="button") 增加一行
           .form-group
               .col-sm-offset-2.col-sm-10
                 button(type="submit").btn.btn-default 发布

@@ -7,8 +7,6 @@ var crypto = require('crypto');
 var multer = require('multer');
 var xss = require('xss');
 var sharp = require('sharp');
-var moment = require('moment');
-var async = require('async');
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, './public/uploads');
@@ -53,52 +51,11 @@ module.exports = function(app) {
     
   });
 
-  app.get('/post', checkLogin, function(req, res) {
-    Tag.fetch(function(err, tags) {
-      res.render('post', {
-        title: '发布电影',
-        tags: tags,
-        user: req.session.user,
-        success: req.flash('success').toString(),
-        error: req.flash('error')
-      });
-    });
-    
-  });
+  app.get('/post', checkLogin, MovieController.new);
 
   app.post('/post', checkLogin, upload.single('img'), MovieController.post);
 
-  app.get('/movie/:id', pvadd,  function(req, res) {
-    var id =  req.params.id;
-    async.parallel({
-      tags: function(callback) {
-        Tag.fetch(function(err, tags) {
-          callback(null, tags);
-       });
-      },
-      movie: function(callback) {
-        Movie.findById(id, function(err, movie) {
-          callback(null,movie);
-        });
-      }
-      },
-        function(err, results) {
-          var title = results.movie.title + '_迅雷下载,百度云,360云,电驴,磁力链接'
-          var pubdate = moment(results.movie.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
-          var tags = results.tags;
-          var movie = results.movie;
-          res.render('article', {
-              title: title,
-              user: req.session.user,
-              pubdate: pubdate,
-              tags: tags,
-              movie: movie,
-              error: req.flash('error'),
-              success: req.flash('success').toString()
-          });
-        }
-      );
-      });
+  app.get('/movie/:id', MovieController.getMovie );
     
 
   app.get('/reg', checkNotLogin,function(req, res) {
@@ -318,14 +275,6 @@ module.exports = function(app) {
       res.redirect('/login');
     }
     next();
-  }
-
-  function pvadd(req, res, next) {
-     var id = req.params.id;
-     Movie.findByIdAndUpdate(id, {$inc: {pv: 1}}, function(err) {
-            if(err) console.log(err);
-        });
-     next();
   }
 
   function checkNotLogin(req, res, next) {

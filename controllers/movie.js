@@ -3,7 +3,11 @@ var User = require('../models/user');
 var Tag = require('../models/tag');
 var Resource = require('../models/resource');
 var xss = require('xss');
+var async = require('async');
+var moment = require('moment');
 var sharp = require('sharp');
+var redis = require("redis");
+var client = redis.createClient();
 
 exports.post = function(req, res) {
 
@@ -45,7 +49,6 @@ exports.post = function(req, res) {
       }
 
     });
-    console.log(req.body);
     var errors = req.validationErrors();
     if (errors) {
       req.flash('error', errors);
@@ -86,46 +89,53 @@ exports.post = function(req, res) {
         console.log(err);
       }
       var resources = req.body.resources;
+      console.log(resources);
+      console.log(types);
       var movieid = movie._id;
       var resources_id = [];
       if( Array.isArray( resources) ){
-        for(var i = 0; i<resources.length;i++) {
-            if(resources[i] == "" || typeof(resources[i]) == 'undefined')
-            {
-              resources.aplice(i,1);
-              i= i-1;
-            }
-        }
+        
         for(var i=0; i<resources.length;i++){
             var resource = resources[i];
             var typeid = checkResTypeId(resource);
-            var resourceObj = {
-              resource: resource,
-              typeid: typeid,
-              tomovie: movieid,
-              creator: user._id
+            if(typeid) {
+              var resourceObj = {
+                resource: resource,
+                typeid: typeid,
+                tomovie: movieid,
+                creator: user._id
 
-            }
-            var resource = new Resource(resourceObj);
-            resource.save(function(err, resource) {
-              resources_id.push(resource._id);
-            });
+              }
+              var resource = new Resource(resourceObj);
+              resource.save(function(err, resource) {
+                resources_id.push(resource._id);
+              });
+           }
+           else {
+              req.flash('error', {'msg': '输入的资源类型有误或者有一行为空！'});
+              return res.redirect('/post');
+           }
         }
          
       }
       else{
         var resource = resources;
         var typeid = checkResTypeId(resources);
-        var resourceObj = {
-          resource: resource,
-          typeid: typeid,
-          tomovie: movieid,
-          creator: user._id
+        if(typeid) {
+          var resourceObj = {
+            resource: resource,
+            typeid: typeid,
+            tomovie: movieid,
+            creator: user._id
+          }
+          var resource = new Resource(resourceObj);
+          resource.save( function(err, resource) {
+            resources_id.push(resource._id);
+          });
+        }else{
+          req.flash('error', {'msg': '输入资源类型有误！'});
+          return res.redirect('/post');
         }
-        var resource = new Resource(resourceObj);
-        resource.save( function(err, resource) {
-          resources_id.push(resource._id);
-        });
       }
       User.findById(user._id, function(err, user) {
         user.movies.push(movie);
@@ -146,21 +156,89 @@ exports.post = function(req, res) {
             if(err) {
               console.log(err);
             }
-            for(var i=0;i<types.length; i++){
-            	Tag.findById(types[i], function(err, tag) {
-                   tag.movies.push(themovie);
-                   tag.save(function(err) {
-                      if(err) {
-                      	console.log(err);
-                      }
-                   });
-            	});
-            }
+            if(Array.isArray(types) ) {
+              for(var i=0;i<types.length; i++){
+              	Tag.findById(types[i], function(err, tag) {
+                     tag.movies.push(themovie);
+                     tag.save(function(err) {
+                        if(err) {
+                        	console.log(err);
+                        }
+                     });
+              	});
+              }
+           }else{
+              Tag.findById(types, function(err, tag) {
+                 tag.movies.push(themovie);
+                 tag.save(function(err) {
+                    if(err) {
+                      console.log(err);
+                    }
+                 });
+              });
+           }
           });
       });
       res.redirect('/movie/'+movie._id);
     });
 }
+
+exports.getMovie = function(req, res) {
+    var id =  req.params.id;
+    async.parallel({
+      tags: function(callback) {
+        client.hgetall('tags', function(err, tags) {
+           if(tags) {
+              callback(null, tags);
+           }
+           else{
+              Tag.fetch(function(err, tags) {
+                 client.hmset('tags', tags);
+                 callback(null, tags);
+              });
+           }
+        });
+      },
+      movie: function(callback) {
+          Movie.findByIdAndUpdate(id, {$inc: {pv: 1}})
+                      .populate('types','_id tag')
+                      .populate('creator', '_id name avatar')
+                      .exec(function(err,movie) {
+                        if(err) console.log(err);
+                         callback(null,movie);
+                      });
+      }
+      },
+        function(err, results) {
+          var title = results.movie.title + '_迅雷下载,百度云,360云,电驴,磁力链接'
+          var pubdate = moment(results.movie.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
+          var tags = results.tags;
+          var movie = results.movie;
+          res.render('article', {
+              title: title,
+              user: req.session.user,
+              pubdate: pubdate,
+              tags: tags,
+              movie: movie,
+              error: req.flash('error'),
+              success: req.flash('success').toString()
+          });
+        }
+      );
+}
+
+exports.new = function(req, res) {
+    Tag.fetch(function(err, tags) {
+      res.render('post', {
+        title: '发布电影',
+        tags: tags,
+        user: req.session.user,
+        success: req.flash('success').toString(),
+        error: req.flash('error')
+      });
+    });
+    
+  }
 
 function checkResTypeId( resource) {
     if( /pan.baidu.com\/s\/[\s\S]{8}/i.test(resource)){
