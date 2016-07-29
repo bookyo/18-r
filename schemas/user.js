@@ -11,6 +11,7 @@ var UserSchema  = new mongoose.Schema({
     default: 0 
   },
   movies: [ {type: Schema.Types.ObjectId, ref: 'Movie'}],
+  resources: [ { type:Schema.Types.ObjectId, ref: 'Resoure'}],
   meta: {
     createAt: {
       type: Date,
@@ -42,6 +43,7 @@ UserSchema.statics = {
   findById: function(id, cb) {
     return this
       .findOne({_id: id})
+      .populate('movies')
       .exec(cb)
   }
 };

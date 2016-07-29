@@ -2,13 +2,13 @@ var Movie = require('../models/movie');
 var User = require('../models/user');
 var Tag = require('../models/tag');
 var Resource = require('../models/resource');
+var MovieController = require('../controllers/movie');
 var crypto = require('crypto');
 var multer = require('multer');
 var xss = require('xss');
 var sharp = require('sharp');
 var moment = require('moment');
 var async = require('async');
-var cache = require('express-redis-cache')({ expire: 300 });
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, './public/uploads');
@@ -66,111 +66,9 @@ module.exports = function(app) {
     
   });
 
-  app.post('/post', checkLogin, upload.single('img'), function(req, res) {
+  app.post('/post', checkLogin, upload.single('img'), MovieController.post);
 
-    req.checkBody({
-      'title': {
-        notEmpty: true,
-        errorMessage: '请填写正确的名称'
-      },
-      'doctor': {
-        notEmpty: true,
-        errorMessage: '请输入正确的导演信息'
-      },
-      'players': {
-        notEmpty: true,
-        errorMessage: '请输入正确的主演信息'
-      },
-      'country': {
-        notEmpty: true,
-        errorMessage: '请输入正确的发行国家'
-      },
-      'year': {
-        notEmpty: true,
-        isInt: {
-          options: [{ min: 1900, max: 2020 }]
-        },
-        errorMessage: '请输入正确的上映年份'
-      },
-      'types': {
-        notEmpty: true,
-        errorMessage: '请选择正确的电影类型'
-      },
-      'summary': {
-        notEmpty: true,
-        errorMessage: '请输入正确的剧情简介'
-      },
-      'resources': {
-        notEmpty: true,
-        errorMessage: '请务必输入下载资源'
-      }
-
-    });
-    console.log(req.body);
-    var errors = req.validationErrors();
-    if (errors) {
-      req.flash('error', errors);
-      return res.redirect('/post');
-    };
-    if(req.file === undefined) {
-      req.flash('error', {'msg': '请上传正确的海报！'});
-      return res.redirect('/post');
-    };
-    sharp(req.file.path)
-      .resize(400,400)
-      .quality(70)
-      .toFile(req.file.destination + '/400/' + req.file.filename , function(err) {
-        if(err) throw err;
-      });
-    var summary = req.body.summary;
-    var htmlsummary = xss(summary, {
-      whiteList: [],
-      stripIgnoreTag: true,
-      stripIgnoreTagBody: ['script']
-    });
-    var user= req.session.user;
-    var movieObj = {
-      title: req.body.title,
-      doctor: req.body.doctor,
-      players: req.body.players,
-      country: req.body.country,
-      year: req.body.year,
-      types: req.body.types,
-      summary: htmlsummary,
-      img: req.file.filename,
-      creator: user._id
-    };
-    var resources_id;
-    if( Array.isArray( req.body.resources) ){
-      for(var i=0; i<req.body.resources.length;i++){
-        
-      }
-       var resources = new Resource({
-        resource: req.body.resources,
-        creator: req.session.user._id,
-       })
-    }
-    else{
-      console.log('资源不是数组');
-    }
-    var movie = new Movie(movieObj);
-    movie.save(function(err, movie) {
-      if(err) {
-        console.log(err);
-      }
-      User.findById(user._id, function(err, user) {
-        user.movies.push(movie);
-        user.save(function(err){
-          if(err) {
-            console.log(err);
-          }
-        });
-      });
-      res.redirect('/');
-    });
-  });
-
-  app.get('/movie/:id', pvadd, cache.route(), function(req, res) {
+  app.get('/movie/:id', pvadd,  function(req, res) {
     var id =  req.params.id;
     async.parallel({
       tags: function(callback) {
@@ -364,7 +262,7 @@ module.exports = function(app) {
     });
   });
  
- app.get('/tag/:id', cache.route(), function(req, res) {
+ app.get('/tag/:id', function(req, res) {
     var typeid = req.params.id;
     Tag.fetch(function(err, tags) {
       Movie.find({types: typeid })
@@ -393,7 +291,7 @@ module.exports = function(app) {
     });
     
    });
-  app.get('/user/:id', cache.route(), function(req, res){
+  app.get('/user/:id', function(req, res){
     var id = req.params.id;
     User.findById( id, function(err, user) {
         Movie.find({creator: id})
@@ -437,5 +335,7 @@ module.exports = function(app) {
     }
     next();
   }
+
+  
 
 }

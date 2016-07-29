@@ -1,10 +1,11 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ResourceSchema = new mongoose.Schema({
-  resource: [String],
+  resource: String,
   typeid: Number,
   //1:baiduyun  2:360yun 3:dianlv 4:cili
-  creator: {type: Schema.Types.ObjectId, ref: 'user'},
+  tomovie: {type:Schema.Types.ObjectId, ref: 'Movie'},
+  creator: {type: Schema.Types.ObjectId, ref: 'User'},
   meta: {
 		createAt: {
 			type: Date,

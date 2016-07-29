@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 var TagSchema = new mongoose.Schema({
 	tag: String,
+        movies: [{type: Schema.Types.ObjectId, ref: 'Movie'}],
         meta: {
             createAt: {
               type: Date,
@@ -34,6 +36,7 @@ TagSchema.statics = {
   findById: function(id, cb) {
     return this
       .findOne({_id: id})
+      .populate('movies')
       .exec(cb)
   }
 };
