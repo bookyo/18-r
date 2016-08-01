@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var TagSchema = new mongoose.Schema({
 	tag: String,
-        movies: [{type: Schema.Types.ObjectId, ref: 'Movie'}],
         meta: {
             createAt: {
               type: Date,

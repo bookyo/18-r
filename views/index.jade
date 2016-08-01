@@ -23,99 +23,11 @@ block content
                   each type in movie.types
                     a(href="/tag/#{type._id}")
                       span.category #{type.tag}
-          .col-md-3
-            .movie-box
-              img.img-responsive(src="/upload/timg.jpg")
-              h2 
-                a(href="#") 印度超人
-                span.label.label-success.pinfen 评分：8.3
-              p 导演：悦三
-              p 主演：book
-              p 电影类型：
-                span.category 科幻
-                span.category 动作
-          .col-md-3
-            .movie-box
-              img.img-responsive(src="/upload/timg.jpg")
-              h2 
-                a(href="#") 印度超人
-                span.label.label-success.pinfen 评分：8.3
-              p 导演：悦三
-              p 主演：book
-              p 电影类型：
-                span.category 科幻
-                span.category 动作
-                span.category 喜剧
-                span.category 爱情
-          .col-md-3
-            .movie-box
-              img.img-responsive(src="/upload/timg.jpg")
-              h2 
-                a(href="#") 印度超人
-                span.label.label-success.pinfen 评分：8.3
-              p 导演：悦三
-              p 主演：book
-              p 电影类型：
-                span.category 科幻
-                span.category 动作
-                span.category 喜剧
-                span.category 爱情
-          .col-md-3
-            .movie-box
-              img.img-responsive(src="/upload/timg.jpg")
-              h2 
-                a(href="#") 印度超人
-                span.label.label-success.pinfen 评分：8.3
-              p 导演：悦三
-              p 主演：book
-              p 电影类型：
-                span.category 科幻
-                span.category 动作
-                span.category 喜剧
-                span.category 爱情
-
-          .col-md-3
-            .movie-box
-              img.img-responsive(src="/upload/timg.jpg")
-              h2 
-                a(href="#") 印度超人
-                span.label.label-success.pinfen 评分：8.3
-              p 导演：悦三
-              p 主演：book
-              p 电影类型：
-                span.category 科幻
-                span.category 动作
-                span.category 喜剧
-                span.category 爱情
-          .col-md-3
-            .movie-box
-              img.img-responsive(src="/upload/timg.jpg")
-              h2 
-                a(href="#") 印度超人
-                span.label.label-success.pinfen 评分：8.3
-              p 导演：悦三
-              p 主演：book
-              p 电影类型：
-                span.category 科幻
-                span.category 动作
         nav.pages
-          ul.pagination
-            li
-              a(href="#", aria-label="Previous")
-                span(aria-hidden="true") &laquo;
-            li.active
-              a(href="#") 1
-            li
-              a(href="#") 2
-            li
-              a(href="#") 3
-            li
-              a(href="#") 4
-            li
-              a(href="#") 5
-            li
-              a(href="#", aria-lable="Next")
-                span(aria-hidden="true") &raquo;
+          if( pages> 1) 
+            ul.pagination
+              != createPagination(pages, page)
+            
 
 
 

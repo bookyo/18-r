@@ -38,10 +38,44 @@ app.use(session({
   })
 }));
 
-
+app.use(function(req, res, next) {
+  res.locals.createPagination = function (pages, page) {
+    var url = require('url')
+      , qs = require('querystring')
+      , params = qs.parse(url.parse(req.url).query)
+      , str = ''
+      , list_len = 2
+      , total_list = list_len * 2 +1
+      , j = 1
+      , pageNo = parseInt(page);
+    if(pageNo >= total_list) {
+       j = pageNo - list_len;
+       total_list = pageNo + list_len;
+       if(total_list > pages) {
+          total_list = pages;
+       }
+    }
+    else {
+      j = 1;
+      if( total_list > pages) {
+        total_list = pages;
+      }
+    }
+    params.page = 0
+    for(j; j<=total_list; j++) {
+      params.page = j
+      clas = pageNo == j ? "active" : "no"
+       str += '<li class="'+clas+'"><a href="?'+qs.stringify(params)+'">'+ j +'</a></li>'
+    }
+    return str
+  }
+  next();
+});
 
 app.use(flash());
 routes(app);
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

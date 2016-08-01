@@ -82,15 +82,12 @@ exports.post = function(req, res) {
       img: req.file.filename,
       creator: user._id
     };
-    var types = req.body.types;
     var movie = new Movie(movieObj);
     movie.save(function(err, movie) {
       if(err) {
         console.log(err);
       }
       var resources = req.body.resources;
-      console.log(resources);
-      console.log(types);
       var movieid = movie._id;
       var resources_id = [];
       if( Array.isArray( resources) ){
@@ -137,17 +134,6 @@ exports.post = function(req, res) {
           return res.redirect('/post');
         }
       }
-      User.findById(user._id, function(err, user) {
-        user.movies.push(movie);
-        for(var i =0; i< resources_id.length; i++){
-        user.resources.push(resources_id[i]);
-        }
-        user.save(function(err){
-          if(err) {
-            console.log(err);
-          }
-        });
-      });
       Movie.findById(movie._id, function(err, themovie) {
           for(var i =0; i< resources_id.length; i++){
              themovie.resources.push(resources_id[i]);
@@ -156,27 +142,7 @@ exports.post = function(req, res) {
             if(err) {
               console.log(err);
             }
-            if(Array.isArray(types) ) {
-              for(var i=0;i<types.length; i++){
-              	Tag.findById(types[i], function(err, tag) {
-                     tag.movies.push(themovie);
-                     tag.save(function(err) {
-                        if(err) {
-                        	console.log(err);
-                        }
-                     });
-              	});
-              }
-           }else{
-              Tag.findById(types, function(err, tag) {
-                 tag.movies.push(themovie);
-                 tag.save(function(err) {
-                    if(err) {
-                      console.log(err);
-                    }
-                 });
-              });
-           }
+            
           });
       });
       res.redirect('/movie/'+movie._id);
@@ -187,13 +153,13 @@ exports.getMovie = function(req, res) {
     var id =  req.params.id;
     async.parallel({
       tags: function(callback) {
-        client.hgetall('tags', function(err, tags) {
+        client.get('tags', function(err, tags) {
            if(tags) {
-              callback(null, tags);
+              callback(null, JSON.parse(tags));
            }
            else{
               Tag.fetch(function(err, tags) {
-                 client.hmset('tags', tags);
+                 client.set('tags', JSON.stringify(tags));
                  callback(null, tags);
               });
            }
@@ -228,15 +194,29 @@ exports.getMovie = function(req, res) {
 }
 
 exports.new = function(req, res) {
-    Tag.fetch(function(err, tags) {
-      res.render('post', {
-        title: '发布电影',
-        tags: tags,
-        user: req.session.user,
-        success: req.flash('success').toString(),
-        error: req.flash('error')
-      });
-    });
+   client.get('tags', function(err, tags) {
+      if(tags) {
+         res.render('post', {
+                 title: '发布电影',
+                 tags: JSON.parse(tags),
+                 user: req.session.user,
+                 success: req.flash('success').toString(),
+                 error: req.flash('error')
+               });
+      }
+      else{
+         Tag.fetch(function(err, tags) {
+            client.set('tags', JSON.stringify(tags));
+            res.render('post', {
+              title: '发布电影',
+              tags: tags,
+              user: req.session.user,
+              success: req.flash('success').toString(),
+              error: req.flash('error')
+            });
+         });
+      }
+   });
     
   }
 

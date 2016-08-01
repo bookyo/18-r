@@ -10,8 +10,6 @@ var UserSchema  = new mongoose.Schema({
     type: Number, 
     default: 0 
   },
-  movies: [ {type: Schema.Types.ObjectId, ref: 'Movie'}],
-  resources: [ { type:Schema.Types.ObjectId, ref: 'Resoure'}],
   meta: {
     createAt: {
       type: Date,
