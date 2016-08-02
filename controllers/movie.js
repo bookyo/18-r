@@ -153,17 +153,7 @@ exports.getMovie = function(req, res) {
     var id =  req.params.id;
     async.parallel({
       tags: function(callback) {
-        client.get('tags', function(err, tags) {
-           if(tags) {
-              callback(null, JSON.parse(tags));
-           }
-           else{
-              Tag.fetch(function(err, tags) {
-                 client.set('tags', JSON.stringify(tags));
-                 callback(null, tags);
-              });
-           }
-        });
+           callback(null, req.tags);
       },
       movie: function(callback) {
           Movie.findByIdAndUpdate(id, {$inc: {pv: 1}})
@@ -194,30 +184,13 @@ exports.getMovie = function(req, res) {
 }
 
 exports.new = function(req, res) {
-   client.get('tags', function(err, tags) {
-      if(tags) {
-         res.render('post', {
-                 title: '发布电影',
-                 tags: JSON.parse(tags),
-                 user: req.session.user,
-                 success: req.flash('success').toString(),
-                 error: req.flash('error')
-               });
-      }
-      else{
-         Tag.fetch(function(err, tags) {
-            client.set('tags', JSON.stringify(tags));
-            res.render('post', {
-              title: '发布电影',
-              tags: tags,
-              user: req.session.user,
-              success: req.flash('success').toString(),
-              error: req.flash('error')
-            });
-         });
-      }
-   });
-    
+    res.render('post', {
+      title: '发布电影',
+      tags: req.tags,
+      user: req.session.user,
+      success: req.flash('success').toString(),
+      error: req.flash('error')
+    });
   }
 
 function checkResTypeId( resource) {
