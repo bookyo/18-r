@@ -59,28 +59,35 @@ exports.gettags= function(req,res) {
 
  exports.gettag = function(req, res) {
     var typeid = req.params.id;
-      Movie.find({types: typeid })
-                  .sort('-meta.updateAt')
-                  .populate('types', 'tag _id')
-                  .exec(function(err, movies){
-                    if(err) {
-                      console.log(err);
-                    }
-                    var tagname;
-                    for(var i=0; i<req.tags.length;i++){
-                      if(req.tags[i]._id == typeid){
-                          tagname= req.tags[i].tag;
-                      }
-                    }
-                    res.render('tag', {
-                      title: tagname+'电影大全_迅雷下载,百度云,电驴,磁力链接,种子',
-                      tagname: tagname,
-                      user: req.session.user,
-                      tags: req.tags,
-                      error: req.flash('error'),
-                      movies: movies,
-                      success: req.flash('success').toString()
-                    });
-                  });
-    
+    var perPage = 16;
+    var page = req.query.page > 0 ? req.query.page : 1;
+    Movie
+      .find({types: typeid })
+      .select('title _id doctor players types img')
+      .populate('types', '_id tag')
+      .limit(perPage)
+      .skip(perPage * (page-1))
+      .sort('-meta.updateAt')
+      .exec( function(err, movies) {
+         if(err) {
+           console.log(err);
+         }
+         var tagname;
+         for(var i=0; i<req.tags.length;i++){
+           if(req.tags[i]._id == typeid){
+               tagname= req.tags[i].tag;
+           }
+         }
+         Movie.count(function(err, count) {
+           res.render('tag', { 
+              title: tagname+'电影大全_迅雷下载,百度云,360云盘,电驴,磁力链接',
+              tagname: tagname,
+              user: req.session.user,
+              tags: req.tags,
+              error: req.flash('error'),
+              movies: movies,
+              success: req.flash('success').toString()
+           });
+         });
+      });
    }

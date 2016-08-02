@@ -1,0 +1,25 @@
+.col-md-9
+  section#main-body.clearfix
+    each movie in movies
+      .col-md-3.col-sm-4.col-xs-6
+        .movie-box
+          a(href="/movie/#{movie._id}")
+            img.img-responsive(src="/uploads/400/#{movie.img}")
+          h2 
+            a(href="/movie/#{movie._id}")= movie.title
+          dl
+            dt 导演：
+            dd #{movie.doctor}
+          dl 
+            dt 主演：
+            dd #{movie.players}
+          dl 
+            dt 电影类型：
+            each type in movie.types
+               dd 
+                 a(href="/tag/#{type._id}")
+                    span.category #{type.tag}
+  nav.pages
+    if( pages> 1) 
+      ul.pagination
+        != createPagination(pages, page)

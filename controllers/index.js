@@ -1,7 +1,7 @@
 var Movie = require('../models/movie');
 var Tag = require('../models/tag');
 exports.index =  function(req, res, next) {
-      var perPage = 3;
+      var perPage = 16;
       var page = req.query.page > 0 ? req.query.page : 1;
       Movie
         .find()
