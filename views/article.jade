@@ -16,31 +16,75 @@ block content
             span #{movie.creator.name}
           span.pubdate 发表于 #{pubdate} &nbsp&nbsp
           span  已播放：#{movie.pv} 次
-        .col-md-5
-          img.img-responsive(src="/uploads/400/#{movie.img}")
-        .col-md-7.movie-info
-          dl.clearfix
-            dt 导演:  
-            dd #{movie.doctor}
-          dl.clearfix
-            dt 主演: 
-            dd #{movie.players}
-          dl.clearfix
-            dt 电影类型: 
-            dd
-              each type in movie.types
-                a(href="/tag/#{type._id}")
-                  span.category #{type.tag}
-          dl.clearfix
-            dt 发行国家: 
-            dd #{movie.country}
-          dl.clearfix
-            dt 上映年份: 
-            dd #{movie.year}
-          dl.clearfix
-            dt  电影剧情简介: 
-            - var summary = movie.summary;
-            - var newsummary = summary.replace(/\r?\n/g,"<br />");
-            dd.summary!= newsummary 
-            dd.summary-hidden!=newsummary
+        .movie-main.clearfix
+            .col-md-5
+              img.img-responsive(src="/uploads/400/#{movie.img}")
+            .col-md-7.movie-info
+              dl.clearfix
+                dt 导演:  
+                dd #{movie.doctor}
+              dl.clearfix
+                dt 主演: 
+                dd #{movie.players}
+              dl.clearfix
+                dt 电影类型: 
+                dd
+                  each type in movie.types
+                    a(href="/tag/#{type._id}")
+                      span.category #{type.tag}
+              dl.clearfix
+                dt 发行国家: 
+                dd #{movie.country}
+              dl.clearfix
+                dt 上映年份: 
+                dd #{movie.year}
+              dl.clearfix
+                dt  电影剧情简介: 
+                - var summary = movie.summary;
+                - var newsummary = summary.replace(/\r?\n/g,"<br />");
+                dd.summary!= newsummary 
+                dd.summary-hidden!=newsummary
+        .col-md-12
+            - var baidures = [];
+            - var cilires = [];
+            - var dianlvres = [];
+            - var qihures = [];
+            each resource in movie.resources
+              if resource.typeid == 1
+                - baidures.push(resource);
+              else if resource.typeid == 2
+                - cilires.push(resource);
+              else if resource.typeid == 3
+                - dianlvres.push(resource);
+              else if resource.typeid == 4
+                - qihures.push(resource);
+            if baidures.length
+              .panel.panel-default
+                .panel-heading 百度云网盘资源
+                ul.list-group
+                  each baidure in baidures
+                    li.list-group-item #{baidure.resource}
+            if cilires.length
+              .panel.panel-default
+                .panel-heading 磁力链接
+                ul.list-group
+                  each cilire in cilires
+                    li.list-group-item #{cilire.resource}
+            if dianlvres.length
+              .panel.panel-default
+                .panel-heading 电驴ed2k链接
+                ul.list-group
+                  each dianlvre in dianlvres
+                    li.list-group-item 
+                      a(href="#{dianlvre.resource}")  #{dianlvre.resource}
+            if qihures.length
+              .panel.panel-default
+                .panel-heading 360云网盘资源
+                ul.list-group
+                  each qihure in qihures
+                    li.list-group-item #{qihure.resource}
+            if user
+              a.btn.btn-default.btn-block(href="/resource/#{movie._id}/add") 添加《#{movie.title}》的资源
+
+
           

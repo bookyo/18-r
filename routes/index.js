@@ -3,6 +3,7 @@ var IndexController = require('../controllers/index');
 var UserController = require('../controllers/user');
 var AdminController = require('../controllers/admin');
 var Tagcontroller = require('../controllers/tag');
+var ResourceController = require('../controllers/resource');
 var multer = require('multer');
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -33,7 +34,10 @@ module.exports = function(app) {
   app.post('/post', checkLogin, upload.single('img'), MovieController.post);
 
   app.get('/movie/:id', Tagcontroller.tagsByRedis,MovieController.getMovie );
-    
+  
+  app.get('/resource/:id/add', checkLogin, ResourceController.getadd);
+  app.post('/resource/:id/add', checkLogin, ResourceController.postadd);
+  
 
   app.get('/reg', checkNotLogin,UserController.getreg);
 

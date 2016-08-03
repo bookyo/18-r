@@ -159,6 +159,7 @@ exports.getMovie = function(req, res) {
           Movie.findByIdAndUpdate(id, {$inc: {pv: 1}})
                       .populate('types','_id tag')
                       .populate('creator', '_id name avatar')
+                      .populate('resources')
                       .exec(function(err,movie) {
                         if(err) console.log(err);
                          callback(null,movie);
