@@ -17,7 +17,7 @@ block content
           span.pubdate 发表于 #{pubdate} &nbsp&nbsp
           span  已播放：#{movie.pv} 次
           .pull-right.admindo
-            a(target="_blank", href="/movie/#{movie._id}/update") 修改
+            a(href="/movie/#{movie._id}/update") 修改
             button.btn.btn-danger.del(type="button", data-id="#{movie._id}") 删除
         .movie-main.clearfix
             .col-md-5

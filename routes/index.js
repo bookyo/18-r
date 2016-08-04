@@ -35,8 +35,8 @@ module.exports = function(app) {
 
   app.get('/movie/:id', Tagcontroller.tagsByRedis,MovieController.getMovie );
   app.delete('/movie/delete', checkLogin, MovieController.delete);
-  app.get('movie/:id/update', MovieController.getupdate);
-  app.post('movie/:id/update', MovieController.postupdate);
+  app.get('/movie/:id/update', checkLogin,Tagcontroller.tagsByRedis,MovieController.getupdate);
+  app.post('/movie/:id/update', checkLogin, upload.single('img'),  MovieController.postupdate);
 
   app.get('/resource/:id/add', checkLogin, ResourceController.getadd);
   app.post('/resource/:id/add', checkLogin, ResourceController.postadd);

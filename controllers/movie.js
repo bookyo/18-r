@@ -213,13 +213,98 @@ exports.new = function(req, res) {
   exports.getupdate = function(req, res) {
     var id = req.params.id;
     Movie.findOne({_id: id})
-                .populate('types', '_id tag')
                 .exec( function(err, movie) {
                   res.render('update', {
                     title: '编辑' + movie.title,
+                    movie: movie,
+                    tags: req.tags,
                     error: req.flash('error'),
                     success: req.flash('success').toString(),
                     user: req.session.user
+                  });
+                });
+  }
+  exports.postupdate = function(req, res) {
+    var id = req.params.id;
+    var title = req.body.title;
+    var doctor = req.body.doctor;
+    var players = req.body.players;
+    var country = req.body.country;
+    var year = req.body.year;
+    var types =  req.body.types;
+    var img;
+    console.log(req.body);
+    req.checkBody({
+      'title': {
+        notEmpty: true,
+        errorMessage: '请填写正确的名称'
+      },
+      'doctor': {
+        notEmpty: true,
+        errorMessage: '请输入正确的导演信息'
+      },
+      'players': {
+        notEmpty: true,
+        errorMessage: '请输入正确的主演信息'
+      },
+      'country': {
+        notEmpty: true,
+        errorMessage: '请输入正确的发行国家'
+      },
+      'year': {
+        notEmpty: true,
+        isInt: {
+          options: [{ min: 1900, max: 2020 }]
+        },
+        errorMessage: '请输入正确的上映年份'
+      },
+      'types': {
+        notEmpty: true,
+        errorMessage: '请选择正确的电影类型'
+      },
+      'summary': {
+        notEmpty: true,
+        errorMessage: '请输入正确的剧情简介'
+      }
+
+    });
+    var errors = req.validationErrors();
+    if (errors) {
+      req.flash('error', errors);
+      return res.redirect('back');
+    };
+    if(req.file === undefined) {
+      img = req.body.eimg;
+    }else{
+      sharp(req.file.path)
+        .resize(400,400)
+        .quality(70)
+        .toFile(req.file.destination + '/400/' + req.file.filename , function(err) {
+          if(err) throw err;
+        });
+        img = req.file.filename;
+    }
+    var summary = req.body.summary;
+    var htmlsummary = xss(summary, {
+      whiteList: [],
+      stripIgnoreTag: true,
+      stripIgnoreTagBody: ['script']
+    });
+    Movie.findOne({_id: id})
+                .exec(function(err, movie){
+                  movie.title = title;
+                  movie.doctor = doctor;
+                  movie.players = players;
+                  movie.country = country;
+                  movie.year = year;
+                  movie.types = types;
+                  movie.img = img;
+                  movie.summary = htmlsummary;
+                  movie.save(function(err, movie) {
+                    if(err) {
+                      console.log(err);
+                    }
+                    res.redirect('/movie/' + id);
                   });
                 });
   }

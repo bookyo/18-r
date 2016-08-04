@@ -8,38 +8,44 @@ block content
           .form-group
             label.col-sm-3.control-label(for="title") 电影名称
             .col-sm-9
-              input#title.form-control(type="text" name="title")
+              input#title.form-control(type="text" name="title"  value="#{movie.title}")
           .form-group
             label.col-sm-3.control-label(for="doctor") 导演
             .col-sm-9
-              input#doctor.form-control(type="text" name="doctor")
+              input#doctor.form-control(type="text" name="doctor"  value="#{movie.doctor}")
           .form-group
             label.col-sm-3.control-label(for="players") 主演
             .col-sm-9
-              input#players.form-control(type="text" name="players")
+              input#players.form-control(type="text" name="players" value="#{movie.players}")
           .form-group
             label.col-sm-3.control-label(for="country") 国家
             .col-sm-9
-              input#country.form-control(type="text" name="country")
+              input#country.form-control(type="text" name="country"  value="#{movie.country}")
           .form-group
             label.col-sm-3.control-label(for="year") 上映年份
             .col-sm-9
-              input#year.form-control(type="text" name="year" placeholder="输入年份数字，必须为纯数字，比如2000")
+              input#year.form-control(type="text" name="year" placeholder="输入年份数字，必须为纯数字，比如2000" value="#{movie.year}")
           .form-group
             label.col-sm-3.control-label 分类
             .col-sm-9
-              each tag in tags
+              each tag, i in tags
                 label.checkbox-inline
-                  input.types(type="checkbox" value="#{tag._id}" name="types")
-                  | #{tag.tag}
+                  if  movie.types.indexOf(tag._id) >= 0
+                    input.types(type="checkbox" value="#{tag._id}" name="types" checked)
+                    | #{tag.tag}
+                  else 
+                    input.types(type="checkbox" value="#{tag._id}" name="types")
+                    | #{tag.tag}
           .form-group
             label.col-sm-3.control-label(for="summary") 剧情简介
             .col-sm-9
-              textarea#summary.form-control(rows="6" name="summary")
+              textarea#summary.form-control(rows="6" name="summary") #{movie.summary}
           .form-group
             label.col-sm-3.control-label(for="img") 海报
             .col-sm-9
-              input#img.form-control(type="file" name="img")
+              input#img.form-control(type="file" name="img") 
+              input(type="hidden" name="eimg" value="#{movie.img}")
+              img(src="/uploads/400/#{movie.img}")
           .form-group
               .col-sm-offset-2.col-sm-10
                 button(type="submit").btn.btn-default 发布
