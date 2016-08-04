@@ -194,12 +194,42 @@ exports.new = function(req, res) {
     });
   }
 
+  exports.delete = function(req, res) {
+    var id = req.query.id;
+
+    if(id) {
+      Movie.remove({_id: id}, function(err, movie){
+        if(err){
+          console.log(err);
+          res.json({success: 0});
+        }else {
+          req.flash('error', {'msg':'成功删除页面！'});
+          res.json({success: 1});
+        }
+      });
+    }
+  }
+
+  exports.getupdate = function(req, res) {
+    var id = req.params.id;
+    Movie.findOne({_id: id})
+                .populate('types', '_id tag')
+                .exec( function(err, movie) {
+                  res.render('update', {
+                    title: '编辑' + movie.title,
+                    error: req.flash('error'),
+                    success: req.flash('success').toString(),
+                    user: req.session.user
+                  });
+                });
+  }
+
 function checkResTypeId( resource) {
     if( /pan.baidu.com\/s\/[\s\S]{8}/i.test(resource)){
           return 1;
         }else if(/magnet:\?xt=urn:btih:[\s\S]{40}/.test(resource)){
           return 2;
-        }else if(/ed2k:\/\/\|file\|/.test(resource)){
+        }else if(/^ed2k:\/\/\|file\|(.*)\|\/$/.test(resource)){
           return 3;
         }else if(/yunpan.cn\/[\s\S]{13}/i.test(resource)){
           return 4;

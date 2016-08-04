@@ -34,7 +34,10 @@ module.exports = function(app) {
   app.post('/post', checkLogin, upload.single('img'), MovieController.post);
 
   app.get('/movie/:id', Tagcontroller.tagsByRedis,MovieController.getMovie );
-  
+  app.delete('/movie/delete', checkLogin, MovieController.delete);
+  app.get('movie/:id/update', MovieController.getupdate);
+  app.post('movie/:id/update', MovieController.postupdate);
+
   app.get('/resource/:id/add', checkLogin, ResourceController.getadd);
   app.post('/resource/:id/add', checkLogin, ResourceController.postadd);
   
@@ -63,7 +66,7 @@ module.exports = function(app) {
   function checkLogin(req, res, next) {
     if( !req.session.user ) {
       req.flash('error', {'msg': '未登录！'});
-      res.redirect('/login');
+      return res.redirect('/login');
     }
     next();
   }
@@ -71,7 +74,7 @@ module.exports = function(app) {
   function checkNotLogin(req, res, next) {
     if(req.session.user) {
       req.flash('error', {'msg': '已经登陆'});
-      res.redirect('back');
+       return res.redirect('back');
     }
     next();
   }

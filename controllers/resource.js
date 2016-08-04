@@ -64,7 +64,7 @@ exports.getadd =  function(req,res) {
           return 1;
         }else if(/magnet:\?xt=urn:btih:[\s\S]{40}/.test(resource)){
           return 2;
-        }else if(/ed2k:\/\/\|file\|/.test(resource)){
+        }else if(/^ed2k:\/\/\|file\|(.*)\|\/$/.test(resource)){
           return 3;
         }else if(/yunpan.cn\/[\s\S]{13}/i.test(resource)){
           return 4;

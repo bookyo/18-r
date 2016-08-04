@@ -11,7 +11,7 @@ exports.getreg = function(req, res) {
   }
 
  exports.postreg =  function(req, res) {
-    var email = req.body.email;
+    var email = req.sanitize('email').trim().toLowerCase();
     var password = req.body.password;
     var password_re = req.body['password-repeat'];
     var signature  = req.body.signature ;
@@ -104,8 +104,9 @@ exports.getreg = function(req, res) {
 
   exports.postlogin = function(req, res) {
     var md5 = crypto.createHash('md5');
+    var email = req.sanitize('email').trim().toLowerCase();
     var password = md5.update(req.body.password).digest('hex');
-    User.findOne({email: req.body.email}, function(err, user) {
+    User.findOne({email: email}, function(err, user) {
       if(!user) {
         req.flash('error', {'msg': '邮箱不存在！'});
         return res.redirect('/login');
