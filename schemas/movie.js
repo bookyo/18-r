@@ -8,6 +8,7 @@ var MovieSchema = new mongoose.Schema({
 	players: String,
 	types: [{type: Schema.Types.ObjectId, ref: 'Tag'}],
 	img: String,
+	review: { type:Number, default: 3},
 	summary: String,
 	resources: [{type: Schema.Types.ObjectId, ref: 'Resource'}],
 	pv: { type:Number, default: 0 },

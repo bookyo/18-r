@@ -44,7 +44,7 @@ module.exports = function(app) {
 
   app.get('/reg', checkNotLogin,UserController.getreg);
 
-  app.post('/reg', checkNotLogin,UserController.postreg);
+  app.post('/reg', checkNotLogin, AdminController.rolesByRedis, UserController.postreg);
 
   app.get('/login', checkNotLogin,UserController.getlogin);
 
@@ -58,6 +58,8 @@ module.exports = function(app) {
   app.get('/18r/tags/add',checkLogin, AdminController.getaddtags);
 
   app.post('/18r/tags/add', checkLogin, AdminController.postaddtags);
+  app.get('/18r/roles/add', checkLogin, AdminController.getaddroles);
+  app.post('/18r/roles/add', checkLogin, AdminController.postaddroles);
 
   app.get('/tags', Tagcontroller.tagsByRedis,Tagcontroller.gettags);
  
@@ -78,7 +80,5 @@ module.exports = function(app) {
     }
     next();
   }
-
-  
 
 }

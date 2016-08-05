@@ -6,9 +6,12 @@ var UserSchema  = new mongoose.Schema({
   name: String,
   signature: String,
   avatar: String,
+  postcounts: {
+    type: Number,
+    default: 0
+  },
   role: { 
-    type: Number, 
-    default: 0 
+    type: Schema.Types.ObjectId, ref: 'Role'
   },
   meta: {
     createAt: {

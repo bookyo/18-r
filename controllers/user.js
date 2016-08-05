@@ -65,11 +65,18 @@ exports.getreg = function(req, res) {
     };
     var md5 = crypto.createHash('md5');
     var password = md5.update(req.body.password).digest('hex');
+    var role;
+    for(var i=0; i< req.roles.length;i++) {
+      if( req.roles[i].postcounts == 0 ){
+        role= req.roles[i]._id;
+      }
+    }
     var newUser = new User({
       email: email,
       password: password,
       name: req.body.name,
       signature: signature,
+      role: role,
       avatar: avatar
     });
     User.findOne({email: newUser.email}, function(err, user){
