@@ -31,7 +31,7 @@ module.exports = function(app) {
 
   app.get('/post', checkLogin,  Tagcontroller.tagsByRedis, MovieController.new);
 
-  app.post('/post', checkLogin, upload.single('img'), MovieController.post);
+  app.post('/post', checkLogin, AdminController.rolesByRedis, upload.single('img'), MovieController.post);
 
   app.get('/movie/:id', Tagcontroller.tagsByRedis,MovieController.getMovie );
   app.delete('/movie/delete', checkLogin, MovieController.delete);

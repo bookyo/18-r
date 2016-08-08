@@ -2,6 +2,7 @@ var Movie = require('../models/movie');
 var User = require('../models/user');
 var Tag = require('../models/tag');
 var Resource = require('../models/resource');
+var adminController = require('./admin');
 var xss = require('xss');
 var async = require('async');
 var moment = require('moment');
@@ -142,7 +143,17 @@ exports.post = function(req, res) {
             if(err) {
               console.log(err);
             }
-            
+            User.findOne({_id: req.session.user._id})
+                    .exec(function(err, user) {
+                      user.postcounts = user.postcounts + 1;
+                      var role = adminController.checkRole(user.postcounts, req.roles);
+                      user.role = role;
+                      user.save(function(err, user) {
+                        if(err) {
+                          console.log(err);
+                        }
+                      });
+                    });
           });
       });
       res.redirect('/movie/'+movie._id);

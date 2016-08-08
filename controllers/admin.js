@@ -73,6 +73,7 @@ exports.rolesByRedis = function(req, res, next) {
 function getRolesFromMongo(cb) {
   Role
     .find({})
+    .sort('-postcounts')
     .exec(function(err, roles) {
                 if(roles) {
                   client.set('roles', JSON.stringify(roles));
@@ -91,5 +92,13 @@ function getRolesFromRedis(cb) {
     }
     return cb(err, roles);
   });
+}
+
+exports.checkRole = function(postcounts, roles) {
+  for(var i=0; i< roles.length;i++) {
+      if( postcounts >= roles[i].postcounts ){
+        return roles[i]._id;
+      }
+    }
 }
 

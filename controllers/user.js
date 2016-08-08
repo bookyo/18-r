@@ -1,7 +1,7 @@
 var User = require('../models/user');
 var crypto = require('crypto');
 var Movie = require('../models/movie');
-
+var adminController = require('./admin');
 exports.getreg = function(req, res) {
     res.render('reg', {
       title: "注册账号",
@@ -65,12 +65,7 @@ exports.getreg = function(req, res) {
     };
     var md5 = crypto.createHash('md5');
     var password = md5.update(req.body.password).digest('hex');
-    var role;
-    for(var i=0; i< req.roles.length;i++) {
-      if( req.roles[i].postcounts == 0 ){
-        role= req.roles[i]._id;
-      }
-    }
+    var role = adminController.checkRole(0, req.roles);
     var newUser = new User({
       email: email,
       password: password,

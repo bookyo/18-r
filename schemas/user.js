@@ -44,7 +44,7 @@ UserSchema.statics = {
   findById: function(id, cb) {
     return this
       .findOne({_id: id})
-      .populate('movies')
+      .populate('role')
       .exec(cb)
   }
 };

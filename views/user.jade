@@ -7,7 +7,15 @@ block content
         .user-info
             img(src="/upload/avatar/avatar-#{visituser.avatar}.jpg")
             h1.name #{visituser.name}
-            p 个人签名： #{visituser.signature}
+            p 
+              strong  贡献发帖数：
+              | #{visituser.postcounts}
+            p 
+              strong 用户组： 
+              | #{visituser.role.role}
+            p 
+              strong 个人签名： 
+              | #{visituser.signature}
             - if(user&&visituser._id == user._id)
                 .btn-group.text-center(role="group")
                   a.btn.btn-default.btn-do(type="button" href="/logout") 注销
