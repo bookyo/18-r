@@ -139,10 +139,14 @@ exports.post = function(req, res) {
           for(var i =0; i< resources_id.length; i++){
              themovie.resources.push(resources_id[i]);
           }
+          if(req.session.user.role.isexam) {
+            themovie.review = 1;
+          }
           themovie.save(function(err) {
             if(err) {
               console.log(err);
             }
+            if(!req.session.user.role.isexam){
             User.findOne({_id: req.session.user._id})
                     .exec(function(err, user) {
                       user.postcounts = user.postcounts + 1;
@@ -154,9 +158,15 @@ exports.post = function(req, res) {
                         }
                       });
                     });
+                res.redirect('/movie/'+movie._id);
+            }else{
+              req.flash('success', '新人！您的帖子进入审核区，审核通过即可成为正式会员，享受特权！');
+
+              res.redirect('/');
+            }
           });
       });
-      res.redirect('/movie/'+movie._id);
+      
     });
 }
 

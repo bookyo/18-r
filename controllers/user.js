@@ -108,7 +108,9 @@ exports.getreg = function(req, res) {
     var md5 = crypto.createHash('md5');
     var email = req.sanitize('email').trim().toLowerCase();
     var password = md5.update(req.body.password).digest('hex');
-    User.findOne({email: email}, function(err, user) {
+    User.findOne({email: email})
+             .populate('role')
+             .exec(function(err, user) {
       if(!user) {
         req.flash('error', {'msg': '邮箱不存在！'});
         return res.redirect('/login');
@@ -145,15 +147,13 @@ exports.getreg = function(req, res) {
              if(err) {
                console.log(err);
              }
-             Movie.count(function(err, count) {
-               res.render('user', { 
-                  title: user.name+'个人页面,'+ user.name+'发布的电影',
-                  error: req.flash('error'),
-                  success: req.flash('success').toString(),
-                  user: req.session.user,
-                  visituser: user,
-                  movies: movies
-               });
+             res.render('user', { 
+                title: user.name+'个人页面,'+ user.name+'发布的电影',
+                error: req.flash('error'),
+                success: req.flash('success').toString(),
+                user: req.session.user,
+                visituser: user,
+                movies: movies
              });
           });
      });
