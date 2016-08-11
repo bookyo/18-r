@@ -111,17 +111,17 @@ exports.getreg = function(req, res) {
     User.findOne({email: email})
              .populate('role')
              .exec(function(err, user) {
-      if(!user) {
-        req.flash('error', {'msg': '邮箱不存在！'});
-        return res.redirect('/login');
-      }
-      if( user.password != password) {
-        req.flash('error', {'msg': '密码错误！'});
-        return res.redirect('/login');
-      }
-      req.session.user = user;
-      req.flash('success', '登陆成功');
-      res.redirect('/');
+                if(!user) {
+                  req.flash('error', {'msg': '邮箱不存在！'});
+                  return res.redirect('/login');
+                }
+                if( user.password != password) {
+                  req.flash('error', {'msg': '密码错误！'});
+                  return res.redirect('/login');
+                }
+                req.session.user = user;
+                req.flash('success', '登陆成功');
+                res.redirect('/');
     });
   }
 

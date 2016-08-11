@@ -146,7 +146,6 @@ exports.post = function(req, res) {
             if(err) {
               console.log(err);
             }
-            if(!req.session.user.role.isexam){
             User.findOne({_id: req.session.user._id})
                     .exec(function(err, user) {
                       user.postcounts = user.postcounts + 1;
@@ -158,10 +157,11 @@ exports.post = function(req, res) {
                         }
                       });
                     });
-                res.redirect('/movie/'+movie._id);
+            if(!req.session.user.role.isexam){
+              req.flash('success', '恭喜，发布电影成功！');
+              res.redirect('/movie/'+movie._id);
             }else{
               req.flash('success', '新人！您的帖子进入审核区，审核通过即可成为正式会员，享受特权！');
-
               res.redirect('/');
             }
           });
@@ -330,6 +330,27 @@ exports.new = function(req, res) {
                 });
   }
 
+ exports.checkLimitPost = function(req, res, next) {
+    var now = new Date();
+    var day = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+    var endday = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + (now.getDate()+1);
+    var start = new Date(day);
+    var end = new Date(endday);
+    Movie.find({creator: req.session.user._id})
+                .where('meta.createAt').gt(start)
+                .count(function(err, count) {
+                  if(err) {
+                    console.log(err);
+                  }
+                  if(count >= req.session.user.role.limitposts) {
+                    req.flash('error', {'msg': "对不起，您所在用户组每日只能发布" + req.session.user.role.limitposts + "篇电影帖子"});
+                    return res.redirect('/');
+                  }
+                  console.log('today you post ' +count + " movies");
+                  next();
+                });
+  }
+
 function checkResTypeId( resource) {
     if( /pan.baidu.com\/s\/[\s\S]{8}/i.test(resource)){
           return 1;
@@ -343,3 +364,4 @@ function checkResTypeId( resource) {
           return false;
         }
   }
+

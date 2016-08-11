@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var RoleSchema = new mongoose.Schema({
         role: String,
-        limitpost: Number,
+        limitposts: Number,
         limitview: Number,
         isexam: {
           type: Boolean,

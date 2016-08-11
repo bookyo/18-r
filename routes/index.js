@@ -29,9 +29,9 @@ var upload = multer({
 module.exports = function(app) {
   app.get('/', Tagcontroller.tagsByRedis, IndexController.index);
 
-  app.get('/post', checkLogin,  Tagcontroller.tagsByRedis, MovieController.new);
+  app.get('/post', checkLogin,  Tagcontroller.tagsByRedis, AdminController.rolesByRedis, MovieController.checkLimitPost, MovieController.new);
 
-  app.post('/post', checkLogin, AdminController.rolesByRedis, upload.single('img'), MovieController.post);
+  app.post('/post', checkLogin, AdminController.rolesByRedis, MovieController.checkLimitPost, upload.single('img'), MovieController.post);
 
   app.get('/movie/:id', Tagcontroller.tagsByRedis,MovieController.getMovie );
   app.delete('/movie/delete', checkLogin, MovieController.delete);
@@ -81,6 +81,6 @@ module.exports = function(app) {
     next();
   }
 
-  
+
 
 }

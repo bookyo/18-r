@@ -97,7 +97,7 @@ function getRolesFromRedis(cb) {
 exports.checkRole = function(postcounts, roles) {
   for(var i=0; i< roles.length;i++) {
       if( postcounts >= roles[i].postcounts ){
-        return roles[i]._id;
+        return roles[i];
       }
     }
 }
