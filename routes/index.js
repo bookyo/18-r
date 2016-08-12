@@ -54,9 +54,9 @@ module.exports = function(app) {
   
   app.get('/user/:id', UserController.getUser);
 
-
+  app.get('/18r', checkLogin,AdminController.isAdmin, AdminController.getadmin);
+  app.get('/18r/movies', checkLogin,AdminController.isAdmin, AdminController.getmovies);
   app.get('/18r/tags/add',checkLogin, AdminController.getaddtags);
-
   app.post('/18r/tags/add', checkLogin, AdminController.postaddtags);
   app.get('/18r/roles/add', checkLogin, AdminController.getaddroles);
   app.post('/18r/roles/add', checkLogin, AdminController.postaddroles);

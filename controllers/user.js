@@ -138,6 +138,7 @@ exports.getreg = function(req, res) {
         var page = req.query.page > 0 ? req.query.page : 1;
         Movie
           .find({creator: id})
+          .where({'review': 3})
           .select('title _id doctor players types img')
           .populate('types', '_id tag')
           .limit(perPage)

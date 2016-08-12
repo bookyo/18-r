@@ -1,5 +1,6 @@
 var Tag = require('../models/tag');
 var Role = require('../models/role');
+var Movie = require('../models/movie');
 var redis = require("redis");
 var client = redis.createClient();
 
@@ -50,6 +51,27 @@ exports.getaddtags = function(req, res) {
      });
   }
 
+  exports.getadmin = function(req, res) {
+    res.render('admin', {
+      title:'18r管理界面'
+    });
+  }
+
+  exports.getmovies= function(req, res) {
+    Movie.find()
+                .where("review").lt(3)
+                .populate('types','_id tag')
+                .populate('creator', '_id name avatar')
+                .populate('resources')
+                .exec(function(err,movies) {
+                  if(err) console.log(err);
+                   res.render('adminmovies', {
+                    title: '审核中或者前台删除的电影列表',
+                    movies: movies
+                   });
+                });
+  }
+
 exports.rolesByRedis = function(req, res, next) {
   getRolesFromRedis(function(err, roles) {
     if(err) return next(err);
@@ -92,6 +114,15 @@ function getRolesFromRedis(cb) {
     }
     return cb(err, roles);
   });
+}
+
+exports.isAdmin = function(req, res, next){
+  if(req.session.user.isadmin) {
+    next();
+  }else{
+    req.flash('error', {'msg': '对不起，您不是管理员'});
+    return res.redirect('/');
+  }
 }
 
 exports.checkRole = function(postcounts, roles) {

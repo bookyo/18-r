@@ -43,6 +43,8 @@ a {
 .movie-box dt,.movie-box dd{
 	float:left;
 }
+.dtleft{width:25%;}
+.ddright{width:75%;}
 .movie-box a{
 	vertical-align: middle;
 	line-height:1.1;

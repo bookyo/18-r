@@ -63,6 +63,7 @@ exports.gettags= function(req,res) {
     var page = req.query.page > 0 ? req.query.page : 1;
     Movie
       .find({types: typeid })
+      .where({'review': 3})
       .select('title _id doctor players types img')
       .populate('types', '_id tag')
       .limit(perPage)

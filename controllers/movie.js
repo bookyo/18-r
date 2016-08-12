@@ -139,7 +139,7 @@ exports.post = function(req, res) {
           for(var i =0; i< resources_id.length; i++){
              themovie.resources.push(resources_id[i]);
           }
-          if(req.session.user.role.isexam) {
+          if(!req.session.user.isadmin && req.session.user.role.isexam) {
             themovie.review = 1;
           }
           themovie.save(function(err) {
@@ -152,11 +152,15 @@ exports.post = function(req, res) {
                       var role = adminController.checkRole(user.postcounts, req.roles);
                       user.role = role;
                       user.save(function(err, user) {
-                        if(err) {
+                        if(err){
                           console.log(err);
                         }
                       });
                     });
+            if(req.session.user.isadmin) {
+              req.flash('success', '恭喜，发布电影成功！');
+              return res.redirect('/movie/'+ movie._id);
+            }
             if(!req.session.user.role.isexam){
               req.flash('success', '恭喜，发布电影成功！');
               res.redirect('/movie/'+movie._id);
@@ -219,15 +223,16 @@ exports.new = function(req, res) {
     var id = req.query.id;
 
     if(id) {
-      Movie.remove({_id: id}, function(err, movie){
-        if(err){
-          console.log(err);
-          res.json({success: 0});
-        }else {
-          req.flash('error', {'msg':'成功删除页面！'});
-          res.json({success: 1});
-        }
-      });
+      Movie.update({_id: id}, { review: 2})
+                  .exec(function(err, movie){
+                    if(err){
+                      console.log(err);
+                      res.json({success: 0});
+                    }else {
+                      req.flash('error', {'msg':'成功删除页面！'});
+                      res.json({success: 1});
+                    }
+                  });
     }
   }
 
@@ -331,6 +336,9 @@ exports.new = function(req, res) {
   }
 
  exports.checkLimitPost = function(req, res, next) {
+    if (req.session.user.isadmin) {
+      return next();
+    }
     var now = new Date();
     var day = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
     var endday = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + (now.getDate()+1);

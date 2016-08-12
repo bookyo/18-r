@@ -8,11 +8,11 @@
           h2 
             a(href="/movie/#{movie._id}")= movie.title
           dl
-            dt 导演：
-            dd #{movie.doctor}
+            dt.dtleft 导演：
+            dd.ddright #{movie.doctor}
           dl 
-            dt 主演：
-            dd #{movie.players}
+            dt.dtleft 主演：
+            dd.ddright #{movie.players}
           dl 
             dt 电影类型：
             each type in movie.types

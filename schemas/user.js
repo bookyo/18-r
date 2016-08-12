@@ -6,6 +6,7 @@ var UserSchema  = new mongoose.Schema({
   name: String,
   signature: String,
   avatar: String,
+  isadmin: { type: Boolean, default: false},
   postcounts: {
     type: Number,
     default: 0

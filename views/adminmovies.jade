@@ -1,0 +1,29 @@
+extends adminlayout
+
+block content
+   .container
+    .row
+      .col-md-12
+        table.table.table-bordered
+          tr
+            th 片名
+            th 导演
+            th 主演
+            th 国家
+            th 年份
+            th 发布人
+            th 状态
+          tbody
+            each movie in movies
+              tr(class="item-id-#{movie._id}")
+                td #{movie.title}
+                td #{movie.doctor}
+                td #{movie.players}
+                td #{movie.country}
+                td #{movie.year}
+                td #{movie.creator.name}
+                td 
+                  if movie.review==2
+                    | 被删除
+                  else if movie.review==1
+                    | 审核中

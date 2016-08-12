@@ -1,0 +1,49 @@
+doctype html
+html(lang="zh-CN")
+  meta(charset="utf-8")
+  meta(http-equiv="X-UA-Compatible", content="IE=edge")
+  meta(name="viewport", content="width=device-width, initial-scale=1")
+  head
+    title= title
+    link(rel='stylesheet', href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css")
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  body
+    nav.navbar.navbar-fixed-top.navbar-default
+      .container
+        .navbar-header
+          button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#18r-navbar', aria-expanded='false')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href="/") 18-r
+
+        .collapse.navbar-collapse#18r-navbar
+          p.navbar-text 电影爱好者的私密社区
+          ul.nav.navbar-nav
+            li
+              a(href='/18r/movies') 电影管理
+            li 
+              a(href="/18r/tags") 标签管理
+            li 
+              a(href="/18r/res") 资源管理
+            li 
+              a(href="/18r/users") 用户管理
+            li 
+              a(href="/18r/roles") 用户组管理
+           if user
+            .pull-right
+              a.btn.btn-primary.navbar-btn(href="/post") 发布
+              a.btn.btn-default.avatar(href="/user/#{user._id}",style="margin-left:10px;") 
+                img(src="/upload/avatar/avatar-#{user.avatar}.jpg")
+          else
+            .pull-right
+              a.btn.btn-primary.navbar-btn(href="/reg") 注册
+              a.btn.btn-default(href="/login",style="margin-left:10px;") 登陆
+    block content
+    script(src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js")
+    script(src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js")
