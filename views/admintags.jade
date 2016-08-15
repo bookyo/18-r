@@ -1,0 +1,17 @@
+extends adminlayout
+
+block content
+   .container
+    .row
+      .col-md-12
+        table.table.table-bordered
+          tr
+            th 标签名
+            th 操作
+          tbody
+            each tag in tags
+              tr(class="item-id-#{tag._id}")
+                td #{tag.tag}
+                td 
+                  a(href="/18r/tags/add") 添加
+                  button.btn.btn-danger.tagdel(type="button", data-id="#{tag._id}") 删除

@@ -12,7 +12,10 @@ block content
             th 国家
             th 年份
             th 发布人
+            th 简介
+            th 资源
             th 状态
+            th 操作
           tbody
             each movie in movies
               tr(class="item-id-#{movie._id}")
@@ -22,8 +25,16 @@ block content
                 td #{movie.country}
                 td #{movie.year}
                 td #{movie.creator.name}
+                td #{movie.summary}
+                td 
+                  ul.list-group
+                    each resource in movie.resources
+                      li.list-group-item.res-item #{resource.resource}
                 td 
                   if movie.review==2
                     | 被删除
                   else if movie.review==1
                     | 审核中
+                td 
+                  a(href="/18r/movie/#{movie._id}/edit") 查看
+                  button.btn.btn-danger.del(type="button", data-id="#{movie._id}") 删除

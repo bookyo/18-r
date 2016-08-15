@@ -34,7 +34,7 @@ module.exports = function(app) {
   app.post('/post', checkLogin, AdminController.rolesByRedis, MovieController.checkLimitPost, upload.single('img'), MovieController.post);
 
   app.get('/movie/:id', Tagcontroller.tagsByRedis,MovieController.getMovie );
-  app.delete('/movie/delete', checkLogin, MovieController.delete);
+  app.delete('/movie/delete', checkLogin, AdminController.isAdmin, MovieController.delete);
   app.get('/movie/:id/update', checkLogin,Tagcontroller.tagsByRedis,MovieController.getupdate);
   app.post('/movie/:id/update', checkLogin, upload.single('img'),  MovieController.postupdate);
 
@@ -56,8 +56,13 @@ module.exports = function(app) {
 
   app.get('/18r', checkLogin,AdminController.isAdmin, AdminController.getadmin);
   app.get('/18r/movies', checkLogin,AdminController.isAdmin, AdminController.getmovies);
-  app.get('/18r/tags/add',checkLogin, AdminController.getaddtags);
-  app.post('/18r/tags/add', checkLogin, AdminController.postaddtags);
+  app.get('/18r/movie/:id/edit',  checkLogin,AdminController.isAdmin, Tagcontroller.tagsByRedis,AdminController.getmovieedit);
+  app.post('/18r/movie/:id/edit', checkLogin,AdminController.isAdmin, upload.single('img'),  AdminController.postmovieedit);
+  app.delete('/18r/movie/delete', checkLogin, AdminController.isAdmin, AdminController.delete);
+  app.get('/18r/tags',checkLogin, AdminController.isAdmin, AdminController.gettags);
+  app.get('/18r/tags/add',checkLogin, AdminController.isAdmin, AdminController.getaddtags);
+  app.delete('/18r/tag/delete', checkLogin, AdminController.isAdmin, AdminController.tagdel);
+  app.post('/18r/tags/add', checkLogin, AdminController.isAdmin, AdminController.postaddtags);
   app.get('/18r/roles/add', checkLogin, AdminController.getaddroles);
   app.post('/18r/roles/add', checkLogin, AdminController.postaddroles);
 

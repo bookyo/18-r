@@ -2,6 +2,7 @@ var Tag = require('../models/tag');
 var Role = require('../models/role');
 var Movie = require('../models/movie');
 var redis = require("redis");
+var xss = require('xss');
 var client = redis.createClient();
 
 exports.getaddtags = function(req, res) {
@@ -53,7 +54,8 @@ exports.getaddtags = function(req, res) {
 
   exports.getadmin = function(req, res) {
     res.render('admin', {
-      title:'18r管理界面'
+      title:'18r管理界面',
+      user: req.session.user
     });
   }
 
@@ -67,11 +69,152 @@ exports.getaddtags = function(req, res) {
                   if(err) console.log(err);
                    res.render('adminmovies', {
                     title: '审核中或者前台删除的电影列表',
-                    movies: movies
+                    movies: movies,
+                    user: req.session.user
                    });
                 });
   }
 
+  exports.getmovieedit = function(req, res) {
+    var id = req.params.id;
+    Movie.findOne({_id: id})
+                .exec( function(err, movie) {
+                  res.render('movieedit', {
+                    title: '修改' + movie.title,
+                    movie: movie,
+                    tags: req.tags,
+                    user: req.session.user
+                  });
+                });
+  }
+  exports.delete = function(req, res) {
+    var id = req.query.id;
+
+    if(id) {
+      Movie.remove({_id: id})
+                  .exec(function(err, movie){
+                    if(err){
+                      console.log(err);
+                      res.json({success: 0});
+                    }else {
+                      res.json({success: 1});
+                    }
+                  });
+    }
+  }
+  exports.postmovieedit = function(req, res) {
+    var id = req.params.id;
+    var title = req.body.title;
+    var doctor = req.body.doctor;
+    var players = req.body.players;
+    var country = req.body.country;
+    var year = req.body.year;
+    var types =  req.body.types;
+    var img;
+    console.log(req.body);
+    req.checkBody({
+      'title': {
+        notEmpty: true,
+        errorMessage: '请填写正确的名称'
+      },
+      'doctor': {
+        notEmpty: true,
+        errorMessage: '请输入正确的导演信息'
+      },
+      'players': {
+        notEmpty: true,
+        errorMessage: '请输入正确的主演信息'
+      },
+      'country': {
+        notEmpty: true,
+        errorMessage: '请输入正确的发行国家'
+      },
+      'year': {
+        notEmpty: true,
+        isInt: {
+          options: [{ min: 1900, max: 2020 }]
+        },
+        errorMessage: '请输入正确的上映年份'
+      },
+      'types': {
+        notEmpty: true,
+        errorMessage: '请选择正确的电影类型'
+      },
+      'summary': {
+        notEmpty: true,
+        errorMessage: '请输入正确的剧情简介'
+      }
+
+    });
+    var errors = req.validationErrors();
+    if (errors) {
+      return res.redirect('back');
+    };
+    if(req.file === undefined) {
+      img = req.body.eimg;
+    }else{
+      sharp(req.file.path)
+        .resize(400,400)
+        .quality(70)
+        .toFile(req.file.destination + '/400/' + req.file.filename , function(err) {
+          if(err) throw err;
+        });
+        img = req.file.filename;
+    }
+    var summary = req.body.summary;
+    var htmlsummary = xss(summary, {
+      whiteList: [],
+      stripIgnoreTag: true,
+      stripIgnoreTagBody: ['script']
+    });
+    Movie.findOne({_id: id})
+                .exec(function(err, movie){
+                  movie.title = title;
+                  movie.doctor = doctor;
+                  movie.players = players;
+                  movie.country = country;
+                  movie.review = 3;
+                  movie.year = year;
+                  movie.types = types;
+                  movie.img = img;
+                  movie.summary = htmlsummary;
+                  movie.save(function(err, movie) {
+                    if(err) {
+                      console.log(err);
+                    }
+                    res.redirect('/18r/movies' );
+                  });
+                });
+  }
+
+exports.gettags = function(req, res) {
+  Tag.find()
+         .exec(function(err, tags) {
+          if(err) {
+            console.log(err);
+          }
+          res.render('admintags', {
+            title: '后台标签分类管理',
+            tags: tags,
+            user: req.session.user
+          });
+         });
+}
+exports.tagdel = function(req, res) {
+    var id = req.query.id;
+
+    if(id) {
+      Tag.remove({_id: id})
+                  .exec(function(err, tag){
+                    if(err){
+                      console.log(err);
+                      res.json({success: 0});
+                    }else {
+                      res.json({success: 1});
+                    }
+                  });
+    }
+}
 exports.rolesByRedis = function(req, res, next) {
   getRolesFromRedis(function(err, roles) {
     if(err) return next(err);
