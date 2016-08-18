@@ -1,6 +1,7 @@
 var Tag = require('../models/tag');
 var Role = require('../models/role');
 var Movie = require('../models/movie');
+var Resource = require('../models/resource');
 var redis = require("redis");
 var xss = require('xss');
 var client = redis.createClient();
@@ -215,6 +216,67 @@ exports.tagdel = function(req, res) {
                   });
     }
 }
+exports.resdel = function(req, res) {
+    var id = req.query.id;
+    var movieid = req.query.movieid;
+    console.log(movieid);
+    if(movieid!= 'undefined') {
+      Movie.findOne({_id: movieid})
+                  .exec(function(err, movie) {
+                    if(err) {
+                      console.log(err);
+                    }
+                    for(var i=0; i< movie.resources.length; i++){
+                      if( movie.resources[i] == id) {
+                        movie.resources.splice(i, 1);
+                        break;
+                      }
+                    }
+                    movie.save(function(err){
+                      if(err){
+                        console.log(err);
+                      }
+                    });
+                  });
+    }
+    if(id) {
+      Resource.remove({_id: id})
+                        .exec(function(err, tag){
+                          if(err){
+                            console.log(err);
+                            res.json({success: 0});
+                          }else {
+                            res.json({success: 1});
+                          }
+                        });
+    }
+}
+exports.getresources = function(req, res) {
+    var perPage = 30;
+    var page = req.query.page > 0 ? req.query.page : 1;
+    Resource
+      .find()
+      .populate('creator', '_id name')
+      .populate('tomovie', '_id title')
+      .limit(perPage)
+      .skip(perPage * (page-1))
+      .sort('-meta.updateAt')
+      .exec( function(err, resources) {
+         if(err) {
+           console.log(err);
+         }
+         Resource.count(function(err, count) {
+            res.render('adminres', {
+              title: '资源管理',
+              user: req.session.user,
+              resources: resources,
+              page: page,
+              pages: Math.ceil(count/perPage)
+            });
+         });
+       });
+}
+
 exports.rolesByRedis = function(req, res, next) {
   getRolesFromRedis(function(err, roles) {
     if(err) return next(err);

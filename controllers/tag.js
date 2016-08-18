@@ -79,10 +79,12 @@ exports.gettags= function(req,res) {
                tagname= req.tags[i].tag;
            }
          }
-         Movie.count(function(err, count) {
+         Movie.find({types:typeid }).where({'review': 3}).count(function(err, count) {
            res.render('tag', { 
               title: tagname+'电影大全_迅雷下载,百度云,360云盘,电驴,磁力链接',
               tagname: tagname,
+              page: page,
+              pages: Math.ceil(count/perPage),
               user: req.session.user,
               tags: req.tags,
               error: req.flash('error'),

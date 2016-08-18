@@ -134,7 +134,7 @@ exports.getreg = function(req, res) {
   exports.getUser = function(req, res){
     var id = req.params.id;
     User.findById( id, function(err, user) {
-        var perPage = 16;
+        var perPage = 4;
         var page = req.query.page > 0 ? req.query.page : 1;
         Movie
           .find({creator: id})
@@ -148,13 +148,18 @@ exports.getreg = function(req, res) {
              if(err) {
                console.log(err);
              }
-             res.render('user', { 
-                title: user.name+'个人页面,'+ user.name+'发布的电影',
-                error: req.flash('error'),
-                success: req.flash('success').toString(),
-                user: req.session.user,
-                visituser: user,
-                movies: movies
+             Movie.find({creator:id}).where({'review': 3}).count(function(err, count) {
+               console.log(count);
+               res.render('user', { 
+                  title: user.name+'个人页面,'+ user.name+'发布的电影',
+                  page: page,
+                  pages: Math.ceil(count/perPage),
+                  error: req.flash('error'),
+                  success: req.flash('success').toString(),
+                  user: req.session.user,
+                  visituser: user,
+                  movies: movies
+               });
              });
           });
      });

@@ -21,4 +21,16 @@ $(function() {
       window.location= '/18r/tags';
     });
   });
+  $('.resdel').click(function(e) {
+    var target = $(e.target);
+    var id = target.data('id');
+    var movieid = target.data('movieid');
+    $.ajax({
+      type: 'DELETE',
+      url: '/18r/res/delete?id=' + id + '&movieid=' + movieid
+    })
+    .done(function(results) {
+      window.location= '/18r/res';
+    });
+  });
 });

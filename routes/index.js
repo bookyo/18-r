@@ -63,6 +63,8 @@ module.exports = function(app) {
   app.get('/18r/tags/add',checkLogin, AdminController.isAdmin, AdminController.getaddtags);
   app.delete('/18r/tag/delete', checkLogin, AdminController.isAdmin, AdminController.tagdel);
   app.post('/18r/tags/add', checkLogin, AdminController.isAdmin, AdminController.postaddtags);
+  app.get('/18r/res', AdminController.getresources);
+  app.delete('/18r/res/delete',AdminController.resdel);
   app.get('/18r/roles/add', checkLogin, AdminController.getaddroles);
   app.post('/18r/roles/add', checkLogin, AdminController.postaddroles);
 

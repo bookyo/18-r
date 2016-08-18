@@ -1,0 +1,26 @@
+extends adminlayout
+
+block content
+   .container
+    .row
+      .col-md-12
+        table.table.table-bordered
+          tr
+            th 资源
+            th 电影
+            th 发布者
+            th 操作
+          tbody
+            each theres in resources
+              tr(class="item-id-#{theres._id}")
+                td 
+                  textarea.form-control(readonly) #{theres.resource}
+                td 
+                  if theres.tomovie
+                    | #{theres.tomovie.title}
+                td #{theres.creator.name}
+                td 
+                  if theres.tomovie
+                    button.btn.btn-danger.resdel(type="button", data-movieid="#{theres.tomovie._id}", data-id="#{theres._id}") 删除
+                  else 
+                    button.btn.btn-danger.resdel(type="button", data-id="#{theres._id}") 删除
