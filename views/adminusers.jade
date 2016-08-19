@@ -1,0 +1,28 @@
+extends adminlayout
+
+block content
+   .container
+    .row
+      .col-md-12
+        form.form-horizontal(method="post")
+          .form-group
+            label.col-sm-3.control-label(for="user") 用户Id搜索
+            .col-sm-9
+              input#user.form-control(type="text" name="user" placeholder="输入需要搜索的用户ID")
+          .form-group
+              .col-sm-offset-3.col-sm-8
+                button(type="submit").btn.btn-default.addrow 确认
+        if resultuser
+          table.table.table-bordered
+            tr
+              th 用户名
+              th 邮箱
+              th 用户组
+              th 操作
+            tbody
+              tr(class="item-id-#{resultuser._id}")
+                td #{resultuser.name}
+                td #{resultuser.email}
+                td #{resultuser.role.role}
+                td 
+                  a(href="/18r/user/#{resultuser._id}/edit") 编辑

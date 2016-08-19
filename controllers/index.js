@@ -20,7 +20,7 @@ exports.index =  function(req, res, next) {
              res.render('index', { 
                title: "首页",
                page: page,
-               pages: parseInt(count/perPage),
+               pages: Math.ceil(count/perPage),
                user: req.session.user,
                tags: req.tags,
                movies: movies,

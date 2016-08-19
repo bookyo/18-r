@@ -1,0 +1,22 @@
+extends adminlayout
+
+block content
+  .container
+    .row
+      .col-md-8.col-md-offset-2
+        form.form-horizontal(method="post")
+          .form-group
+            label.col-sm-3.control-label(for="name") 用户名
+            .col-sm-9
+              input#name.form-control(type="text" name="name"  value="#{edituser.name}")
+          .form-group
+            label.col-sm-3.control-label(for="email") 邮箱
+            .col-sm-9
+              input#email.form-control(type="text" name="email" value="#{edituser.email}")
+          .form-group
+            label.col-sm-3.control-label(for="postcounts") 发布数
+            .col-sm-9
+              input#postcounts.form-control(type="text" name="postcounts"  value="#{edituser.postcounts}")
+          .form-group
+              .col-sm-offset-2.col-sm-10
+                button(type="submit").btn.btn-default 确定

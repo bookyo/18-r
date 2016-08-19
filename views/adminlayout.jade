@@ -45,6 +45,10 @@ html(lang="zh-CN")
               a.btn.btn-primary.navbar-btn(href="/reg") 注册
               a.btn.btn-default(href="/login",style="margin-left:10px;") 登陆
     block content
+    nav.pages
+    if( pages> 1) 
+      ul.pagination
+        != createPagination(pages, page)
     script(src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js")
     script(src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js")
     script(src='/js/root.js')

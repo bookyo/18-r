@@ -2,6 +2,7 @@ var Tag = require('../models/tag');
 var Role = require('../models/role');
 var Movie = require('../models/movie');
 var Resource = require('../models/resource');
+var User = require('../models/user');
 var redis = require("redis");
 var xss = require('xss');
 var client = redis.createClient();
@@ -219,7 +220,6 @@ exports.tagdel = function(req, res) {
 exports.resdel = function(req, res) {
     var id = req.query.id;
     var movieid = req.query.movieid;
-    console.log(movieid);
     if(movieid!= 'undefined') {
       Movie.findOne({_id: movieid})
                   .exec(function(err, movie) {
@@ -275,6 +275,40 @@ exports.getresources = function(req, res) {
             });
          });
        });
+}
+
+exports.getusers = function(req, res) {
+        res.render('adminusers', {
+          title: '后台用户管理',
+          user: req.session.user
+        });
+}
+
+exports.searchusers = function(req, res) {
+  var id = req.body.user
+  User.findOne({_id: id})
+           .populate('role')
+           .exec(function(err, user) {
+              res.render('adminusers', {
+                title: '后台用户管理',
+                user:req.session.user,
+                resultuser: user
+              });
+           });
+
+}
+
+exports.edituser = function(req, res) {
+  var id = req.params.id;
+  User.findOne({_id: id})
+           .populate('role')
+           .exec(function(err, user) {
+              res.render('adminedituser', {
+                title: '修改用户资料',
+                user: req.session.user,
+                edituser: user
+              });
+           });
 }
 
 exports.rolesByRedis = function(req, res, next) {
