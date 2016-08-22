@@ -1,0 +1,60 @@
+extends adminlayout
+
+block content
+   .container
+    .row
+      .col-md-8.col-md-offset-2
+        form.form-horizontal(method="post")
+          .form-group
+            label.col-sm-3.control-label(for="role") 头衔名称
+            .col-sm-9
+              input#role.form-control(type="text" name="role" value="#{role.role}")
+          .form-group
+            label.col-sm-3.control-label(for="postcounts") 升级所需发帖量
+            .col-sm-9
+              input#postcounts.form-control(type="number" name="postcounts" value="#{role.postcounts}")
+          .form-group
+            label.col-sm-3.control-label(for="limitview") 限定看资源量
+            .col-sm-9
+              input#limitview.form-control(type="number" name="limitview" value="#{role.limitview}")
+          .form-group
+            label.col-sm-3.control-label(for="isexam") 发帖是否进入审核
+            .col-sm-9
+              if role.isexam
+                label.radio-inline
+                  input.types(type="radio" value="true" name="isexam" checked)
+                  | 是
+                label.radio-inline
+                  input.types(type="radio" value="false" name="isexam")
+                  | 否
+              else
+                label.radio-inline
+                  input.types(type="radio" value="true" name="isexam")
+                  | 是
+                label.radio-inline
+                  input.types(type="radio" value="false" name="isexam" checked)
+                  | 否
+          .form-group
+            label.col-sm-3.control-label(for="limitposts") 每日限定发帖量
+            .col-sm-9
+              input#limitposts.form-control(type="number" name="limitposts" value="#{role.limitposts}")
+          .form-group
+            label.col-sm-3.control-label(for="canaddres") 是否能够添加电影资源
+            .col-sm-9
+              if role.canaddres
+                label.radio-inline
+                  input.types(type="radio" value="true" name="canaddres" checked)
+                  | 是
+                label.radio-inline
+                  input.types(type="radio" value="false" name="canaddres")
+                  | 否
+              else
+                label.radio-inline
+                  input.types(type="radio" value="true" name="canaddres")
+                  | 是
+                label.radio-inline
+                  input.types(type="radio" value="false" name="canaddres" checked)
+                  | 否
+          .form-group
+              .col-sm-offset-3.col-sm-8
+                button(type="submit").btn.btn-default.addrow 确认

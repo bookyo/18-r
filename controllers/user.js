@@ -127,6 +127,16 @@ exports.getreg = function(req, res) {
 
   exports.logout = function(req, res) {
     req.session.user = null;
+    User.findOne({_id: req.session.user._id})
+             .exec(function(err, user) {
+                 var role = adminController.checkRole(user.postcounts, req.roles);
+                 user.role = role;
+                 user.save(function(err, user) {
+                   if(err){
+                     console.log(err);
+                   }
+                 });
+             });
     req.flash('success', '登出成功！');
     res.redirect('/');
   }

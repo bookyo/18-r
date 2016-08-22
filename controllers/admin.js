@@ -311,6 +311,72 @@ exports.edituser = function(req, res) {
            });
 }
 
+exports.postuser = function(req, res) {
+  var id = req.body.id;
+  var name = req.body.name;
+  var signature = req.body.signature;
+  var email = req.body.email;
+  var postcounts = req.body.postcounts;
+  User.findOne({_id: id})
+          .exec(function(err, user){
+            user.name = name;
+            user.signature= signature;
+            user.email = email;
+            user.postcounts = postcounts;
+            user.save(function(err, user){
+              if(err) {
+                console.log(err);
+              }
+              res.redirect('/18r/users');
+            });
+          });
+}
+
+exports.getroles = function(req, res){
+  Role.find()
+          .exec(function(err, roles){
+            res.render('adminroles', {
+              title: '后台用户组管理',
+              roles: roles,
+              user: req.session.user
+            });
+          });
+}
+exports.getroleedit = function(req, res) {
+  var id = req.params.id;
+  Role.findOne({_id: id})
+          .exec(function(err, role) {
+            res.render('editrole', {
+              title: '编辑用户组',
+              role: role,
+              user: req.session.user
+            });
+          });
+}
+exports.postroleedit = function(req, res) {
+  var id = req.params.id;
+  var therole = req.body.role;
+  var postcounts = req.body.postcounts;
+  var limitview =req.body.limitview;
+  var isexam = req.body.isexam;
+  var limitposts = req.body.limitposts;
+  var canaddres = req.body.canaddres;
+  Role.findOne({_id: id})
+          .exec(function(err, role){
+            role.role = therole;
+            role.postcounts = postcounts;
+            role.limitview = limitview;
+            role.isexam = isexam;
+            role.limitposts = limitposts;
+            role.canaddres = canaddres;
+            role.save(function(err, role){
+              if (err) {
+                console.log(err);
+              }
+              res.redirect('/18r/roles');
+            });
+          });
+}
 exports.rolesByRedis = function(req, res, next) {
   getRolesFromRedis(function(err, roles) {
     if(err) return next(err);

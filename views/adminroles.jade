@@ -1,0 +1,27 @@
+extends adminlayout
+
+block content
+   .container
+    .row
+      .col-md-12
+        a(href="/18r/roles/add") 添加用户组
+        table.table.table-bordered
+          tr
+            th 头衔
+            th 判定发帖量
+            th 每天限定看帖量
+            th 是否进入审核
+            th 每天限定发帖量
+            th 能否添加资源
+            th 操作
+          tbody
+            each role in roles
+              tr(class="item-id-#{role._id}")
+                td #{role.role}
+                td #{role.postcounts}
+                td #{role.limitview}
+                td #{role.isexam}
+                td #{role.limitposts}
+                td #{role.canaddres}
+                td
+                  a(href="/18r/role/#{role._id}/edit") 编辑

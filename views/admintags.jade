@@ -4,6 +4,7 @@ block content
    .container
     .row
       .col-md-12
+        a(href="/18r/tags/add") 添加标签
         table.table.table-bordered
           tr
             th 标签名
@@ -13,5 +14,4 @@ block content
               tr(class="item-id-#{tag._id}")
                 td #{tag.tag}
                 td 
-                  a(href="/18r/tags/add") 添加
                   button.btn.btn-danger.tagdel(type="button", data-id="#{tag._id}") 删除

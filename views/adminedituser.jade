@@ -6,6 +6,8 @@ block content
       .col-md-8.col-md-offset-2
         form.form-horizontal(method="post")
           .form-group
+            input#id.form-control(type="hidden" name="id" value="#{edituser._id}")
+          .form-group
             label.col-sm-3.control-label(for="name") 用户名
             .col-sm-9
               input#name.form-control(type="text" name="name"  value="#{edituser.name}")
@@ -17,6 +19,10 @@ block content
             label.col-sm-3.control-label(for="postcounts") 发布数
             .col-sm-9
               input#postcounts.form-control(type="text" name="postcounts"  value="#{edituser.postcounts}")
+          .form-group
+            label.col-sm-3.control-label(for="signature") 签名
+            .col-sm-9
+              input#signature.form-control(type="text" name="signature"  value="#{edituser.signature}")
           .form-group
               .col-sm-offset-2.col-sm-10
                 button(type="submit").btn.btn-default 确定

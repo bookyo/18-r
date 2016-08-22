@@ -50,7 +50,7 @@ module.exports = function(app) {
 
   app.post('/login',checkNotLogin, UserController.postlogin);
 
-  app.get('/logout', checkLogin, UserController.logout);
+  app.get('/logout', checkLogin, AdminController.rolesByRedis, UserController.logout);
   
   app.get('/user/:id', UserController.getUser);
 
@@ -67,13 +67,16 @@ module.exports = function(app) {
   app.delete('/18r/res/delete',checkLogin, AdminController.isAdmin, AdminController.resdel);
   app.get('/18r/users', checkLogin, AdminController.isAdmin, AdminController.getusers);
   app.post('/18r/users', checkLogin, AdminController.isAdmin, AdminController.searchusers);
-  app.get('/18r/user/:id/edit', checkLogin, AdminController.isAdmin, AdminController.editusers);
+  app.get('/18r/user/:id/edit', checkLogin, AdminController.isAdmin, AdminController.edituser);
+  app.post('/18r/user/:id/edit', checkLogin, AdminController.isAdmin, AdminController.postuser);
   app.get('/18r/roles/add', checkLogin, AdminController.getaddroles);
   app.post('/18r/roles/add', checkLogin, AdminController.postaddroles);
-
+  app.get('/18r/roles', checkLogin, AdminController.isAdmin,AdminController.getroles);
+  app.get('/18r/role/:id/edit', checkLogin, AdminController.isAdmin,AdminController.getroleedit);
+  app.post('/18r/role/:id/edit',checkLogin, AdminController.isAdmin,AdminController.postroleedit);
   app.get('/tags', Tagcontroller.tagsByRedis,Tagcontroller.gettags);
  
- app.get('/tag/:id', Tagcontroller.tagsByRedis,Tagcontroller.gettag);
+  app.get('/tag/:id', Tagcontroller.tagsByRedis,Tagcontroller.gettag);
 
   function checkLogin(req, res, next) {
     if( !req.session.user ) {
