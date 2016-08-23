@@ -144,7 +144,7 @@ exports.getreg = function(req, res) {
   exports.getUser = function(req, res){
     var id = req.params.id;
     User.findById( id, function(err, user) {
-        var perPage = 4;
+        var perPage = 16;
         var page = req.query.page > 0 ? req.query.page : 1;
         Movie
           .find({creator: id})

@@ -373,3 +373,51 @@ function checkResTypeId( resource) {
         }
   }
 
+exports.hotsByRedis = function(req, res, next) {
+  getHotsFromRedis(function(err, hots) {
+    if(err) return next(err);
+
+    if(!hots) {
+      getHotsFromMongo( function(err, hots) {
+        if(err) return next(err);
+        if(!hots) {
+          return next(new Error('Hots not found'));
+        }
+        req.hots = hots;
+        return next();
+      });
+    } else {
+      req.hots = hots;
+      return next();
+    }
+  });
+}
+
+function getHotsFromMongo(cb) {
+  var now = new Date();
+  var date = new Date(now.getTime() - 7 * 24 * 3600 * 1000);
+  Movie
+    .find()
+    .where('meta.updateAt').gte(date)
+    .limit(100)
+    .sort('-pv')
+    .exec(function(err, hots) {
+                if(hots) {
+                  client.set('hots', JSON.stringify(hots));
+                }
+      return cb(err, hots);
+    });
+}
+
+function getHotsFromRedis(cb) {
+  client.get('hots', function(err, hots) {
+    if(err) return cb(err, null);
+    try {
+      hots = JSON.parse(hots);
+    } catch(e) {
+      return cb(e, null);
+    }
+    return cb(err, hots);
+  });
+}
+
