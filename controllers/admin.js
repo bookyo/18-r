@@ -430,6 +430,15 @@ exports.isAdmin = function(req, res, next){
   }
 }
 
+exports.canaddres = function(req, res, next) {
+  if(req.session.user.role.canaddres) {
+    next();
+  } else {
+    req.flash('error', {'msg': '对不起，您所在用户组不能添加电影资源'});
+    return res.redirect('back');
+  }
+}
+
 exports.checkRole = function(postcounts, roles) {
   for(var i=0; i< roles.length;i++) {
       if( postcounts >= roles[i].postcounts ){

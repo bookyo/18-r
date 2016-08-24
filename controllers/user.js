@@ -126,8 +126,9 @@ exports.getreg = function(req, res) {
   }
 
   exports.logout = function(req, res) {
+    var id = req.session.user._id
     req.session.user = null;
-    User.findOne({_id: req.session.user._id})
+    User.findOne({_id: id})
              .exec(function(err, user) {
                  var role = adminController.checkRole(user.postcounts, req.roles);
                  user.role = role;

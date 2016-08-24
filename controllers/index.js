@@ -23,6 +23,7 @@ exports.index =  function(req, res, next) {
                pages: Math.ceil(count/perPage),
                user: req.session.user,
                tags: req.tags,
+               hots: req.hots,
                movies: movies,
                error: req.flash('error'),
                success: req.flash('success').toString()

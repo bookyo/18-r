@@ -27,17 +27,17 @@ var upload = multer({
 });
 /* GET home page. */
 module.exports = function(app) {
-  app.get('/', Tagcontroller.tagsByRedis, IndexController.index);
+  app.get('/', Tagcontroller.tagsByRedis, MovieController.hotsByRedis, IndexController.index);
 
   app.get('/post', checkLogin,  Tagcontroller.tagsByRedis, AdminController.rolesByRedis, MovieController.checkLimitPost, MovieController.new);
 
   app.post('/post', checkLogin, AdminController.rolesByRedis, MovieController.checkLimitPost, upload.single('img'), MovieController.post);
 
-  app.get('/movie/:id', Tagcontroller.tagsByRedis,MovieController.getMovie );
+  app.get('/movie/:id', Tagcontroller.tagsByRedis,MovieController.hotsByRedis,MovieController.getMovie );
   app.delete('/movie/delete', checkLogin, AdminController.isAdmin, MovieController.delete);
-  app.get('/movie/:id/update', checkLogin,Tagcontroller.tagsByRedis,MovieController.getupdate);
-  app.post('/movie/:id/update', checkLogin, upload.single('img'),  MovieController.postupdate);
-
+  app.get('/movie/:id/update', checkLogin,AdminController.isAdmin, Tagcontroller.tagsByRedis,MovieController.getupdate);
+  app.post('/movie/:id/update', checkLogin, AdminController.isAdmin, upload.single('img'),  MovieController.postupdate);
+  app.get('/hots', MovieController.hotsByRedis, MovieController.gethots);
   app.get('/resource/:id/add', checkLogin, ResourceController.getadd);
   app.post('/resource/:id/add', checkLogin, ResourceController.postadd);
   
@@ -76,7 +76,7 @@ module.exports = function(app) {
   app.post('/18r/role/:id/edit',checkLogin, AdminController.isAdmin,AdminController.postroleedit);
   app.get('/tags', Tagcontroller.tagsByRedis,Tagcontroller.gettags);
  
-  app.get('/tag/:id', Tagcontroller.tagsByRedis,Tagcontroller.gettag);
+  app.get('/tag/:id', Tagcontroller.tagsByRedis,MovieController.hotsByRedis,Tagcontroller.gettag);
 
   function checkLogin(req, res, next) {
     if( !req.session.user ) {

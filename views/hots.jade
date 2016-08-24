@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  .container
+    .row
+      .col-md-12
+        h1.hots-title 一周热门电影排行榜
+        table.table.table-bordered
+          tr
+            th 电影名
+            th 导演
+            th 主演
+            th 类型
+            th 国家
+            th 年份
+          tbody
+            each hot in hots
+              tr
+                td 
+                  a(href="/movie/#{hot._id}") #{hot.title}
+                td #{hot.doctor}
+                td #{hot.players}
+                td 
+                  each type in hot.types
+                    a(href="/tag/#{type._id}")
+                       span.category #{type.tag}
+                td #{hot.country}
+                td #{hot.year}

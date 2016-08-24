@@ -11,4 +11,10 @@ block content
               a.current.tag(href="/tag/#{tag._id}") #{tag.tag}
             - else
               a.tag(href="/tag/#{tag._id}") #{tag.tag}
+        section.hots
+          h3.hot-title 一周影片热门榜
+          div.list-group
+            each hot,i in hots
+              if i<5
+                a.list-group-item(href="/movie/#{hot._id}") #{hot.title}
        include movie

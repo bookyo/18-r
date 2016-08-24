@@ -87,6 +87,7 @@ exports.gettags= function(req,res) {
               pages: Math.ceil(count/perPage),
               user: req.session.user,
               tags: req.tags,
+              hots: req.hots,
               error: req.flash('error'),
               movies: movies,
               success: req.flash('success').toString()

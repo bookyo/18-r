@@ -198,6 +198,7 @@ exports.getMovie = function(req, res) {
           var movie = results.movie;
           res.render('article', {
               title: title,
+              hots: req.hots,
               user: req.session.user,
               pubdate: pubdate,
               tags: tags,
@@ -335,6 +336,15 @@ exports.new = function(req, res) {
                 });
   }
 
+ exports.gethots = function(req, res) {
+    res.render('hots', {
+      title: '一周热门电影排行榜',
+      hots: req.hots,
+      success: req.flash('success').toString(),
+      error: req.flash('error')
+    });
+ }
+
  exports.checkLimitPost = function(req, res, next) {
     if (req.session.user.isadmin) {
       return next();
@@ -397,13 +407,14 @@ function getHotsFromMongo(cb) {
   var now = new Date();
   var date = new Date(now.getTime() - 7 * 24 * 3600 * 1000);
   Movie
-    .find()
+    .find({'review': 3})
     .where('meta.updateAt').gte(date)
+    .populate('types', '_id tag')
     .limit(100)
     .sort('-pv')
     .exec(function(err, hots) {
                 if(hots) {
-                  client.set('hots', JSON.stringify(hots));
+                  client.setex('hots', 3600, JSON.stringify(hots));
                 }
       return cb(err, hots);
     });
