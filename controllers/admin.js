@@ -19,13 +19,13 @@ exports.getaddtags = function(req, res) {
     var tags = req.body.tags;
     var tags_arr = tags.split(',');
     var tags_object= [];
-    for(i=0;i< tags_arr.length -1; i++) {
+    for(i=0;i< tags_arr.length; i++) {
       tags_object.push({tag: tags_arr[i]});
     }
     Tag.create(tags_object, function(err) {
       if(err) console.log(err);
-      req.flash('success', '成功添加电影分类');
-      res.redirect('/tags');
+      client.del('tags');
+      res.redirect('/18r/tags');
     });
   }
 
@@ -48,7 +48,7 @@ exports.getaddtags = function(req, res) {
      }
      var role = new Role(roleObj);
      role.save( function(err, role) {
-       console.log(role);
+      client.del('roles');
        req.flash('success', '成功添加用户组');
        res.redirect('back');
      });
@@ -93,14 +93,16 @@ exports.getaddtags = function(req, res) {
     var id = req.query.id;
 
     if(id) {
-      Movie.remove({_id: id})
-                  .exec(function(err, movie){
-                    if(err){
-                      console.log(err);
-                      res.json({success: 0});
-                    }else {
+      Movie.findOne({_id:id})
+                  .exec(function(err, movie) {
+                    exports.addCounts(movie.creator, -3, req.roles);
+                    movie.remove(function(err) {
+                      if(err) {
+                        console.log(err);
+                        res.json({success: 0});
+                      }
                       res.json({success: 1});
-                    }
+                    });
                   });
     }
   }
@@ -112,6 +114,7 @@ exports.getaddtags = function(req, res) {
     var country = req.body.country;
     var year = req.body.year;
     var types =  req.body.types;
+    var review = req.body.review;
     var img;
     console.log(req.body);
     req.checkBody({
@@ -184,6 +187,9 @@ exports.getaddtags = function(req, res) {
                     if(err) {
                       console.log(err);
                     }
+                    if(review==1){
+                      exports.addCounts(movie.creator, 10, req.roles);
+                    }
                     res.redirect('/18r/movies' );
                   });
                 });
@@ -240,14 +246,19 @@ exports.resdel = function(req, res) {
                   });
     }
     if(id) {
-      Resource.remove({_id: id})
-                        .exec(function(err, tag){
-                          if(err){
+      Resource.findOne({_id:id})
+                        .exec(function(err, resource) {
+                          if(err) {
                             console.log(err);
                             res.json({success: 0});
-                          }else {
-                            res.json({success: 1});
                           }
+                          exports.addCounts(resource.creator, -1, req.roles);
+                          resource.remove(function(err) {
+                            if(err) {
+                              console.log(err);
+                            };
+                            res.json({success: 1});
+                          });
                         });
     }
 }
@@ -431,7 +442,7 @@ exports.isAdmin = function(req, res, next){
 }
 
 exports.canaddres = function(req, res, next) {
-  if(req.session.user.role.canaddres) {
+  if(req.session.user.isadmin || req.session.user.role.canaddres) {
     next();
   } else {
     req.flash('error', {'msg': '对不起，您所在用户组不能添加电影资源'});
@@ -446,4 +457,21 @@ exports.checkRole = function(postcounts, roles) {
       }
     }
 }
+
+exports.addCounts = function(userid, counts, roles) {
+  User.findOne({_id: userid})
+           .populate('role')
+           .exec(function(err, user) {
+                      user.postcounts = user.postcounts + counts;
+                      var role = exports.checkRole(user.postcounts, roles);
+                      user.role = role;
+                      user.save(function(err, user) {
+                        if(err){
+                          console.log(err);
+                        }
+                      });
+                    });
+}
+
+
 

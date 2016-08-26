@@ -38,8 +38,8 @@ module.exports = function(app) {
   app.get('/movie/:id/update', checkLogin,AdminController.isAdmin, Tagcontroller.tagsByRedis,MovieController.getupdate);
   app.post('/movie/:id/update', checkLogin, AdminController.isAdmin, upload.single('img'),  MovieController.postupdate);
   app.get('/hots', MovieController.hotsByRedis, MovieController.gethots);
-  app.get('/resource/:id/add', checkLogin, ResourceController.getadd);
-  app.post('/resource/:id/add', checkLogin, ResourceController.postadd);
+  app.get('/resource/:id/add', checkLogin, AdminController.canaddres,ResourceController.getadd);
+  app.post('/resource/:id/add', checkLogin, AdminController.canaddres, AdminController.rolesByRedis, ResourceController.postadd);
   
 
   app.get('/reg', checkNotLogin,UserController.getreg);
@@ -51,20 +51,20 @@ module.exports = function(app) {
   app.post('/login',checkNotLogin, UserController.postlogin);
 
   app.get('/logout', checkLogin, AdminController.rolesByRedis, UserController.logout);
-  
+  app.get('/user/goup', checkLogin, AdminController.rolesByRedis, UserController.goup);
   app.get('/user/:id', UserController.getUser);
 
   app.get('/18r', checkLogin,AdminController.isAdmin, AdminController.getadmin);
   app.get('/18r/movies', checkLogin,AdminController.isAdmin, AdminController.getmovies);
   app.get('/18r/movie/:id/edit',  checkLogin,AdminController.isAdmin, Tagcontroller.tagsByRedis,AdminController.getmovieedit);
-  app.post('/18r/movie/:id/edit', checkLogin,AdminController.isAdmin, upload.single('img'),  AdminController.postmovieedit);
-  app.delete('/18r/movie/delete', checkLogin, AdminController.isAdmin, AdminController.delete);
+  app.post('/18r/movie/:id/edit', checkLogin,AdminController.isAdmin, AdminController.rolesByRedis, upload.single('img'),  AdminController.postmovieedit);
+  app.delete('/18r/movie/delete', checkLogin, AdminController.isAdmin, AdminController.rolesByRedis,AdminController.delete);
   app.get('/18r/tags',checkLogin, AdminController.isAdmin, AdminController.gettags);
   app.get('/18r/tags/add',checkLogin, AdminController.isAdmin, AdminController.getaddtags);
   app.delete('/18r/tag/delete', checkLogin, AdminController.isAdmin, AdminController.tagdel);
   app.post('/18r/tags/add', checkLogin, AdminController.isAdmin, AdminController.postaddtags);
   app.get('/18r/res', checkLogin, AdminController.isAdmin, AdminController.getresources);
-  app.delete('/18r/res/delete',checkLogin, AdminController.isAdmin, AdminController.resdel);
+  app.delete('/18r/res/delete',checkLogin, AdminController.isAdmin, AdminController.rolesByRedis, AdminController.resdel);
   app.get('/18r/users', checkLogin, AdminController.isAdmin, AdminController.getusers);
   app.post('/18r/users', checkLogin, AdminController.isAdmin, AdminController.searchusers);
   app.get('/18r/user/:id/edit', checkLogin, AdminController.isAdmin, AdminController.edituser);

@@ -8,7 +8,7 @@ block content
             img(src="/upload/avatar/avatar-#{visituser.avatar}.jpg")
             h1.name #{visituser.name}
             p 
-              strong  贡献发帖数：
+              strong  贡献积分：
               | #{visituser.postcounts}
             p 
               strong 用户组： 
@@ -23,4 +23,5 @@ block content
                 .btn-group.text-center(role="group")
                   a.btn.btn-default.btn-do(type="button" href="/logout") 注销
                   a.btn.btn-default.btn-do(type="button" href="/user/edit") 编辑资料
+                  a.btn.btn-default.btn-do(type="button" href="/user/goup") 升级
        include movie

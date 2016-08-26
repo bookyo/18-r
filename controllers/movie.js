@@ -146,17 +146,7 @@ exports.post = function(req, res) {
             if(err) {
               console.log(err);
             }
-            User.findOne({_id: req.session.user._id})
-                    .exec(function(err, user) {
-                      user.postcounts = user.postcounts + 1;
-                      var role = adminController.checkRole(user.postcounts, req.roles);
-                      user.role = role;
-                      user.save(function(err, user) {
-                        if(err){
-                          console.log(err);
-                        }
-                      });
-                    });
+            adminController.addCounts(req.session.user._id, 3,req.roles);
             if(req.session.user.isadmin) {
               req.flash('success', '恭喜，发布电影成功！');
               return res.redirect('/movie/'+ movie._id);
@@ -192,7 +182,10 @@ exports.getMovie = function(req, res) {
       }
       },
         function(err, results) {
-          var title = results.movie.title + '_迅雷下载,百度云,360云,电驴,磁力链接'
+          if(results.movie.review==1 || results.movie.review==2){
+            res.status(404).send( '此页面已经不存在了！');
+          }
+          var title = results.movie.title + '_迅雷下载,百度云,360云,电驴ED2K,bt磁力链接'
           var pubdate = moment(results.movie.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
           var tags = results.tags;
           var movie = results.movie;

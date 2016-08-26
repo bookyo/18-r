@@ -6,6 +6,8 @@ block content
       .col-md-8.col-md-offset-2
         form.form-horizontal(method="post" enctype="multipart/form-data")
           .form-group
+            input(type="hidden" name="review" value="#{movie.review}")
+          .form-group
             label.col-sm-3.control-label(for="title") 电影名称
             .col-sm-9
               input#title.form-control(type="text" name="title"  value="#{movie.title}")

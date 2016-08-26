@@ -160,7 +160,6 @@ exports.getreg = function(req, res) {
                console.log(err);
              }
              Movie.find({creator:id}).where({'review': 3}).count(function(err, count) {
-               console.log(count);
                res.render('user', { 
                   title: user.name+'个人页面,'+ user.name+'发布的电影',
                   page: page,
@@ -174,4 +173,22 @@ exports.getreg = function(req, res) {
              });
           });
      });
+  }
+
+  exports.goup = function(req, res) {
+    var id = req.session.user._id;
+    User.findOne({_id: id})
+             .populate('role')
+             .exec(function(err, user) {
+                 var role = adminController.checkRole(user.postcounts, req.roles);
+                 user.role = role;
+                 req.session.user = user;
+                 user.save(function(err, user) {
+                   if(err){
+                     console.log(err);
+                   }
+                   req.flash('success', '升级成功，若用户组未变，那就是积分不够');
+                   res.redirect('back');
+                 });
+             });
   }

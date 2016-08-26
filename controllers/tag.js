@@ -81,7 +81,7 @@ exports.gettags= function(req,res) {
          }
          Movie.find({types:typeid }).where({'review': 3}).count(function(err, count) {
            res.render('tag', { 
-              title: tagname+'电影大全_迅雷下载,百度云,360云盘,电驴,磁力链接',
+              title: tagname+'电影大全_迅雷下载,百度云,360云盘,电驴ED2K,bt磁力链接',
               tagname: tagname,
               page: page,
               pages: Math.ceil(count/perPage),

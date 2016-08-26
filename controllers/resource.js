@@ -1,5 +1,6 @@
 var Movie = require('../models/movie');
 var Resource = require('../models/resource');
+var adminController = require('./admin');
 var async = require('async');
 exports.getadd =  function(req,res) {
     var movieid = req.params.id;
@@ -46,6 +47,7 @@ exports.getadd =  function(req,res) {
                               if(err) {
                                 console.log(err);
                               }
+                              adminController.addCounts(movie.creator, 1, req.roles);
                             });
                           });
             });
