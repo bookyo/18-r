@@ -88,9 +88,8 @@ exports.getreg = function(req, res) {
           console.log(err);
           return res.redirect('/reg');
         }
-        req.session.user = newUser;
-        req.flash('success', '注册成功');
-        res.redirect('/');
+        req.flash('success', '注册成功，请登录');
+        res.redirect('/login');
       });
     });
   }

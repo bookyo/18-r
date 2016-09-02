@@ -40,7 +40,7 @@ module.exports = function(app) {
   app.get('/hots', MovieController.hotsByRedis, MovieController.gethots);
   app.get('/resource/:id/add', checkLogin, AdminController.canaddres,ResourceController.getadd);
   app.post('/resource/:id/add', checkLogin, AdminController.canaddres, AdminController.rolesByRedis, ResourceController.postadd);
-  
+  app.post('/movie/buy', checkLogin, AdminController.checkLimitView, ResourceController.buymovie);
 
   app.get('/reg', checkNotLogin,UserController.getreg);
 

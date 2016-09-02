@@ -17,5 +17,18 @@ $(document).ready(function(){
     $(".resources").on('click', '.removerow', function() {
         $(this).parent().parent().remove();
     });
+ $('.buyres').click(function(e) {
+   var target = $(e.target);
+   var id = target.data('id');
+   $.ajax({
+     type: 'POST',
+     url: '/movie/buy?id=' + id
+   })
+   .done(function(results) {
+    if( results.success ==1){
+     window.location.reload();
+    }
+   });
+ });
 
 });

@@ -3,6 +3,7 @@ var Role = require('../models/role');
 var Movie = require('../models/movie');
 var Resource = require('../models/resource');
 var User = require('../models/user');
+var UserBuyMovie = require('../models/userbuymovie');
 var redis = require("redis");
 var xss = require('xss');
 var client = redis.createClient();
@@ -450,6 +451,28 @@ exports.canaddres = function(req, res, next) {
   }
 }
 
+exports.checkLimitView = function(req, res, next) {
+    if (req.session.user.isadmin) {
+      return next();
+    }
+    var now = new Date();
+    var day = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+    var start = new Date(day);
+    UserBuyMovie.find({userid: req.session.user._id})
+                                 .where('createAt').gt(start)
+                                 .count(function(err, count){
+                                    if(err) {
+                                      console.log(err);
+                                    }
+                                    console.log(count);
+                                    if(count>=req.session.user.role.limitview) {
+                                      req.flash('error',{'msg': '对不起，您所在用户组每天只能查看'+ req.session.user.role.limitview + '个电影资源'});
+                                      return res.redirect('back');
+                                    }
+                                    next();
+                                 });
+  }
+
 exports.checkRole = function(postcounts, roles) {
   for(var i=0; i< roles.length;i++) {
       if( postcounts >= roles[i].postcounts ){
@@ -466,6 +489,7 @@ exports.addCounts = function(userid, counts, roles) {
                       var role = exports.checkRole(user.postcounts, roles);
                       user.role = role;
                       user.save(function(err, user) {
+                        
                         if(err){
                           console.log(err);
                         }

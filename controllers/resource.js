@@ -1,4 +1,5 @@
 var Movie = require('../models/movie');
+var UserBuyMovie = require('../models/userbuymovie');
 var Resource = require('../models/resource');
 var adminController = require('./admin');
 var async = require('async');
@@ -59,6 +60,23 @@ exports.getadd =  function(req,res) {
         }
         res.redirect('/movie/'+movieid);
 
+ }
+
+ exports.buymovie = function(req, res) {
+  var id = req.body.id;
+  if(id) {
+     var usermovieobj = {
+        movieid: id,
+        userid: req.session.user._id
+     }
+     var userbuymovie = new UserBuyMovie(usermovieobj);
+     userbuymovie.save(function(err, obj) {
+      if(err) {
+        console.log(err);
+       }
+        res.redirect('/movie/'+id);
+     });
+  }
  }
 
  function checkResTypeId( resource) {

@@ -344,9 +344,9 @@ exports.new = function(req, res) {
     }
     var now = new Date();
     var day = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
-    var endday = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + (now.getDate()+1);
+    // var endday = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + (now.getDate()+1);
     var start = new Date(day);
-    var end = new Date(endday);
+    // var end = new Date(endday);
     Movie.find({creator: req.session.user._id})
                 .where('meta.createAt').gt(start)
                 .count(function(err, count) {
@@ -357,7 +357,6 @@ exports.new = function(req, res) {
                     req.flash('error', {'msg': "对不起，您所在用户组每日只能发布" + req.session.user.role.limitposts + "篇电影帖子"});
                     return res.redirect('/');
                   }
-                  console.log('today you post ' +count + " movies");
                   next();
                 });
   }
