@@ -41,7 +41,7 @@ module.exports = function(app) {
   app.get('/resource/:id/add', checkLogin, AdminController.canaddres,ResourceController.getadd);
   app.post('/resource/:id/add', checkLogin, AdminController.canaddres, AdminController.rolesByRedis, ResourceController.postadd);
   app.post('/movie/buy', checkLogin, AdminController.checkLimitView, ResourceController.buymovie);
-
+  
   app.get('/reg', checkNotLogin,UserController.getreg);
 
   app.post('/reg', checkNotLogin, AdminController.rolesByRedis, UserController.postreg);
@@ -53,6 +53,8 @@ module.exports = function(app) {
   app.get('/logout', checkLogin, AdminController.rolesByRedis, UserController.logout);
   app.get('/user/goup', checkLogin, AdminController.rolesByRedis, UserController.goup);
   app.get('/user/:id', UserController.getUser);
+  app.get('/user/do/edit', checkLogin, UserController.getedit);
+  app.post('/user/do/edit', checkLogin, UserController.postedit);
 
   app.get('/18r', checkLogin,AdminController.isAdmin, AdminController.getadmin);
   app.get('/18r/movies', checkLogin,AdminController.isAdmin, AdminController.getmovies);

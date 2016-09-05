@@ -14,12 +14,13 @@ exports.getreg = function(req, res) {
     var email = req.sanitize('email').trim().toLowerCase();
     var password = req.body.password;
     var password_re = req.body['password-repeat'];
-    var signature  = req.body.signature ;
     var avatar = req.body.avatar;
     if( password != password_re) {
       req.flash('error', {'msg': '两次输入的密码不一致！'});
       return res.redirect('/reg');
     }
+    var name = req.sanitize('name').trim();
+    var signature = req.sanitize('signature').trim();
     req.checkBody({
       'email': {
         notEmpty: true,
@@ -51,7 +52,7 @@ exports.getreg = function(req, res) {
       'signature': {
         notEmpty: true,
         isLength: {
-          options: [{ min: 10, max: 50}],
+          options: [{ min: 5, max: 50}],
           errorMessage: '请填写10到50个字符之间的个人简介'
         },
         errorMessage: '请填写正确的个人简介'
@@ -69,7 +70,7 @@ exports.getreg = function(req, res) {
     var newUser = new User({
       email: email,
       password: password,
-      name: req.body.name,
+      name: name,
       signature: signature,
       role: role,
       avatar: avatar
@@ -88,8 +89,16 @@ exports.getreg = function(req, res) {
           console.log(err);
           return res.redirect('/reg');
         }
-        req.flash('success', '注册成功，请登录');
-        res.redirect('/login');
+        user.populate({
+          path: 'role'
+        },function(err, popudoc) {
+          if(err) {
+            console.log(err);
+          }
+          req.session.user = popudoc;
+          req.flash('success', '注册成功');
+          res.redirect('/');
+        });
       });
     });
   }
@@ -140,7 +149,54 @@ exports.getreg = function(req, res) {
     req.flash('success', '登出成功！');
     res.redirect('/');
   }
-
+ exports.getedit = function(req, res) {
+   res.render('useredit', {
+     title: '修改资料',
+     user: req.session.user,
+     error: req.flash('error'),
+     success: req.flash('success').toString()
+   });
+  }
+  exports.postedit = function(req, res) {
+    var id = req.session.user._id;
+    var name = req.sanitize('name').trim();
+    var signature = req.sanitize('signature').trim();
+    req.checkBody({
+      'name': {
+        notEmpty: true,
+        errorMessage: '请填写昵称',
+      },
+      'signature': {
+        notEmpty: true,
+        isLength: {
+          options: [{ min: 10, max: 50}],
+          errorMessage: '请填写10到50个字符之间的个人简介'
+        },
+        errorMessage: '请填写正确的个人简介'
+      }
+    });
+    var errors = req.validationErrors();
+    if (errors) {
+      req.flash('error', errors);
+      return res.redirect('back');
+    }
+    User.findOne({_id: id})
+             .exec(function(err, user) {
+              if(err) {
+                console.log(err);
+              }
+              user.name = name;
+              user.signature = signature;
+              user.save(function(err,user) {
+                 if(err) {
+                  console.log(err);
+                 }
+                 req.session.user.name = user.name;
+                 req.session.user.signature = user.signature;
+                 res.redirect('/user/' + id);
+              });
+             });
+  }
   exports.getUser = function(req, res){
     var id = req.params.id;
     User.findById( id, function(err, user) {

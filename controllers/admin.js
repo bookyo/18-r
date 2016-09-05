@@ -49,7 +49,7 @@ exports.getaddtags = function(req, res) {
      }
      var role = new Role(roleObj);
      role.save( function(err, role) {
-      client.del('roles');
+       client.del('roles');
        req.flash('success', '成功添加用户组');
        res.redirect('back');
      });
@@ -214,14 +214,14 @@ exports.tagdel = function(req, res) {
 
     if(id) {
       Tag.remove({_id: id})
-                  .exec(function(err, tag){
+             .exec(function(err, tag){
                     if(err){
                       console.log(err);
                       res.json({success: 0});
                     }else {
                       res.json({success: 1});
                     }
-                  });
+             });
     }
 }
 exports.resdel = function(req, res) {
@@ -385,6 +385,7 @@ exports.postroleedit = function(req, res) {
               if (err) {
                 console.log(err);
               }
+              client.del('roles');
               res.redirect('/18r/roles');
             });
           });
