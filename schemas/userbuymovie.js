@@ -5,4 +5,5 @@ var UserBuyMovieSchema = new Schema({
   userid: Schema.Types.ObjectId,
   createAt: {type: Date, default: Date.now()}
 });
+UserBuyMovieSchema.index({movieid: 1, userid: 1});
 module.exports = UserBuyMovieSchema;

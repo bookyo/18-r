@@ -2,6 +2,7 @@ var Movie = require('../models/movie');
 var User = require('../models/user');
 var Tag = require('../models/tag');
 var Resource = require('../models/resource');
+var UserBuyMovie = require('../models/userbuymovie');
 var adminController = require('./admin');
 var xss = require('xss');
 var async = require('async');
@@ -166,6 +167,10 @@ exports.post = function(req, res) {
 
 exports.getMovie = function(req, res) {
     var id =  req.params.id;
+    var userid;
+    if (req.session.user) {
+      userid = req.session.user._id;
+    }
     async.parallel({
       tags: function(callback) {
            callback(null, req.tags);
@@ -179,12 +184,23 @@ exports.getMovie = function(req, res) {
                         if(err) console.log(err);
                          callback(null,movie);
                       });
+      },
+      userbuymovie: function(callback) {
+        UserBuyMovie.find({movieid: id, userid: userid})
+                                     .count(function(err, count){
+                                       if(err) {
+                                        console.log(err);
+                                       }
+                                       callback(null, count);
+                                     });
       }
       },
         function(err, results) {
           if(results.movie.review==1 || results.movie.review==2){
             res.status(404).send( '此页面已经不存在了！');
           }
+          var count = results.userbuymovie;
+          console.log(count);
           var title = results.movie.title + '_迅雷下载,百度云,360云,电驴ED2K,bt磁力链接'
           var pubdate = moment(results.movie.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
           var tags = results.tags;
@@ -192,6 +208,7 @@ exports.getMovie = function(req, res) {
           res.render('article', {
               title: title,
               hots: req.hots,
+              buy: count,
               user: req.session.user,
               pubdate: pubdate,
               tags: tags,

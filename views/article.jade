@@ -75,19 +75,27 @@ block content
                 ul.list-group
                   each baidure in baidures
                     - var baiduyun = baidure.resource.replace(urlreg,"<a href='$1$2' target='_blank'>$1$2</a>")
-                    li.list-group-item!= baiduyun
-                    li.list-group-item
-                      form.form(method="post",action="/movie/buy")
-                        input(type="hidden", name="id", value="#{movie._id}")
-                        button(type="submit").btn.btn-info 查看资源
+                    if buy
+                      li.list-group-item!= baiduyun
+                    else
+                      li.list-group-item
+                        form.form(method="post",action="/movie/buy")
+                          input(type="hidden", name="id", value="#{movie._id}")
+                          button(type="submit").btn.btn-info 查看资源
             if cilires.length
               .panel.panel-default
                 .panel-heading 磁力链接
                 ul.list-group
                   each cilire in cilires
                     - var cili = cilire.resource.split('&')
-                    li.list-group-item 
-                      a(href="#{cili[0]}" target='_blank') 磁力链接
+                    if buy
+                      li.list-group-item 
+                        a(href="#{cili[0]}" target='_blank') 磁力链接
+                    else
+                      li.list-group-item
+                        form.form(method="post",action="/movie/buy")
+                          input(type="hidden", name="id", value="#{movie._id}")
+                          button(type="submit").btn.btn-info 查看资源
             if dianlvres.length
               .panel.panel-default
                 .panel-heading 电驴ed2k链接
@@ -95,17 +103,27 @@ block content
                   each dianlvre in dianlvres
                     - var dianlv = dianlvre.resource.split('|');
                     - var restitle = decodeURI(dianlv[2]);
-                    li.list-group-item 
-                      a(href="#{dianlvre.resource}" target='_blank')  #{restitle}
+                    if buy
+                      li.list-group-item 
+                        a(href="#{dianlvre.resource}" target='_blank')  #{restitle}
+                    else
+                      li.list-group-item
+                        form.form(method="post",action="/movie/buy")
+                          input(type="hidden", name="id", value="#{movie._id}")
+                          button(type="submit").btn.btn-info 查看资源
             if qihures.length
               .panel.panel-default
                 .panel-heading 360云网盘资源
                 ul.list-group
                   each qihure in qihures
                     - var qihu = qihure.resource.replace(urlreg,"<a href='$1$2' target='_blank'>$1$2</a>")
-                    li.list-group-item!= qihu
-                    li.list-group-item 
-                      a.buyres(href="javascript:;") 点击查看资源
+                    if buy
+                      li.list-group-item!= qihu
+                    else
+                      li.list-group-item
+                        form.form(method="post",action="/movie/buy")
+                          input(type="hidden", name="id", value="#{movie._id}")
+                          button(type="submit").btn.btn-info 查看资源
             if user
               a.btn.btn-default.btn-block(href="/resource/#{movie._id}/add") 添加《#{movie.title}》的资源
 

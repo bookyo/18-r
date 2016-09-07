@@ -465,7 +465,6 @@ exports.checkLimitView = function(req, res, next) {
                                     if(err) {
                                       console.log(err);
                                     }
-                                    console.log(count);
                                     if(count>=req.session.user.role.limitview) {
                                       req.flash('error',{'msg': '对不起，您所在用户组每天只能查看'+ req.session.user.role.limitview + '个电影资源'});
                                       return res.redirect('back');
