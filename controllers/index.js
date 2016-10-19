@@ -18,7 +18,7 @@ exports.index =  function(req, res, next) {
            }
            Movie.count(function(err, count) {
              res.render('index', { 
-               title: "电影天堂,热门电影,最新电影_电影云社区",
+               title: "电影天堂,热门电影,最新电影_bt老司机社区",
                page: page,
                pages: Math.ceil(count/perPage),
                user: req.session.user,

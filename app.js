@@ -11,9 +11,9 @@ var expressValidator = require('express-validator');
 
 var MongoStore = require('connect-mongo')(session);
 var routes = require('./routes/index');
-
+var config = require('./config/db');
 var app = express();
-mongoose.connect('mongodb://localhost/movies-eighten');
+mongoose.connect('mongodb://127.0.0.1/bted2k', config);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -34,7 +34,7 @@ app.use(session({
   key: "movie",
   cookie: {maxAge: 1000 * 60 * 60 * 24 * 30},//30day
   store: new MongoStore({
-    url: 'mongodb://localhost/movies-eighten'
+    url: 'mongodb://xiezixing:qyquyue@127.0.0.1/bted2k'
   })
 }));
 
