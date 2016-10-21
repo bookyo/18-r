@@ -1,3 +1,4 @@
+var compression = require('compression');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -13,6 +14,7 @@ var MongoStore = require('connect-mongo')(session);
 var routes = require('./routes/index');
 var config = require('./config/db');
 var app = express();
+app.use(compression());
 mongoose.connect('mongodb://127.0.0.1/bted2k', config);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
