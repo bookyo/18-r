@@ -96,3 +96,4 @@ a {
 .hot-title{font-size:18px;}
 .hots-title{font-size:18px;}
 .toreg{margin-left:15px;}
+@media (max-width:991px){.movie-info{margin-top:20px;}}
