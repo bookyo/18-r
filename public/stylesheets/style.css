@@ -64,7 +64,7 @@ a {
 .article{margin-bottom:20px;}
 .article h1{padding-left:15px;}
 .article img{display:block; margin: 0 auto;}
-.movie-info {margin-top:20px;font-size:16px;}
+.movie-info {font-size:16px;}
 .movie-info dd,.movie-info dt{float:left;}
 .movie-info dt{ padding-right:15px; }
 .summary-hidden{ display:none; }

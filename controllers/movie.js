@@ -201,7 +201,7 @@ exports.getMovie = function(req, res) {
           }
           var count = results.userbuymovie;
           console.log(count);
-          var title = results.movie.title + '_迅雷下载,百度云,360云,电驴ED2K,bt磁力链接'
+          var title = results.movie.title + '_迅雷下载,百度网盘,电驴ED2K,bt磁力链接'
           var pubdate = moment(results.movie.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
           var tags = results.tags;
           var movie = results.movie;
