@@ -1,0 +1,29 @@
+extends layout
+
+block content
+  .container
+    .row
+      .col-md-3
+        a.btn.btn-info.btn-topic 创建电影专题
+        section.hots
+          h3.hot-title 一周专题热门榜
+          div.list-group
+            //- each hot,i in hots
+            //-   if i<5
+            //-     a.list-group-item(href="/movie/#{hot._id}") #{hot.title}
+      .col-md-9
+        section#main-body.clearfix
+          each topic in topics
+            .col-md-4.col-sm-6.col-xs-12
+              .movie-box
+                //- a(href="/movie/#{movie._id}")
+                //-   img.img-responsive(src="/uploads/400/#{movie.img}")
+                //- h2 
+                //-   a(href="/movie/#{movie._id}")= movie.title
+                //- dl
+                //-   dt.dtleft 电影：
+                //-   dd.ddright #{movie.doctor}
+        nav.pages
+          if( pages> 1) 
+            ul.pagination
+              != createPagination(pages, page)

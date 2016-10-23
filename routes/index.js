@@ -4,6 +4,7 @@ var UserController = require('../controllers/user');
 var AdminController = require('../controllers/admin');
 var Tagcontroller = require('../controllers/tag');
 var ResourceController = require('../controllers/resource');
+var TopicController = require('../controllers/topic');
 var multer = require('multer');
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -80,6 +81,9 @@ module.exports = function(app) {
  
   app.get('/tag/:id', Tagcontroller.tagsByRedis,MovieController.hotsByRedis,Tagcontroller.gettag);
 
+  app.get('/topics', TopicController.getTopics);
+  app.get('/topics/new', TopicController.getNew);
+  app.post('/topics/new', TopicController.postNew);
   function checkLogin(req, res, next) {
     if( !req.session.user ) {
       req.flash('error', {'msg': '未登录！'});

@@ -350,6 +350,7 @@ exports.new = function(req, res) {
     res.render('hots', {
       title: '一周热门电影排行榜',
       hots: req.hots,
+      user: req.session.user,
       success: req.flash('success').toString(),
       error: req.flash('error')
     });

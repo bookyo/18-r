@@ -53,4 +53,5 @@ MovieSchema.statics = {
 };
 MovieSchema.index({review: 1, "meta.updateAt": -1});
 MovieSchema.index({types: 1, review: 1, "meta.updateAt": -1});
+MovieSchema.index({title: 1});
 module.exports = MovieSchema;
