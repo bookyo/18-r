@@ -1,6 +1,7 @@
 var Movie = require('../models/movie');
 var User = require('../models/user');
 var Tag = require('../models/tag');
+var Topic = require('../models/topic');
 var Resource = require('../models/resource');
 var UserBuyMovie = require('../models/userbuymovie');
 var adminController = require('./admin');
@@ -9,6 +10,7 @@ var async = require('async');
 var moment = require('moment');
 var sharp = require('sharp');
 var redis = require("redis");
+var _ = require("underscore");
 var client = redis.createClient();
 
 exports.post = function(req, res) {
@@ -60,6 +62,17 @@ exports.post = function(req, res) {
       req.flash('error', {'msg': '请上传正确的海报！'});
       return res.redirect('/post');
     };
+    var resources = [].concat(req.body.resources);
+    for(var i = 0; i < resources.length; i++) {
+      var resource = resources[i];
+      var typeid = checkResTypeId(resource);
+      if(!typeid) {
+        req.flash('error', {'msg': '输入资源类型有误！'});
+        return res.redirect('/post');
+      }
+
+    }
+
     sharp(req.file.path)
       .resize(400,400)
       .quality(70)
@@ -89,53 +102,22 @@ exports.post = function(req, res) {
       if(err) {
         console.log(err);
       }
-      var resources = req.body.resources;
-      var movieid = movie._id;
       var resources_id = [];
-      if( Array.isArray( resources) ){
+      for(var i=0; i<resources.length;i++){
+        var resource = resources[i];
+        var typeid = checkResTypeId(resource);
+        var resourceObj = {
+          resource: resource,
+          typeid: typeid,
+          tomovie: movie._id,
+          creator: user._id
+        }
+        var newresource = new Resource(resourceObj);
+        newresource.save(function(err, resource) {
+          resources_id.push(resource._id);
+        });
+      }
         
-        for(var i=0; i<resources.length;i++){
-            var resource = resources[i];
-            var typeid = checkResTypeId(resource);
-            if(typeid) {
-              var resourceObj = {
-                resource: resource,
-                typeid: typeid,
-                tomovie: movieid,
-                creator: user._id
-
-              }
-              var resource = new Resource(resourceObj);
-              resource.save(function(err, resource) {
-                resources_id.push(resource._id);
-              });
-           }
-           else {
-              req.flash('error', {'msg': '输入的资源类型有误或者有一行为空！'});
-              return res.redirect('/post');
-           }
-        }
-         
-      }
-      else{
-        var resource = resources;
-        var typeid = checkResTypeId(resources);
-        if(typeid) {
-          var resourceObj = {
-            resource: resource,
-            typeid: typeid,
-            tomovie: movieid,
-            creator: user._id
-          }
-          var resource = new Resource(resourceObj);
-          resource.save( function(err, resource) {
-            resources_id.push(resource._id);
-          });
-        }else{
-          req.flash('error', {'msg': '输入资源类型有误！'});
-          return res.redirect('/post');
-        }
-      }
       Movie.findById(movie._id, function(err, themovie) {
           for(var i =0; i< resources_id.length; i++){
              themovie.resources.push(resources_id[i]);
@@ -193,6 +175,27 @@ exports.getMovie = function(req, res) {
                                        }
                                        callback(null, count);
                                      });
+      },
+      userstopics: function(callback) {
+        Topic.find({creator: userid})
+                   .exec(function(err, topics) {
+                    if(err) {
+                      console.log(err);
+                    }
+                    callback(null, topics);
+                   })
+      },
+      movieintopics: function(callback) {
+        Topic.find({movies: id})
+                   .select('topic _id')
+                   .sort('-pv')
+                   .limit(10)
+                   .exec(function(err, topics) {
+                    if(err) {
+                      console.log(err);
+                    }
+                    callback(null, topics);
+                   })
       }
       },
         function(err, results) {
@@ -200,22 +203,35 @@ exports.getMovie = function(req, res) {
             res.status(404).send( '此页面已经不存在了！');
           }
           var count = results.userbuymovie;
-          console.log(count);
-          var title = results.movie.title + '_迅雷下载,百度网盘,电驴ED2K,bt磁力链接'
-          var pubdate = moment(results.movie.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
-          var tags = results.tags;
-          var movie = results.movie;
-          res.render('article', {
-              title: title,
-              hots: req.hots,
-              buy: count,
-              user: req.session.user,
-              pubdate: pubdate,
-              tags: tags,
-              movie: movie,
-              error: req.flash('error'),
-              success: req.flash('success').toString()
+          if(results.movie.creator._id == userid) {
+            count = 1;
+          }
+          recommendByRedis(results.movie, function(err, removies) {
+            if(err) {
+              console.log(err);
+            }
+            var title = results.movie.title +'('+ results.movie.year + '年电影)_下载,百度云网盘,bt磁力链接,电驴ED2K';
+            var pubdate = moment(results.movie.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
+            var tags = results.tags;
+            var movie = results.movie;
+            var topics = results.userstopics;
+            var movieintopics = results.movieintopics;
+            res.render('article', {
+                title: title,
+                hots: req.hots,
+                buy: count,
+                user: req.session.user,
+                pubdate: pubdate,
+                topics: topics,
+                movieintopics: movieintopics,
+                removies: removies,
+                tags: tags,
+                movie: movie,
+                error: req.flash('error'),
+                success: req.flash('success').toString()
+            });
           });
+          
         }
       );
 }
@@ -270,7 +286,6 @@ exports.new = function(req, res) {
     var year = req.body.year;
     var types =  req.body.types;
     var img;
-    console.log(req.body);
     req.checkBody({
       'title': {
         notEmpty: true,
@@ -356,6 +371,21 @@ exports.new = function(req, res) {
     });
  }
 
+exports.search = function(req, res) {
+  var movietitle = req.query.title;
+  var reg = new RegExp(movietitle);
+  if(movietitle) {
+    Movie.find({title: reg})
+                .exec(function(err, movies){
+                  if(err) {
+                    res.json({success: 0});
+                  }
+                  res.json(movies);
+                });
+  }
+
+}
+
  exports.checkLimitPost = function(req, res, next) {
     if (req.session.user.isadmin) {
       return next();
@@ -439,6 +469,158 @@ function getHotsFromRedis(cb) {
       return cb(e, null);
     }
     return cb(err, hots);
+  });
+}
+
+recommendByRedis = function(movie, cb) {
+  getRemoviesFromRedis(movie, function(err, removies) {
+    if(err) {
+      return next(err);
+    }
+    if(!removies) {
+      getRemoviesFromMongo(movie, function(err, removies) {
+        if(err) {
+          return next(err);
+        }
+        return cb(null, removies);
+      });
+
+    } else {
+      return cb(null, removies);
+    }
+  });
+}
+
+function getRemoviesFromMongo(movie, cb) {
+  var id = movie._id;
+  var movietypes = _.clone(movie.types);
+  var types = [];
+  var query = {};
+  var recomid = 'removie_' + id;
+  var listcounts = 8;
+  if(movietypes.length>1) {
+    for(var i = 0; i < movietypes.length; i++) {
+      if(movietypes[i].tag == '剧情') {
+        movietypes.splice(i,1);
+      }
+    }
+  }
+  if(movietypes.length>2) {
+    var fenzu = function(arr) {
+        var result = [];
+        for(var i = 0; i < arr.length; i++) {
+          var first = arr[i];
+          var left = arr.slice(i+1);
+          for(var j = 0; j < left.length; j++) {
+            var obj = [];
+            obj.push(first);
+            obj.push(left[j]);
+            result.push(obj);
+          }
+        }
+        return result;
+      }
+    types = fenzu(movietypes);
+    query.$or=[];
+    for(var i = 0; i<types.length; i++) {
+      // find({$or:[{types: {$all: typeid}}, {types: {$all: typeid}}]})
+      var allquery = {};
+      var typeid = _.pluck(types[i], '_id');
+      allquery.types = {$all: typeid}
+      query.$or.push(allquery);
+    }
+  } else {
+    types = movietypes;
+    // find({types: {$all: typeid}})
+    var typeid = _.pluck(types, '_id');
+    var allquery = {};
+    allquery.$all = typeid
+    query.types = allquery;
+  }
+  
+  Movie.find(query)
+              .where('year').gt(movie.year-8).lt(movie.year+8)
+              .where({'review': 3})
+              .select('_id title img country types')
+              .limit(50)
+              .exec(function(err, movies) {
+                var listmovies = _.filter(movies, function(obj) {
+                  return obj._id != id.toString();
+                });
+                var count = listmovies.length;
+                var groupmoviesArr = [];
+                if(count>listcounts){
+                  var weightArr = quanObj(movie, listmovies);
+                  var groupweightObj= _.sortBy(weightArr, function(data) {
+                    return - data.quanzhong;
+                  });
+                  groupmoviesArr = _.pluck(groupweightObj, 'arr');
+                  groupmoviesArr = groupmoviesArr.slice(0,9);
+                  if(groupmoviesArr) {
+                    client.setex(recomid, 3600,  JSON.stringify(groupmoviesArr));
+                  }
+                  return cb(err, groupmoviesArr);
+                } else {
+                  var leftcount = listcounts - count;
+                  Movie.find({types: {$in:  _.pluck(movietypes, '_id')}, _id: {$nin: _.pluck(movies, '_id')}})
+                              .sort('-meta.updateAt')
+                              .limit(leftcount)
+                              .select('_id title img country types')
+                              .exec(function(err, leftmovies) {
+                                if(err) {
+                                  console.log(err);
+                                }
+                                groupmoviesArr = listmovies.concat(leftmovies);
+                                if(groupmoviesArr) {
+                                  client.setex(recomid, 3600,  JSON.stringify(groupmoviesArr));
+                                }
+                                return cb(err, groupmoviesArr);
+                              })
+
+                }
+                
+
+              });
+  var quanObj = function(movie, listmovies){
+    var quanzhongObj = [];
+    for(var o = 0; o<listmovies.length; o++) {
+      var quanzhong = quan(movie, listmovies[o]);
+      quanzhongObj.push(quanzhong);
+    }
+    return quanzhongObj;
+  }
+  var quan = function(movie, listmovie) {
+    var movietypesid = _.pluck(movie.types, '_id');
+    var quanzhong = 0;
+    var obj={};
+    for(var i = 0; i<movietypesid.length; i++) {
+      for(var j=0; j<listmovie.types.length; j++) {
+        if(listmovie.types[j]==movietypesid[i].toString()) {
+              quanzhong++;
+        }
+      }
+    }
+    if(listmovie.country == movie.country) {
+      quanzhong++;
+    }
+    
+    obj.quanzhong = quanzhong;
+    obj.arr = listmovie;
+    return obj;
+  }
+}
+
+function getRemoviesFromRedis(movie, cb) {
+  var id = movie._id;
+  var recomid = 'removie_' + id;
+  client.get(recomid, function(err, removies) {
+    if(err) return cb(err, null);
+    try {
+      removies = JSON.parse(removies);
+    } catch(e) {
+      return cb(e, null);
+    }
+    return cb(err, removies);
   });
 }
 

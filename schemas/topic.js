@@ -5,6 +5,7 @@ var TopicSchema = new mongoose.Schema({
         summary: String,
         movies: [{type: Schema.Types.ObjectId, ref: 'Movie'}],
         creator: {type: Schema.Types.ObjectId, ref: 'User'},
+        pv: { type:Number, default: 0 },
         meta: {
             createAt: {
               type: Date,

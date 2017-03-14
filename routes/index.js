@@ -81,9 +81,17 @@ module.exports = function(app) {
  
   app.get('/tag/:id', Tagcontroller.tagsByRedis,MovieController.hotsByRedis,Tagcontroller.gettag);
 
-  app.get('/topics', TopicController.getTopics);
-  app.get('/topics/new', TopicController.getNew);
-  app.post('/topics/new', TopicController.postNew);
+  app.get('/topics', TopicController.topicsByRedis,  TopicController.getTopics);
+  app.get('/topic/new', checkLogin, AdminController.canaddres, TopicController.getNew);
+  app.post('/topic/new', checkLogin, AdminController.canaddres, TopicController.postNew);
+  app.get('/topic/:id', TopicController.topicsByRedis, TopicController.getTopic);
+  app.get('/topic/:id/update', checkLogin, TopicController.editTopic);
+  app.post('/topic/:id/update', checkLogin, TopicController.updateTopic);
+  app.delete('/topic/delete', checkLogin, AdminController.isAdmin, TopicController.delete);
+  app.delete('/topic/delmovie', checkLogin, TopicController.delmovie);
+  app.post('/topic/addmovie', checkLogin, TopicController.addmovie);
+
+  app.post('/movie/search', MovieController.search);
   function checkLogin(req, res, next) {
     if( !req.session.user ) {
       req.flash('error', {'msg': '未登录！'});

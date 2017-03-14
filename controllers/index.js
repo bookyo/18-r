@@ -15,19 +15,25 @@ exports.index =  function(req, res, next) {
            if(err) {
              console.log(err);
            }
-           Movie.count(function(err, count) {
-             res.render('index', { 
-               title: "电影天堂,热门电影,最新电影_bt老司机社区",
-               page: page,
-               pages: Math.ceil(count/perPage),
-               user: req.session.user,
-               tags: req.tags,
-               hots: req.hots,
-               movies: movies,
-               error: req.flash('error'),
-               success: req.flash('success').toString()
-             });
-           });
+           Movie.find()
+                       .where({'review': 3})
+                       .count(function(err, count) {
+                         if(err) {
+                           console.log(err);
+                         }
+                         res.render('index', { 
+                           title: "电影天堂,热门电影,最新电影_bt老司机社区",
+                           page: page,
+                           pages: Math.ceil(count/perPage),
+                           user: req.session.user,
+                           tags: req.tags,
+                           hots: req.hots,
+                           movies: movies,
+                           error: req.flash('error'),
+                           success: req.flash('success').toString()
+                         });
+                       })
+           
         });
     
   }

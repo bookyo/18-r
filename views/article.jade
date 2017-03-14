@@ -23,6 +23,8 @@ block content
           span.pubdate 发表于 #{pubdate} &nbsp&nbsp
           span  已播放：#{movie.pv} 次
           .pull-right.admindo
+            if user
+              button.btn.btn-default(type="button" data-toggle="modal" data-target="#addtotopic") 收藏到专题
             if user&&user.isadmin
               a(href="/movie/#{movie._id}/update") 修改
               button.btn.btn-danger.del(type="button", data-id="#{movie._id}") 删除
@@ -126,6 +128,48 @@ block content
                           button(type="submit").btn.btn-info 查看资源
             if user
               a.btn.btn-default.btn-block(href="/resource/#{movie._id}/add") 添加《#{movie.title}》的资源
-
+            if movieintopics.length
+              .movie-topics
+                h3.coltopic 收录于以下专题
+                each movieintopic in movieintopics
+                  a(href="/topic/#{movieintopic._id}").btn.btn-primary #{movieintopic.topic}
+            .recommands
+              h3.coltopic 同类型电影推荐
+              each movie in removies
+                .col-md-3.col-sm-4.col-xs-6
+                  .movie-box
+                    a(href="/movie/#{movie._id}")
+                      img.img-responsive(src="/uploads/400/#{movie.img}")
+                    h4 
+                      a(href="/movie/#{movie._id}")= movie.title
+            div.modal.fade#addtotopic(tabindex="-1" role="dialog" aria-labelledby="addtotopictitle")
+              div.modal-dialog(role="document")
+                div.modal-content
+                  div.modal-header
+                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                      span(aria-hidden="true") &times;
+                    h4.modal-title#addtotopictitle 选择电影专题
+                  div.modal-body
+                    if topics.length == 0
+                      p 对不起，您还未创建过专题
+                    else
+                      form#addmovietotopic
+                        div.item-select
+                          each topic,i in topics
+                            if i == 0
+                              div.topiclist.select-top(data-movieid="#{movie._id}")
+                                label
+                                  input(type="radio" value="#{topic._id}" id="#{topic._id}" name="selecttopic" checked) 
+                                  | #{topic.topic}
+                            else
+                              div.topiclist(data-movieid="#{movie._id}")
+                                label
+                                  input(type="radio" value="#{topic._id}" id="#{topic._id}" name="selecttopic")
+                                  | #{topic.topic}
+                  div.modal-footer
+                    a.btn.btn-default(href="/topic/new") 点击创建专题
+                    button.btn.btn-default(type="button" data-dismiss="modal") 关闭
+                    if topics.length > 0
+                      button.btn.btn-primary#subaddto(type="button" ) 提交
 
           

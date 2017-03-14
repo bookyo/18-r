@@ -29,7 +29,7 @@ function getTagsFromMongo(cb) {
 	  .sort('-meta.updateAt')
 	  .exec(function(err, tags) {
                 if(tags) {
-                  client.set('tags', JSON.stringify(tags));
+                  client.setex('tags', 3600,  JSON.stringify(tags));
                 }
 	  	return cb(err, tags);
 	  });

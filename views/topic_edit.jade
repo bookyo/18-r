@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  .container
+    .row
+      .col-md-8.col-md-offset-2
+        form.form-horizontal(method="post")
+          .form-group
+            label.col-sm-3.control-label(for="topic") 专题名字
+            .col-sm-9
+              input#topic.form-control(type="text" name="topic" placeholder="输入5字以上专题名" value="#{topic.topic}")
+          .form-group
+            label.col-sm-3.control-label(for="summary") 专题简介
+            .col-sm-9
+              textarea#summary.form-control(rows="6" name="summary") #{topic.summary}
+          .form-group
+              .col-sm-offset-2.col-sm-10
+                button(type="submit").btn.btn-default 发布

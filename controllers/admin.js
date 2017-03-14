@@ -117,7 +117,6 @@ exports.getaddtags = function(req, res) {
     var types =  req.body.types;
     var review = req.body.review;
     var img;
-    console.log(req.body);
     req.checkBody({
       'title': {
         notEmpty: true,
@@ -447,7 +446,7 @@ exports.canaddres = function(req, res, next) {
   if(req.session.user.isadmin || req.session.user.role.canaddres) {
     next();
   } else {
-    req.flash('error', {'msg': '对不起，您所在用户组不能添加电影资源'});
+    req.flash('error', {'msg': '对不起，您所在用户组不能添加电影资源或者创建专题！'});
     return res.redirect('back');
   }
 }

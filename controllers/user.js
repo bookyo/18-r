@@ -214,18 +214,24 @@ exports.getreg = function(req, res) {
              if(err) {
                console.log(err);
              }
-             Movie.find({creator:id}).where({'review': 3}).count(function(err, count) {
-               res.render('user', { 
-                  title: user.name+'个人页面,'+ user.name+'发布的电影',
-                  page: page,
-                  pages: Math.ceil(count/perPage),
-                  error: req.flash('error'),
-                  success: req.flash('success').toString(),
-                  user: req.session.user,
-                  visituser: user,
-                  movies: movies
-               });
-             });
+             Movie.find({creator: id})
+                         .where({'review': 3})
+                         .count(function(err, count) {
+                           if(err) {
+                            console.log(err);
+                           }
+                           res.render('user', { 
+                              title: user.name+'个人页面,'+ user.name+'发布的电影',
+                              page: page,
+                              pages: Math.ceil(count/perPage),
+                              error: req.flash('error'),
+                              success: req.flash('success').toString(),
+                              user: req.session.user,
+                              visituser: user,
+                              movies: movies
+                           });
+                         })
+             
           });
      });
   }

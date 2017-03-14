@@ -4,15 +4,28 @@ block content
   .container
     .row
       .col-md-8.col-md-offset-2
-        form.form-horizontal(method="post" enctype="multipart/form-data")
+        form.form-horizontal(method="post")
           .form-group
             label.col-sm-3.control-label(for="topic") 专题名字
             .col-sm-9
-              input#topic.form-control(type="text" name="topic")
+              input#topic.form-control(type="text" name="topic" placeholder="输入5字以上专题名")
           .form-group
             label.col-sm-3.control-label(for="summary") 专题简介
             .col-sm-9
               textarea#summary.form-control(rows="6" name="summary")
+          .form-group
+            label.col-sm-3.control-label(for="movies") 至少选择3个电影
+            .col-sm-9
+              .movie-lists
+                span.tip 在下方搜索电影进行添加
+          .form-group
+            .col-sm-9.col-sm-offset-3
+              .input-group
+                input#movie-title.form-control(type="text" name="movie-title" placeholder="输入电影名搜索")
+                span.input-group-btn
+                  button.btn.btn-default.search-movie(type="button") 搜索
+          .col-sm-9.col-sm-offset-3
+            table.table.table-bordered.table-search
           .form-group
               .col-sm-offset-2.col-sm-10
                 button(type="submit").btn.btn-default 发布
