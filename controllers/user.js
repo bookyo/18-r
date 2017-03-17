@@ -253,3 +253,39 @@ exports.getreg = function(req, res) {
                  });
              });
   }
+  exports.search = function(req, res) {
+    var title = req.query.q;
+    var reg = new RegExp(title);
+    var perPage = 16;
+    var page = req.query.page > 0 ? req.query.page : 1;
+    if(title) {
+      Movie.find({title: reg})
+                  .where({'review': 3})
+                  .select('title _id doctor players types img')
+                  .populate('types', '_id tag')
+                  .limit(perPage)
+                  .skip(perPage * (page-1))
+                  .sort('-meta.updateAt')
+                  .exec(function(err, movies) {
+                    if(err) {
+                      console.log(err);
+                    }
+                    Movie.find({title: reg})
+                                .where({'review': 3})
+                                .count(function(err, count) {
+                                  res.render('search', {
+                                    title: title+'电影搜索结果',
+                                    page: page,
+                                    tags: req.tags,
+                                    pages: Math.ceil(count/perPage),
+                                    error: req.flash('error'),
+                                    success: req.flash('success').toString(),
+                                    user: req.session.user,
+                                    movies: movies
+                                  })
+                                })
+                    
+                  })
+    }
+
+  }

@@ -376,6 +376,8 @@ exports.search = function(req, res) {
   var reg = new RegExp(movietitle);
   if(movietitle) {
     Movie.find({title: reg})
+                .where({'review': 3})
+                .limit(10)
                 .exec(function(err, movies){
                   if(err) {
                     res.json({success: 0});
@@ -549,7 +551,7 @@ function getRemoviesFromMongo(movie, cb) {
                 });
                 var count = listmovies.length;
                 var groupmoviesArr = [];
-                if(count>listcounts){
+                if(count>= listcounts){
                   var weightArr = quanObj(movie, listmovies);
                   var groupweightObj= _.sortBy(weightArr, function(data) {
                     return - data.quanzhong;

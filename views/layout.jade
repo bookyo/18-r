@@ -34,12 +34,20 @@ html(lang="zh-CN")
             li
               a(href="/topics") 电影专题
            if user
-            .pull-right
+            .navbar-right
+              form.navbar-form.navbar-left(method="get" action="/search")
+                .form-group
+                  input.form-control(type="text" placeholder="输入电影名" name="q")
+                button.btn.btn-default(type="submit") 搜索
               a.btn.btn-primary.navbar-btn(href="/post") 发布
               a.btn.btn-default.avatar(href="/user/#{user._id}",style="margin-left:10px;") 
                 img(src="/upload/avatar/avatar-#{user.avatar}.jpg")
           else
-            .pull-right
+            .navbar-right
+              form.navbar-form.navbar-left(method="get" action="/search")
+                .form-group
+                  input.form-control(type="text" placeholder="输入电影名")
+                button.btn.btn-default(type="submit") 搜索
               a.btn.btn-primary.navbar-btn(href="/reg") 注册
               a.btn.btn-default(href="/login",style="margin-left:10px;") 登陆
     .flash-message.container

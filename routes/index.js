@@ -92,6 +92,9 @@ module.exports = function(app) {
   app.post('/topic/addmovie', checkLogin, TopicController.addmovie);
 
   app.post('/movie/search', MovieController.search);
+  app.get('/search', checkLogin, Tagcontroller.tagsByRedis,  UserController.search);
+
+
   function checkLogin(req, res, next) {
     if( !req.session.user ) {
       req.flash('error', {'msg': '未登录！'});

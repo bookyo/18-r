@@ -22,7 +22,7 @@ exports.index =  function(req, res, next) {
                            console.log(err);
                          }
                          res.render('index', { 
-                           title: "电影天堂,热门电影,最新电影_bt老司机社区",
+                           title: "BT老司机_老司机们的电影分享社群",
                            page: page,
                            pages: Math.ceil(count/perPage),
                            user: req.session.user,
