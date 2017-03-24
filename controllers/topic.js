@@ -111,7 +111,7 @@ exports.editTopic = function(req, res) {
               if(err) {
                 console.log(err);
               }
-              if(topic.creator == req.session.user._id) {
+              if(req.session.user.isadmin || (topic.creator == req.session.user._id)) {
                 res.render('topic_edit', {
                   title: '修改电影专题',
                   user: req.session.user,
@@ -128,12 +128,6 @@ exports.editTopic = function(req, res) {
 }
 exports.updateTopic = function(req, res) {
   var id = req.params.id;
-  if(!req.session.user.isadmin) {
-    if(topic.creator != req.session.user._id) {
-      req.flash('error', {'msg': '对不起，您没有权限修改！'});
-      return res.redirect('/topic/' + id);
-    }
-  }
   var topic = req.sanitize('topic').trim();
   var summary = req.sanitize('summary').trim();
   req.checkBody({
@@ -164,6 +158,12 @@ exports.updateTopic = function(req, res) {
   summary = xss(summary);
   Topic.findOne({_id: id})
              .exec(function(err, topic) {
+              if(!req.session.user.isadmin) {
+                if(topic.creator != req.session.user._id) {
+                  req.flash('error', {'msg': '对不起，您没有权限修改！'});
+                  return res.redirect('/topic/' + id);
+                }
+              }
                topic.topic = newtopic;
                topic.summary = summary;
                topic.save(function(err) {

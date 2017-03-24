@@ -10,6 +10,13 @@ block content
           div.list-group
             each hottopic in hottopics
               a.list-group-item(href="/topic/#{hottopic._id}") #{hottopic.topic}
+        section.notice
+          h3.hot-title 全站公告
+            if user && user.isadmin
+              a.notice-btn.pull-right(href="/notice/add") 添加公告
+          div.btn-group.text-center
+            each notice in locals.notices
+              a.btn.btn-default.btn-do(href="/notice/#{notice._id}") #{notice.title}
       .col-md-9
         section#main-body.clearfix
           each topic in topics

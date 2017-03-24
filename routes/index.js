@@ -5,6 +5,7 @@ var AdminController = require('../controllers/admin');
 var Tagcontroller = require('../controllers/tag');
 var ResourceController = require('../controllers/resource');
 var TopicController = require('../controllers/topic');
+var NoticeController = require('../controllers/notice');
 var multer = require('multer');
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -72,8 +73,8 @@ module.exports = function(app) {
   app.post('/18r/users', checkLogin, AdminController.isAdmin, AdminController.searchusers);
   app.get('/18r/user/:id/edit', checkLogin, AdminController.isAdmin, AdminController.edituser);
   app.post('/18r/user/:id/edit', checkLogin, AdminController.isAdmin, AdminController.postuser);
-  app.get('/18r/roles/add', checkLogin, AdminController.getaddroles);
-  app.post('/18r/roles/add', checkLogin, AdminController.postaddroles);
+  app.get('/18r/roles/add', checkLogin, AdminController.isAdmin, AdminController.getaddroles);
+  app.post('/18r/roles/add', checkLogin, AdminController.isAdmin, AdminController.postaddroles);
   app.get('/18r/roles', checkLogin, AdminController.isAdmin,AdminController.getroles);
   app.get('/18r/role/:id/edit', checkLogin, AdminController.isAdmin,AdminController.getroleedit);
   app.post('/18r/role/:id/edit',checkLogin, AdminController.isAdmin,AdminController.postroleedit);
@@ -94,7 +95,12 @@ module.exports = function(app) {
   app.post('/movie/search', MovieController.search);
   app.get('/search', checkLogin, Tagcontroller.tagsByRedis,  UserController.search);
 
-
+  app.get('/notice/add', checkLogin, AdminController.isAdmin, NoticeController.getadd);
+  app.post('/notice/add', checkLogin, AdminController.isAdmin, NoticeController.postadd);
+  app.get('/notice/:id', Tagcontroller.tagsByRedis, MovieController.hotsByRedis, NoticeController.getnotice);
+  app.get('/notice/:id/update', checkLogin, AdminController.isAdmin, NoticeController.getupdate);
+  app.post('/notice/:id/update', checkLogin, AdminController.isAdmin, NoticeController.postupdate);
+  app.delete('/notice/delete', checkLogin, AdminController.isAdmin, NoticeController.delete);
   function checkLogin(req, res, next) {
     if( !req.session.user ) {
       req.flash('error', {'msg': '未登录！'});
@@ -110,6 +116,7 @@ module.exports = function(app) {
     }
     next();
   }
+
 
 
 

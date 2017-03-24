@@ -14,4 +14,11 @@ block content
             each hot,i in hots
               if i<5
                 a.list-group-item(href="/movie/#{hot._id}") #{hot.title}
+        section.notice
+          h3.hot-title 全站公告
+            if user && user.isadmin
+              a.notice-btn.pull-right(href="/notice/add") 添加公告
+          div.btn-group.text-center
+            each notice in locals.notices
+              a.btn.btn-default.btn-do(href="/notice/#{notice._id}") #{notice.title}
       include movie

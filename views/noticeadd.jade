@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  script(src="/ueditor/ueditor.config.js" charset="utf-8")
+  script(src="/ueditor/ueditor.all.min.js" charset="utf-8")
+  script(src="/ueditor/lang/zh-cn/zh-cn.js" charset="utf-8")
+  .container
+    .row
+      .col-md-8.col-md-offset-2
+        form.form-horizontal(method="post")
+          .form-group
+            label.col-sm-3.control-label(for="title") 公告标题
+            .col-sm-9
+              input#title.form-control(type="text" name="title")
+          .form-group
+            .col-sm-offset-3.col-sm-9
+              script#editor(type="text/plain" style="width:100%;height:500px;")
+          .form-group
+              .col-sm-offset-2.col-sm-10
+                button(type="submit").btn.btn-default 发布
+          script.
+            var ue = UE.getEditor('editor');
