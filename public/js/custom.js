@@ -121,5 +121,60 @@ $('#subaddto').click(function(e) {
 
 });
 
+$(".btn-get").click(function(e) {
+  var url = $('#douban').val();
+  console.log(url);
+  var idreg = /subject\/(\d+)\//;
+  var id = url.match(idreg);
+  console.log(id[1]);
+  $.ajax({
+    url: 'https://api.douban.com/v2/movie/subject/'+id[1],
+    type: 'GET',
+    dataType: 'jsonp',
+    crossDomain: true,
+    success: function(data) {
+      if(data) {
+        console.log(data);
+        var title = data.title;
+        var year = data.year;
+        var directors=[];
+        for(var i = 0; i< data.directors.length; i++) {
+          directors.push(data.directors[i].name);
+        }
+        directors = directors.join("/");
+        var players = [];
+        for(var j = 0; j<data.casts.length; j++) {
+          players.push(data.casts[j].name);
+        }
+        players = players.join("/");
+        var country = [];
+        for(var k = 0; k<data.countries.length; k++) {
+          country.push(data.countries[k])
+        }
+        country = country.join("/");
+        var summary = data.summary;
+        var img = data.images.large;
+        var types = data.genres;
+        console.log(img);
+        $(".checkbox-inline").each(function(e) {
+          var tag = $(this).text().trim();
+          var checkbox = $(this).find("input:checkbox");
+          if($.inArray(tag, types) > -1) {
+            checkbox.attr('checked', 'true');
+          }
+        });
+        $('#title').val(title);
+        $('#doctor').val(directors);
+        $('#players').val(players);
+        $('#country').val(country);
+        $('#year').val(year);
+        $('#summary').val(summary);
+        $(".doubanimg").attr('src', img);
+        $("input[name='eimg']").val(img);
+      }
+    }
+  })
+})
+
 
 });

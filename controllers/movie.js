@@ -12,6 +12,8 @@ var sharp = require('sharp');
 var redis = require("redis");
 var _ = require("underscore");
 var client = redis.createClient();
+var fs = require('fs');
+var request = require('request');
 
 exports.post = function(req, res) {
 
@@ -58,10 +60,39 @@ exports.post = function(req, res) {
       req.flash('error', errors);
       return res.redirect('/post');
     };
+    var path;
+    var destination;
+    var filename;
     if(req.file === undefined) {
-      req.flash('error', {'msg': '请上传正确的海报！'});
-      return res.redirect('/post');
-    };
+      if(req.body.eimg == '') {
+        req.flash('error', {'msg': '请上传正确的海报！'});
+        return res.redirect('/post');
+      } else {
+        var src = req.body.eimg;
+        destination = './public/uploads';
+        filename= "img-"+Date.now()+".jpg";
+        path = destination+"/" + filename;
+        var stream = request(src).pipe(fs.createWriteStream(path));
+        stream.on('finish', function() {
+          sharp(path)
+            .resize(400,400)
+            .quality(70)
+            .toFile(destination + '/400/' + filename , function(err) {
+              if(err) throw err;
+            });
+        });
+      }
+    }else {
+      path = req.file.path;
+      destination = req.file.destination;
+      filename = req.file.filename;
+      sharp(path)
+        .resize(400,400)
+        .quality(70)
+        .toFile(destination + '/400/' + filename , function(err) {
+          if(err) throw err;
+        });
+    }
     var resources = [].concat(req.body.resources);
     for(var i = 0; i < resources.length; i++) {
       var resource = resources[i];
@@ -72,13 +103,7 @@ exports.post = function(req, res) {
       }
 
     }
-
-    sharp(req.file.path)
-      .resize(400,400)
-      .quality(70)
-      .toFile(req.file.destination + '/400/' + req.file.filename , function(err) {
-        if(err) throw err;
-      });
+    
     var summary = req.body.summary;
     var htmlsummary = xss(summary, {
       whiteList: [],
@@ -94,7 +119,7 @@ exports.post = function(req, res) {
       year: req.body.year,
       types: req.body.types,
       summary: htmlsummary,
-      img: req.file.filename,
+      img: filename,
       creator: user._id
     };
     var movie = new Movie(movieObj);

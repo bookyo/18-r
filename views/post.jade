@@ -4,6 +4,14 @@ block content
   .container
     .row
       .col-md-8.col-md-offset-2
+        form.form-horizontal
+          .form-group
+            label.col-sm-3.control-label(for="douban") 通过豆瓣获取资料
+            .col-sm-9
+              .input-group
+                input#douban.form-control(type="text" name="douban" placeholder="输入豆瓣链接，例如：https://movie.douban.com/subject/25934014/")
+                span.input-group-btn
+                  button.btn.btn-default.btn-get(type="button") 获取
         form.form-horizontal(method="post" enctype="multipart/form-data")
           .form-group
             label.col-sm-3.control-label(for="title") 电影名称
@@ -40,6 +48,8 @@ block content
             label.col-sm-3.control-label(for="img") 海报
             .col-sm-9
               input#img.form-control(type="file" name="img")
+              input(type="hidden" name="eimg")
+              img.doubanimg
           .form-group
             label.col-sm-3.control-label(for="resources") 下载资源
             .col-sm-9.resources
