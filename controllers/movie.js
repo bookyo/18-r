@@ -231,7 +231,7 @@ exports.getMovie = function(req, res) {
       },
         function(err, results) {
           if(results.movie.review==1 || results.movie.review==2){
-            res.status(404).send( '此页面已经不存在了！');
+            return res.status(404).send( '此页面已经不存在了！');
           }
           var count = results.userbuymovie;
           if(results.movie.creator._id == userid) {
