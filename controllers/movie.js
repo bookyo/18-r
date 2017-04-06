@@ -69,6 +69,12 @@ exports.post = function(req, res) {
         return res.redirect('/post');
       } else {
         var src = req.body.eimg;
+        var filetype = src.substr(-3,3);
+        console.log(filetype=='jpg');
+        if(filetype != 'jpg') {
+          req.flash('error', {'msg': '请上传正确的海报！'});
+          return res.redirect('/post');
+        }
         destination = './public/uploads';
         filename= "img-"+Date.now()+".jpg";
         path = destination+"/" + filename;
