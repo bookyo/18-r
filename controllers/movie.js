@@ -192,7 +192,7 @@ exports.getMovie = function(req, res) {
           Movie.findByIdAndUpdate(id, {$inc: {pv: 1}})
                       .populate('types','_id tag')
                       .populate('creator', '_id name avatar')
-                      .populate('resources')
+                      .populate('resources', 'resource typeid')
                       .exec(function(err,movie) {
                         if(err) console.log(err);
                          callback(null,movie);
@@ -230,6 +230,9 @@ exports.getMovie = function(req, res) {
       }
       },
         function(err, results) {
+          if(!results.movie) {
+            return res.status(404).send('此页面已经不存在了！');
+          }
           if(results.movie.review==1 || results.movie.review==2){
             return res.status(404).send( '此页面已经不存在了！');
           }
@@ -588,7 +591,7 @@ function getRemoviesFromMongo(movie, cb) {
                     return - data.quanzhong;
                   });
                   groupmoviesArr = _.pluck(groupweightObj, 'arr');
-                  groupmoviesArr = groupmoviesArr.slice(0,9);
+                  groupmoviesArr = groupmoviesArr.slice(0,8);
                   if(groupmoviesArr) {
                     client.setex(recomid, 3600,  JSON.stringify(groupmoviesArr));
                   }
