@@ -209,7 +209,8 @@ exports.getMovie = function(req, res) {
       },
       userstopics: function(callback) {
         Topic.find({creator: userid})
-                   .exec(function(err, topics) {
+                 .limit(10)
+                 .exec(function(err, topics) {
                     if(err) {
                       console.log(err);
                     }

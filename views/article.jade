@@ -1,5 +1,23 @@
 extends layout
 
+append head
+  meta(name="keywords" content="#{movie.title},#{movie.title}下载,#{movie.title}百度云网盘,#{movie.title}bt磁力链接,#{movie.title}电驴ed2k")
+  meta(name="description" content="#{movie.summary}")
+  meta(property="og:type" content="videolist")
+  meta(property="og:title" content="#{movie.title}")
+  meta(property="og:description" content="#{movie.summary}")
+  meta(property="og:image" content="/uploads/400/#{movie.img}")
+  meta(property="og:url" content="http://www.bt-ed2k.com/movie/#{movie._id}")
+  meta(property="og:video:actor" content="#{movie.players}")
+  meta(property="og:video:director" content="#{movie.doctor}")
+  meta(property="og:video:area" content="#{movie.country}")
+  - var classarr = [];
+  each tag in tags
+    - classarr.push(tag.tag);
+  - var classes=classarr.join("、");
+  meta(property="og:video:class" content="#{classes}")
+
+
 block content
   .container
     .row

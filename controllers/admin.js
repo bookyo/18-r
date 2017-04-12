@@ -291,7 +291,8 @@ exports.getresources = function(req, res) {
 exports.getusers = function(req, res) {
         res.render('adminusers', {
           title: '后台用户管理',
-          user: req.session.user
+          user: req.session.user,
+          success: req.flash('success').toString()
         });
 }
 
@@ -341,6 +342,20 @@ exports.postuser = function(req, res) {
               res.redirect('/18r/users');
             });
           });
+}
+
+exports.deletzerousers = function(req, res) {
+  User.remove({postcounts: 0})
+          .exec(function(err, users) {
+            if(err){
+              console.log(err);
+              res.json({success: 0});
+            }else {
+              req.flash('success', '已删除积分为0的用户！');
+              res.json({success: 1});
+            }
+          })
+
 }
 
 exports.getroles = function(req, res){
@@ -485,6 +500,9 @@ exports.addCounts = function(userid, counts, roles) {
            .populate('role')
            .exec(function(err, user) {
                       user.postcounts = user.postcounts + counts;
+                      if(user.postcounts < 0) {
+                        user.postcounts = 0;
+                      }
                       var role = exports.checkRole(user.postcounts, roles);
                       user.role = role;
                       user.save(function(err, user) {

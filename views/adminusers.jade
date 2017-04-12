@@ -12,6 +12,13 @@ block content
           .form-group
               .col-sm-offset-3.col-sm-8
                 button(type="submit").btn.btn-default.addrow 确认
+                a.btn.btn-default.delzerouser(href="javascript:;") 删除积分为0的用户
+       .flash-message.container
+         .row
+           .col-md-12
+             - if (success)
+               .alert.alert-success= success
+                 a.close(href='#', data-dismiss='alert', aria-label='close') ×
         if resultuser
           table.table.table-bordered
             tr

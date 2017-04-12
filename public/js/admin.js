@@ -31,5 +31,5 @@ $(function() {
   .done(function(results) {
     window.location = '/';
   })
- })
+ });
 });

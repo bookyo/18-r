@@ -33,4 +33,14 @@ $(function() {
       window.location= '/18r/res';
     });
   });
+  $('.delzerouser').click(function(e) {
+   console.log('click delete');
+   $.ajax({
+     type: 'DELETE',
+     url: '/18r/users/deletezerousers'
+   })
+   .done(function(results) {
+     window.location = '/18r/users';
+   })
+  })
 });
