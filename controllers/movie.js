@@ -70,7 +70,6 @@ exports.post = function(req, res) {
       } else {
         var src = req.body.eimg;
         var filetype = src.substr(-3,3);
-        console.log(filetype=='jpg');
         if(filetype != 'jpg') {
           req.flash('error', {'msg': '请上传正确的海报！'});
           return res.redirect('/post');
