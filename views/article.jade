@@ -12,8 +12,8 @@ append head
   meta(property="og:video:director" content="#{movie.doctor}")
   meta(property="og:video:area" content="#{movie.country}")
   - var classarr = [];
-  each tag in tags
-    - classarr.push(tag.tag);
+  each type in movie.types
+    - classarr.push(type.tag);
   - var classes=classarr.join("、");
   meta(property="og:video:class" content="#{classes}")
 
