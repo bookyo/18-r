@@ -1,5 +1,10 @@
 extends layout
 
+append head
+  meta(name="keywords" content="#{topic.topic},#{topic.topic}下载")
+  - var description = topic.summary.replace(/\r?\n/g,"").substring(0,100)
+  meta(name="description" content="#{description}")
+
 block content
   .container
     .row
@@ -54,10 +59,10 @@ block content
                     dd #{movie.players}
                   dl 
                     dt 电影类型：
-                    each type in movie.types
-                       dd 
-                         a(href="/tag/#{type._id}")
-                            span.category #{type.tag}
+                    dd
+                      each type in movie.types
+                        a(href="/tag/#{type._id}")
+                          span.category #{type.tag}
                   dl.collec-summary
                     dt 电影剧情：
                     if movie.summary.length > 100
