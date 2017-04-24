@@ -28,7 +28,7 @@ TopicSchema.pre('save', function(next) {
 
   next();
 });
-TopicSchema.index({movies: 1});
-TopicSchema.index({creator: 1});
+TopicSchema.index({movies: 1, pv: -1});
+TopicSchema.index({creator: 1, "meta.updateAt": -1});
 TopicSchema.index({"meta.updateAt": -1});
 module.exports = TopicSchema;

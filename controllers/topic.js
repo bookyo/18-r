@@ -237,12 +237,16 @@ exports.delete = function(req, res) {
 exports.delmovie = function(req, res) {
   var movieid = req.query.movieid;
   var topicid = req.query.topicid;
-
+  
   if(movieid && topicid) {
     Topic.findOne({_id: topicid})
                .exec(function(err, topic) {
                 if(err) {
                   console.log(err);
+                }
+                if(topic.creator != req.session.user._id) {
+                  req.flash('error', {'msg': '对不起，您没有权限修改！'});
+                  return res.json({'success': 0});
                 }
                 var index = topic.movies.indexOf(movieid);
                 if(index>-1) {
@@ -266,6 +270,10 @@ exports.addmovie = function(req, res) {
              .exec(function(err, topic) {
               if(err) {
                 console.log(err);
+              }
+              if(topic.creator != req.session.user._id) {
+                req.flash('error', {'msg': '对不起，您没有权限修改！'});
+                return res.json({'success': 0});
               }
               var index = topic.movies.indexOf(movieid);
               if(index>-1) {

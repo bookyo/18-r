@@ -208,7 +208,8 @@ exports.getMovie = function(req, res) {
       },
       userstopics: function(callback) {
         Topic.find({creator: userid})
-                 .limit(10)
+                 .sort('-meta.updateAt')
+                 .limit(20)
                  .exec(function(err, topics) {
                     if(err) {
                       console.log(err);

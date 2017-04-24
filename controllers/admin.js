@@ -173,6 +173,7 @@ exports.getaddtags = function(req, res) {
       stripIgnoreTagBody: ['script']
     });
     Movie.findOne({_id: id})
+              .populate('creator', '_id postcounts')
                 .exec(function(err, movie){
                   movie.title = title;
                   movie.doctor = doctor;
@@ -187,8 +188,10 @@ exports.getaddtags = function(req, res) {
                     if(err) {
                       console.log(err);
                     }
-                    if(review==1){
-                      exports.addCounts(movie.creator, 10, req.roles);
+                    if(movie.creator.postcounts == 3){
+                      if(review==1){
+                        exports.addCounts(movie.creator._id, 10, req.roles);
+                      }
                     }
                     res.redirect('/18r/movies' );
                   });

@@ -139,3 +139,7 @@ a {
 .delzerouser{
   margin-left:15px;
 }
+.item-select{
+  max-height:250px;
+  overflow-y:scroll;
+}

@@ -6,11 +6,11 @@ html(lang="zh-CN")
       meta(http-equiv="X-UA-Compatible", content="IE=edge")
       meta(name="viewport", content="width=device-width, initial-scale=1")
     title= title
-    link(rel='stylesheet', href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css")
+    link(rel='stylesheet', href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css")
     link(rel='stylesheet', href='/stylesheets/style.css')
     <!--[if lt IE 9]>
-    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
   body
     nav.navbar.navbar-fixed-top.navbar-default
@@ -63,8 +63,8 @@ html(lang="zh-CN")
               for err in error
                 div=err.msg 
     block content
-    script(src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js")
-    script(src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js")
+    script(src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js")
+    script(src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js")
     script(src="/js/custom.js")
     if user && user.isadmin
       script(src='/js/admin.js')
