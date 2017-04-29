@@ -5,23 +5,23 @@ block content
     .row
       .col-md-3
         section.tags.clearfix
-          a.tag(href="/") 全部
+          a.tag(href="/" title="bt老司机") 全部
           each tag in tags 
             - if(tag.tag==tagname)
-              a.current.tag(href="/tag/#{tag._id}") #{tag.tag}
+              a.current.tag(href="/tag/#{tag._id}" title="#{tag.tag}电影大全") #{tag.tag}
             - else
-              a.tag(href="/tag/#{tag._id}") #{tag.tag}
+              a.tag(href="/tag/#{tag._id}" title="#{tag.tag}电影大全") #{tag.tag}
         section.hots
           h3.hot-title 一周影片热门榜
           div.list-group
             each hot,i in hots
               if i<5
-                a.list-group-item(href="/movie/#{hot._id}") #{hot.title}
+                a.list-group-item(href="/movie/#{hot._id}" title="#{hot.title}") #{hot.title}
         section.notice
           h3.hot-title 全站公告
             if user && user.isadmin
               a.notice-btn.pull-right(href="/notice/add") 添加公告
           div.btn-group.text-center
             each notice in locals.notices
-              a.btn.btn-default.btn-do(href="/notice/#{notice._id}") #{notice.title}
+              a.btn.btn-default.btn-do(href="/notice/#{notice._id}" title="#{notice.title}") #{notice.title}
        include movie

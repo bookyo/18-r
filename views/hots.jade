@@ -17,12 +17,12 @@ block content
             each hot in hots
               tr
                 td 
-                  a(href="/movie/#{hot._id}") #{hot.title}
+                  a(href="/movie/#{hot._id}" title="#{hot.title}") #{hot.title}
                 td #{hot.doctor}
                 td #{hot.players}
                 td 
                   each type in hot.types
-                    a(href="/tag/#{type._id}")
+                    a(href="/tag/#{type._id}" title="#{type.tag}电影大全")
                        span.category #{type.tag}
                 td #{hot.country}
                 td #{hot.year}

@@ -5,6 +5,8 @@ html(lang="zh-CN")
       meta(charset="utf-8")
       meta(http-equiv="X-UA-Compatible", content="IE=edge")
       meta(name="viewport", content="width=device-width, initial-scale=1")
+      meta(name="applicable-device", content="pc,mobile")
+      meta(http-equiv="Cache-Control", content="no-transform")
     title= title
     link(rel='stylesheet', href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css")
     link(rel='stylesheet', href='/stylesheets/style.css')
@@ -21,27 +23,27 @@ html(lang="zh-CN")
             span.icon-bar
             span.icon-bar
             span.icon-bar
-          a.navbar-brand(href="/") bt-ed2k
+          a.navbar-brand(href="/" title="bt老司机") bt-ed2k
 
         .collapse.navbar-collapse#18r-navbar
           p.navbar-text 老司机们的电影社区
           ul.nav.navbar-nav
             li
-              a(href='/') 首页
+              a(href='/' title="bt老司机") 首页
             li 
-              a(href="/tags") 电影分类
+              a(href="/tags" title="电影大全分类") 电影分类
             li 
-              a(href="/hots") 热门电影
+              a(href="/hots" title="热门电影") 热门电影
             li
-              a(href="/topics") 电影专题
+              a(href="/topics" title="电影专题") 电影专题
            if user
             .navbar-right
               form.navbar-form.navbar-left(method="get" action="/search")
                 .form-group
                   input.form-control(type="text" placeholder="输入电影名" name="q")
                 button.btn.btn-default(type="submit") 搜索
-              a.btn.btn-primary.navbar-btn(href="/post") 发布
-              a.btn.btn-default.avatar(href="/user/#{user._id}",style="margin-left:10px;") 
+              a.btn.btn-primary.navbar-btn(href="/post" title="发布电影") 发布
+              a.btn.btn-default.avatar(href="/user/#{user._id}",style="margin-left:10px;",title="#{user.name}") 
                 img(src="/upload/avatar/avatar-#{user.avatar}.jpg")
           else
             .navbar-right
@@ -49,8 +51,8 @@ html(lang="zh-CN")
                 .form-group
                   input.form-control(type="text" placeholder="输入电影名")
                 button.btn.btn-default(type="submit") 搜索
-              a.btn.btn-primary.navbar-btn(href="/reg") 注册
-              a.btn.btn-default(href="/login",style="margin-left:10px;") 登陆
+              a.btn.btn-primary.navbar-btn(href="/reg" title="注册") 注册
+              a.btn.btn-default(href="/login",style="margin-left:10px;" title="登录") 登陆
     .flash-message.container
       .row
         .col-md-12

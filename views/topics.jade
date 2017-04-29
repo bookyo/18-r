@@ -4,28 +4,28 @@ block content
   .container
     .row
       .col-md-3
-        a.btn.btn-info.btn-topic(href="/topic/new") 创建电影专题
+        a.btn.btn-info.btn-topic(href="/topic/new" title="创建电影专题") 创建电影专题
         section.hots
           h3.hot-title 专题热门推荐
           div.list-group
             each hottopic in hottopics
-              a.list-group-item(href="/topic/#{hottopic._id}") #{hottopic.topic}
+              a.list-group-item(href="/topic/#{hottopic._id}" title="#{hottopic.topic}") #{hottopic.topic}
         section.notice
           h3.hot-title 全站公告
             if user && user.isadmin
               a.notice-btn.pull-right(href="/notice/add") 添加公告
           div.btn-group.text-center
             each notice in locals.notices
-              a.btn.btn-default.btn-do(href="/notice/#{notice._id}") #{notice.title}
+              a.btn.btn-default.btn-do(href="/notice/#{notice._id}" title="#{notice.title}") #{notice.title}
       .col-md-9
         section#main-body.clearfix
           each topic in topics
             .col-md-4.col-sm-6.col-xs-12
               .movie-box.topic-box
-                a(href="/topic/#{topic._id}")
-                  img.img-responsive(src="/uploads/400/#{topic.movies[0].img}")
+                a(href="/topic/#{topic._id}" title="#{topic.topic}")
+                  img.img-responsive(src="/uploads/400/#{topic.movies[0].img}" alt="#{topic.topic}")
                 h2 
-                  a(href="/topic/#{topic._id}")= topic.topic
+                  a(href="/topic/#{topic._id}" title="#{topic.topic}")= topic.topic
                 .collection
                   p 最近收录
                   .col-lists

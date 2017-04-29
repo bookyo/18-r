@@ -3,10 +3,10 @@
     each movie in movies
       .col-md-3.col-sm-4.col-xs-6
         .movie-box
-          a(href="/movie/#{movie._id}")
-            img.img-responsive(src="/uploads/400/#{movie.img}")
+          a(href="/movie/#{movie._id}" title="#{movie.title}")
+            img.img-responsive(src="/uploads/400/#{movie.img}" alt="#{movie.title}")
           h2 
-            a(href="/movie/#{movie._id}")= movie.title
+            a(href="/movie/#{movie._id}" title="#{movie.title}")= movie.title
           dl
             dt.dtleft 导演：
             dd.ddright #{movie.doctor}
@@ -17,7 +17,7 @@
             dt 电影类型：
             each type in movie.types
                dd 
-                 a(href="/tag/#{type._id}")
+                 a(href="/tag/#{type._id}" title="#{type.tag}电影大全")
                     span.category #{type.tag}
   nav.pages
     if( pages> 1) 

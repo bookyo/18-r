@@ -9,27 +9,27 @@ block content
   .container
     .row
       .col-md-3
-        a.btn.btn-info.btn-topic(href="/topic/new") 创建电影专题
+        a.btn.btn-info.btn-topic(href="/topic/new" title="创建电影专题") 创建电影专题
         section.hots
           h3.hot-title 热门专题推荐
           div.list-group
             each hottopic,i in hottopics
-              a.list-group-item(href="/topic/#{hottopic._id}") #{hottopic.topic}
+              a.list-group-item(href="/topic/#{hottopic._id}" title="#{hottopic.topic}") #{hottopic.topic}
         section.notice
           h3.hot-title 全站公告
             if user && user.isadmin
               a.notice-btn.pull-right(href="/notice/add") 添加公告
           div.btn-group.text-center
             each notice in locals.notices
-              a.btn.btn-default.btn-do(href="/notice/#{notice._id}") #{notice.title}
+              a.btn.btn-default.btn-do(href="/notice/#{notice._id}" title="#{notice.title}") #{notice.title}
       .col-md-9
         section#main-body.clearfix
           .col-md-12.topic-body
             .topic-info
               h1 #{topic.topic}
               .author
-                a.author-info(href="/user/#{topic.creator._id}")
-                  img(src="/upload/avatar/avatar-#{topic.creator.avatar}.jpg" width="40" height="40")
+                a.author-info(href="/user/#{topic.creator._id}" title="#{topic.creator.name}")
+                  img(src="/upload/avatar/avatar-#{topic.creator.avatar}.jpg" width="40" height="40" alt="#{topic.creator.name}")
                   span #{topic.creator.name}
                 span.pubdate 发表于 #{pubdate}
                 .pull-right.admindo
@@ -43,11 +43,11 @@ block content
             each movie in movies
               .movie-lists.clearfix
                 .col-md-4.imgbox
-                  a(href="/movie/#{movie._id}")
-                    img.center-block.img-responsive(src="/uploads/400/#{movie.img}")
+                  a(href="/movie/#{movie._id}" title="#{movie.title}")
+                    img.center-block.img-responsive(src="/uploads/400/#{movie.img}" alt="#{movie.title}")
                 .col-md-8.movieinfo
                   h2 
-                    a(href="/movie/#{movie._id}") #{movie.title}
+                    a(href="/movie/#{movie._id}" title="#{movie.title}") #{movie.title}
                     if user 
                       if user._id == topic.creator._id || user.isadmin
                         button.delmovie.pull-right.btn.btn-danger(type="button", data-movieid="#{movie._id}", data-topicid="#{topic._id}") 删除
@@ -61,7 +61,7 @@ block content
                     dt 电影类型：
                     dd
                       each type in movie.types
-                        a(href="/tag/#{type._id}")
+                        a(href="/tag/#{type._id}" title="#{type.tag}电影大全")
                           span.category #{type.tag}
                   dl.collec-summary
                     dt 电影剧情：
