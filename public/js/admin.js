@@ -10,6 +10,18 @@ $(function() {
       window.location = '/';
     });
   });
+  $('.resdel').click(function(e) {
+    var target = $(e.target);
+    var id = target.data('id');
+    var movieid = target.data('movieid');
+    $.ajax({
+      type: 'DELETE',
+      url: '/18r/res/delete?id=' + id + '&movieid=' + movieid
+    })
+    .done(function(results) {
+      window.location= '/movie/'+movieid;
+    });
+  });
   $('.deltopic').click(function(e) {
    var target = $(e.target);
    var id = target.data('id');

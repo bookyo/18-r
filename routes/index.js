@@ -92,6 +92,8 @@ module.exports = function(app) {
   app.delete('/topic/delete', checkLogin, AdminController.isAdmin, TopicController.delete);
   app.delete('/topic/delmovie', checkLogin, TopicController.delmovie);
   app.post('/topic/addmovie', checkLogin, TopicController.addmovie);
+  app.get('/topic/:id/addmovie', checkLogin, TopicController.addmoviebyid);
+  app.post('/topic/:id/addmovie', checkLogin, TopicController.postaddmovie);
 
   app.post('/movie/search', MovieController.search);
   app.get('/search', checkLogin, Tagcontroller.tagsByRedis,  UserController.search);

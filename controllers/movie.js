@@ -14,6 +14,7 @@ var _ = require("underscore");
 var client = redis.createClient();
 var fs = require('fs');
 var request = require('request');
+var qiniuapi = require('../config/qiniu');
 
 exports.post = function(req, res) {
 
@@ -63,6 +64,7 @@ exports.post = function(req, res) {
     var path;
     var destination;
     var filename;
+    var toqiniudes = 'uploads';
     if(req.file === undefined) {
       if(req.body.eimg == '') {
         req.flash('error', {'msg': '请上传正确的海报！'});
@@ -84,6 +86,9 @@ exports.post = function(req, res) {
             .quality(70)
             .toFile(destination + '/400/' + filename , function(err) {
               if(err) throw err;
+              var filepath = destination + '/400/' + filename;
+              var tofilepath = toqiniudes + '/400/' + filename;
+              qiniuapi.uploadImg(tofilepath, filepath);
             });
         });
       }
@@ -96,6 +101,9 @@ exports.post = function(req, res) {
         .quality(70)
         .toFile(destination + '/400/' + filename , function(err) {
           if(err) throw err;
+          var filepath = destination + '/400/' + filename;
+          var tofilepath = toqiniudes + '/400/' + filename;
+          qiniuapi.uploadImg(tofilepath, filepath);
         });
     }
     var resources = [].concat(req.body.resources);
@@ -191,7 +199,7 @@ exports.getMovie = function(req, res) {
           Movie.findByIdAndUpdate(id, {$inc: {pv: 1}})
                       .populate('types','_id tag')
                       .populate('creator', '_id name avatar')
-                      .populate('resources', 'resource typeid')
+                      .populate('resources', '_id resource typeid')
                       .exec(function(err,movie) {
                         if(err) console.log(err);
                          callback(null,movie);
@@ -245,14 +253,12 @@ exports.getMovie = function(req, res) {
             if(err) {
               console.log(err);
             }
-            var title = results.movie.title +'('+ results.movie.year + '年电影)_下载,百度云网盘,bt磁力链接,电驴ED2K';
             var pubdate = moment(results.movie.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
             var tags = results.tags;
             var movie = results.movie;
             var topics = results.userstopics;
             var movieintopics = results.movieintopics;
             res.render('article', {
-                title: title,
                 hots: req.hots,
                 buy: count,
                 user: req.session.user,
@@ -273,7 +279,6 @@ exports.getMovie = function(req, res) {
 
 exports.new = function(req, res) {
     res.render('post', {
-      title: '发布电影',
       tags: req.tags,
       user: req.session.user,
       success: req.flash('success').toString(),
@@ -303,7 +308,6 @@ exports.new = function(req, res) {
     Movie.findOne({_id: id})
                 .exec( function(err, movie) {
                   res.render('update', {
-                    title: '编辑' + movie.title,
                     movie: movie,
                     tags: req.tags,
                     error: req.flash('error'),
@@ -368,6 +372,9 @@ exports.new = function(req, res) {
         .quality(70)
         .toFile(req.file.destination + '/400/' + req.file.filename , function(err) {
           if(err) throw err;
+          var filepath = req.file.destination + '/400/' + req.file.filename;
+          var tofilepath = 'uploads/400/' + req.file.filename;
+          qiniuapi.uploadImg(tofilepath, filepath);
         });
         img = req.file.filename;
     }
@@ -398,7 +405,6 @@ exports.new = function(req, res) {
 
  exports.gethots = function(req, res) {
     res.render('hots', {
-      title: '一周热门电影排行榜',
       hots: req.hots,
       user: req.session.user,
       success: req.flash('success').toString(),

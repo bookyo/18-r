@@ -1,5 +1,12 @@
 extends layout
 
+append title
+  title #{user.name}个人页面,#{user.name}发布的电影
+
+append head
+  meta(name="keywords" content="#{visituser.name}发布的电影,#{visituser.name}个人页面")
+  meta(name="description" content="#{visituser.name}发布的电影大全，#{visituser.name}个人页面包含了#{visituser.name}发布的所有电影。")
+
 block content
   .container
     .row

@@ -10,7 +10,6 @@ var client = redis.createClient();
 
 exports.getaddtags = function(req, res) {
     res.render('addtag', {
-      title: '添加分类标签',
       error: req.flash('error'),
       success: req.flash('success').toString()
     });
@@ -32,7 +31,6 @@ exports.getaddtags = function(req, res) {
 
   exports.getaddroles = function(req, res) {
   	res.render('addroles', {
-          title: '添加用户组',
           error: req.flash('error'),
           success: req.flash('success').toString()
          });
@@ -57,7 +55,6 @@ exports.getaddtags = function(req, res) {
 
   exports.getadmin = function(req, res) {
     res.render('admin', {
-      title:'18r管理界面',
       user: req.session.user
     });
   }
@@ -71,7 +68,6 @@ exports.getaddtags = function(req, res) {
                 .exec(function(err,movies) {
                   if(err) console.log(err);
                    res.render('adminmovies', {
-                    title: '审核中或者前台删除的电影列表',
                     movies: movies,
                     user: req.session.user
                    });
@@ -83,7 +79,6 @@ exports.getaddtags = function(req, res) {
     Movie.findOne({_id: id})
                 .exec( function(err, movie) {
                   res.render('movieedit', {
-                    title: '修改' + movie.title,
                     movie: movie,
                     tags: req.tags,
                     user: req.session.user
@@ -205,7 +200,6 @@ exports.gettags = function(req, res) {
             console.log(err);
           }
           res.render('admintags', {
-            title: '后台标签分类管理',
             tags: tags,
             user: req.session.user
           });
@@ -281,7 +275,6 @@ exports.getresources = function(req, res) {
          }
          Resource.count(function(err, count) {
             res.render('adminres', {
-              title: '资源管理',
               user: req.session.user,
               resources: resources,
               page: page,
@@ -293,7 +286,6 @@ exports.getresources = function(req, res) {
 
 exports.getusers = function(req, res) {
         res.render('adminusers', {
-          title: '后台用户管理',
           user: req.session.user,
           success: req.flash('success').toString()
         });
@@ -305,7 +297,6 @@ exports.searchusers = function(req, res) {
            .populate('role')
            .exec(function(err, user) {
               res.render('adminusers', {
-                title: '后台用户管理',
                 user:req.session.user,
                 resultuser: user
               });
@@ -319,7 +310,6 @@ exports.edituser = function(req, res) {
            .populate('role')
            .exec(function(err, user) {
               res.render('adminedituser', {
-                title: '修改用户资料',
                 user: req.session.user,
                 edituser: user
               });
@@ -365,7 +355,6 @@ exports.getroles = function(req, res){
   Role.find()
           .exec(function(err, roles){
             res.render('adminroles', {
-              title: '后台用户组管理',
               roles: roles,
               user: req.session.user
             });
@@ -376,7 +365,6 @@ exports.getroleedit = function(req, res) {
   Role.findOne({_id: id})
           .exec(function(err, role) {
             res.render('editrole', {
-              title: '编辑用户组',
               role: role,
               user: req.session.user
             });

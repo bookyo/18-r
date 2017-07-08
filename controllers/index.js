@@ -7,7 +7,6 @@ exports.index =  function(req, res, next) {
           console.log(err);
         }
         res.render('index', { 
-          title: "BT老司机_老司机们的电影分享社群",
           page: page,
           pages: indexObj.pages,
           user: req.session.user,

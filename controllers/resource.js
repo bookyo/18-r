@@ -9,7 +9,6 @@ exports.getadd =  function(req,res) {
                 .select('_id title')
                 .exec(function(err, movie) {
                   res.render('add_resource', {
-                    title: '添加《'+movie.title+'》的资源',
                     user: req.session.user,
                     success: req.flash('success').toString(),
                     error: req.flash('error'),

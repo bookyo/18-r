@@ -1,5 +1,12 @@
 extends layout
 
+append title
+  title 电影专题_bt老司机
+
+append head
+  meta(name="keywords" content="bt老司机电影专题")
+  meta(name="description" content="电影专题是用户根据自己的喜好创建的电影聚合专题，包罗万象，分门别类！")
+
 block content
   .container
     .row
@@ -23,7 +30,7 @@ block content
             .col-md-4.col-sm-6.col-xs-12
               .movie-box.topic-box
                 a(href="/topic/#{topic._id}" title="#{topic.topic}")
-                  img.img-responsive(src="/uploads/400/#{topic.movies[0].img}" alt="#{topic.topic}")
+                  img.img-responsive(src="#{locals.cdnhost}/uploads/400/#{topic.movies[0].img}" alt="#{topic.topic}")
                 h2 
                   a(href="/topic/#{topic._id}" title="#{topic.topic}")= topic.topic
                 .collection

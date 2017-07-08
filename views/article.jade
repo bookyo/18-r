@@ -2,10 +2,11 @@ extends layout
 
 append head
   meta(name="keywords" content="#{movie.title},#{movie.title}下载,#{movie.title}百度云网盘,#{movie.title}bt磁力链接,#{movie.title}电驴ed2k")
-  meta(name="description" content="#{movie.summary}")
+  - var description = movie.summary.replace(/\r?\n/g,"").substring(0,100)
+  meta(name="description" content="#{description}")
   meta(property="og:type" content="videolist")
   meta(property="og:title" content="#{movie.title}")
-  meta(property="og:description" content="#{movie.summary}")
+  meta(property="og:description" content="#{description}")
   meta(property="og:image" content="/uploads/400/#{movie.img}")
   meta(property="og:url" content="http://www.bt-ed2k.com/movie/#{movie._id}")
   meta(property="og:video:actor" content="#{movie.players}")
@@ -16,6 +17,13 @@ append head
     - classarr.push(type.tag);
   - var classes=classarr.join("、");
   meta(property="og:video:class" content="#{classes}")
+
+append title
+  - var classarr = [];
+  each type in movie.types
+    - classarr.push(type.tag);
+  - var classes=classarr.join("");
+  title #{movie.title}(#{movie.year}年电影)_下载/百度云网盘_#{movie.country}#{classes}_bt老司机
 
 
 block content
@@ -43,7 +51,7 @@ block content
         h1 #{movie.title}
         .author
           a.author-info(href="/user/#{movie.creator._id}" title="#{movie.creator.name}")
-            img(src="/upload/avatar/avatar-#{movie.creator.avatar}.jpg" width="40" height="40" alt="#{movie.creator.name}")
+            img(src="#{locals.cdnhost}/upload/avatar/avatar-#{movie.creator.avatar}.jpg" width="40" height="40" alt="#{movie.creator.name}")
             span #{movie.creator.name}
           span.pubdate 发表于 #{pubdate} &nbsp&nbsp
           span  已播放：#{movie.pv} 次
@@ -55,7 +63,7 @@ block content
               button.btn.btn-danger.del(type="button", data-id="#{movie._id}") 删除
         .movie-main.clearfix
             .col-md-5
-              img.img-responsive(src="/uploads/400/#{movie.img}" alt="#{movie.title}")
+              img.img-responsive(src="#{locals.cdnhost}/uploads/400/#{movie.img}" alt="#{movie.title}")
             .col-md-7.movie-info
               dl.clearfix
                 dt 导演:  
@@ -104,6 +112,8 @@ block content
                     - var baiduyun = baidure.resource.replace(urlreg,"<a href='$1$2' target='_blank'>$1$2</a>")
                     if buy
                       li.list-group-item!= baiduyun
+                        if user&&user.isadmin
+                          button.btn.btn-danger.resdel(type="button", data-movieid="#{movie._id}", data-id="#{baidure._id}") 删除
                     else
                       li.list-group-item
                         form.form(method="post",action="/movie/buy")
@@ -164,7 +174,7 @@ block content
                 .col-md-3.col-sm-4.col-xs-6
                   .movie-box
                     a(href="/movie/#{movie._id}" title="#{movie.title}")
-                      img.img-responsive(src="/uploads/400/#{movie.img}" alt="#{movie.title}")
+                      img.img-responsive(src="#{locals.cdnhost}/uploads/400/#{movie.img}" alt="#{movie.title}")
                     h4 
                       a(href="/movie/#{movie._id}" title="#{movie.title}")= movie.title
             div.modal.fade#addtotopic(tabindex="-1" role="dialog" aria-labelledby="addtotopictitle")

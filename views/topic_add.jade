@@ -1,7 +1,7 @@
 extends layout
 
 append title
-  title 创建电影专题_bt老司机
+  title 电影专题添加电影_bt老司机
 
 block content
   .container
@@ -11,16 +11,13 @@ block content
           .form-group
             label.col-sm-3.control-label(for="topic") 专题名字
             .col-sm-9
-              input#topic.form-control(type="text" name="topic" placeholder="输入5字以上专题名")
+              p.form-control-static #{topic.topic}
           .form-group
-            label.col-sm-3.control-label(for="summary") 专题简介
-            .col-sm-9
-              textarea#summary.form-control(rows="6" name="summary")
-          .form-group
-            label.col-sm-3.control-label(for="movies") 至少选择3个电影
+            label.col-sm-3.control-label(for="movies") 添加电影
             .col-sm-9
               .movie-lists
-                span.tip 在下方搜索电影进行添加（只显示10条数据）
+                span.tip 在下方搜索电影进行添加（若添加无效则是电影已存在）
+                input#topic_movies(type="hidden" name="newmovies" value="#{topic.movies}" data-ids="#{topic.movies}")
           .form-group
             .col-sm-9.col-sm-offset-3
               .input-group

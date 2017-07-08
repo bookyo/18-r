@@ -5,6 +5,7 @@ var Topic = require('../models/topic');
 var Movie = require('../models/movie');
 var xss = require('xss');
 var moment = require('moment');
+var _ = require("underscore");
 var redis = require("redis");
 var client = redis.createClient();
 
@@ -28,7 +29,6 @@ exports.getTopics = function(req, res) {
                     console.log(err);
                    }
                    res.render('topics', {
-                     title: '电影专题',
                      user: req.session.user,
                      hottopics: req.topics,
                      error: req.flash('error'),
@@ -44,7 +44,6 @@ exports.getTopics = function(req, res) {
 
 exports.getNew = function(req, res) {
   res.render( 'topic_new', {
-    title: '创建电影专题',
     user: req.session.user,
     error: req.flash('error'),
     success: req.flash('success').toString()
@@ -113,7 +112,6 @@ exports.editTopic = function(req, res) {
               }
               if(req.session.user.isadmin || (topic.creator == req.session.user._id)) {
                 res.render('topic_edit', {
-                  title: '修改电影专题',
                   user: req.session.user,
                   error: req.flash('error'),
                   topic:topic,
@@ -183,7 +181,6 @@ exports.getTopic = function(req, res) {
                 if(err) {
                   console.log(err);
                 }
-                var title = topic.topic + '_下载,百度云网盘,bt磁力链接,电驴ED2K';
                 var pubdate = moment(topic.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
                 var perPage = 10;
                 var page = req.query.page > 0 ? req.query.page : 1;
@@ -202,7 +199,6 @@ exports.getTopic = function(req, res) {
                                               console.log(err);
                                             }
                                             res.render('topic', {
-                                              title: title,
                                               topic:topic,
                                               hottopics: req.topics,
                                               movies: movies,
@@ -266,29 +262,81 @@ exports.delmovie = function(req, res) {
 exports.addmovie = function(req, res) {
   var movieid = req.body.movieid;
   var topicid = req.body.topicid;
-  Topic.findOne({_id: topicid})
-             .exec(function(err, topic) {
-              if(err) {
-                console.log(err);
-              }
-              if(topic.creator != req.session.user._id) {
-                req.flash('error', {'msg': '对不起，您没有权限修改！'});
-                return res.json({'success': 0});
-              }
-              var index = topic.movies.indexOf(movieid);
-              if(index>-1) {
-                req.flash('error', {'msg': '此电影已经存在！'});
-                return res.json({'success': 0});
-              }
-              topic.movies.push(movieid);
-              topic.save(function(err,topic) {
+  if(movieid && topicid) {
+    Topic.findOne({_id: topicid})
+               .exec(function(err, topic) {
                 if(err) {
                   console.log(err);
                 }
-                req.flash('success', '添加电影到专题成功！');
-                res.json({'success': 1});
-              })
-             })
+                if(topic.creator != req.session.user._id) {
+                  req.flash('error', {'msg': '对不起，您没有权限修改！'});
+                  return res.json({'success': 0});
+                }
+                var index = topic.movies.indexOf(movieid);
+                if(index>-1) {
+                  req.flash('error', {'msg': '此电影已经存在！'});
+                  return res.json({'success': 0});
+                }
+                topic.movies.push(movieid);
+                topic.save(function(err,topic) {
+                  if(err) {
+                    console.log(err);
+                  }
+                  req.flash('success', '添加电影到专题成功！');
+                  res.json({'success': 1});
+                })
+               })
+  }
+}
+
+exports.addmoviebyid = function(req, res) {
+  var id = req.params.id;
+  Topic.findOne({_id: id})
+           .exec(function(err, topic) {
+            if(err) {
+              console.log(err);
+            }
+            if(req.session.user.isadmin || (topic.creator == req.session.user._id)) {
+                res.render('topic_add', {
+                  user: req.session.user,
+                  error: req.flash('error'),
+                  topic:topic,
+                  success: req.flash('success').toString()
+                });
+              }
+              else {
+                req.flash('error', {'msg': '对不起，你没有权限添加！'});
+                return res.redirect('/topic/' + id);
+              }
+           })
+}
+
+exports.postaddmovie = function(req, res) {
+  var id = req.params.id;
+  var newmovies = req.body.newmovies;
+  newmovies = newmovies.split(",");
+  Topic.findOne({_id: id})
+           .exec(function(err, topic) {
+              if(err) {
+                console.log(err);
+              }
+              movies = topic.movies.join(',');
+              movies = movies.split(',');
+              newmovies = _.difference(newmovies, movies);
+              if(newmovies.length == 0) {
+                req.flash('error', {'msg': '对不起，你没有添加电影！'});
+                return res.redirect('/topic/' + id + '/addmovie');
+              }
+              newmovies = movies.concat(newmovies);
+              topic.movies = newmovies;
+              topic.save(function(err,topic) {
+                  if(err) {
+                    console.log(err);
+                  }
+                  req.flash('success', '添加电影成功');
+                  return res.redirect('/topic/'+ id);
+               })
+           })
 }
 
 exports.topicsByRedis = function(req, res, next) {

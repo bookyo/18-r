@@ -4,7 +4,6 @@ var Movie = require('../models/movie');
 var adminController = require('./admin');
 exports.getreg = function(req, res) {
     res.render('reg', {
-      title: "注册账号",
       error: req.flash('error'),
       success: req.flash('success').toString()
     });
@@ -105,7 +104,6 @@ exports.getreg = function(req, res) {
 
   exports.getlogin = function(req,res) {
     res.render('login', {
-      title: '登陆账号',
       user: req.session.user,
       error: req.flash('error'),
       success: req.flash('success').toString()
@@ -151,7 +149,6 @@ exports.getreg = function(req, res) {
   }
  exports.getedit = function(req, res) {
    res.render('useredit', {
-     title: '修改资料',
      user: req.session.user,
      error: req.flash('error'),
      success: req.flash('success').toString()
@@ -221,7 +218,6 @@ exports.getreg = function(req, res) {
                             console.log(err);
                            }
                            res.render('user', { 
-                              title: user.name+'个人页面,'+ user.name+'发布的电影',
                               page: page,
                               pages: Math.ceil(count/perPage),
                               error: req.flash('error'),

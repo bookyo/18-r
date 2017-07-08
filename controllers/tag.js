@@ -49,7 +49,6 @@ function getTagsFromRedis(cb) {
 
 exports.gettags= function(req,res) {
       res.render('tags', { 
-        title: "电影分类页",
         user: req.session.user,
         tags: req.tags,
         error: req.flash('error'),
@@ -81,7 +80,6 @@ exports.gettags= function(req,res) {
          }
          Movie.find({types:typeid }).where({'review': 3}).count(function(err, count) {
            res.render('tag', { 
-              title: tagname+'电影大全_下载,百度云网盘,bt磁力链接,电驴ED2K',
               tagname: tagname,
               page: page,
               pages: Math.ceil(count/perPage),

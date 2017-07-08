@@ -4,7 +4,6 @@ var moment = require('moment');
 
 exports.getadd = function(req, res) {
   res.render('noticeadd', {
-    title: '添加公告',
     user: req.session.user,
     success: req.flash('success').toString(),
     error: req.flash('error')
@@ -55,7 +54,6 @@ exports.getnotice = function(req, res) {
                 var pubdate = moment(notice.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
                 res.render('notice', {
                   notice: notice,
-                  title: notice.title,
                   tags: req.tags,
                   hots: req.hots,
                   pubdate: pubdate,
@@ -75,7 +73,6 @@ exports.getupdate = function(req, res) {
                 }
                 res.render('noticeupdate', {
                   notice: notice,
-                  title: '编辑公告',
                   user: req.session.user,
                   success: req.flash('success').toString(),
                   error: req.flash('error')

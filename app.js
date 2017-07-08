@@ -15,6 +15,8 @@ var MongoStore = require('connect-mongo')(session);
 var routes = require('./routes/index');
 var config = require('./config/db');
 var Notice = require('./models/notice');
+var qiniu = require('./config/qiniu');
+
 var app = express();
 app.use(compression());
 mongoose.connect('mongodb://127.0.0.1/bted2k', config);
@@ -61,6 +63,7 @@ app.use(function(req, res, next) {
   Notice.getNoticesByRedis(function(err, notices) {
     res.locals.notices = notices;
   });
+  res.locals.cdnhost = qiniu.host;
   res.locals.createPagination = function (pages, page) {
     var url = require('url')
       , qs = require('querystring')

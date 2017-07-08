@@ -31,6 +31,11 @@ $(document).ready(function(){
    });
  });
  var movielists = [];
+ var movies_arr = $("#topic_movies").data("ids");
+ if(movies_arr) {
+  var movielists = movies_arr.split(',');
+  console.log(movielists);
+ }
  $('.search-movie').click(function(e) {
     var title = $("#movie-title").val();
     var table = $(".table-search");
@@ -59,20 +64,23 @@ $(document).ready(function(){
        var movie = target.data('movie');
        target.parent().parent().remove();
        $("span.tip").remove();
-       if ($.inArray(movie, movielists) == -1) {
-          var movielist = "<span class='label label-primary movies-list'>" + movie + "<span class='p5 delete' data-movie='" + movie + "'>×</span></span>";
+       if ($.inArray(id, movielists) == -1) {
+          var movielist = "<span class='label label-primary movies-list'>" + movie + "<span class='p5 delete' data-id='" + id + "'>×</span></span>";
           var movieinput = "<input type='hidden' name='movies' value='" + id +"'>";
           var moviebox = "<span>" + movielist + movieinput + "</span>";
           listbox.append(moviebox);
-          movielists.push(movie);
+          movielists.push(id);
+          if(movies_arr) {
+            $("#topic_movies").val(movielists);
+          }
           console.log(movielists);
        }
         $('span.delete').on('click', function(e) {
           var target = $(e.target);
-          var movie = target.data('movie');
+          var id = target.data('id');
           target.parent().parent().remove();
-          if($.inArray(movie, movielists) != -1) {
-            movielists.splice($.inArray(movie, movielists), 1);
+          if($.inArray(id, movielists) != -1) {
+            movielists.splice($.inArray(id, movielists), 1);
           }
         });
       });
