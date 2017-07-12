@@ -323,11 +323,14 @@ exports.postuser = function(req, res) {
   var email = req.body.email;
   var postcounts = req.body.postcounts;
   User.findOne({_id: id})
+          .populate('role')
           .exec(function(err, user){
             user.name = name;
             user.signature= signature;
             user.email = email;
             user.postcounts = postcounts;
+            var role = exports.checkRole(user.postcounts, req.roles);
+            user.role = role;
             user.save(function(err, user){
               if(err) {
                 console.log(err);

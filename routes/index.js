@@ -72,7 +72,7 @@ module.exports = function(app) {
   app.get('/18r/users', checkLogin, AdminController.isAdmin, AdminController.getusers);
   app.post('/18r/users', checkLogin, AdminController.isAdmin, AdminController.searchusers);
   app.get('/18r/user/:id/edit', checkLogin, AdminController.isAdmin, AdminController.edituser);
-  app.post('/18r/user/:id/edit', checkLogin, AdminController.isAdmin, AdminController.postuser);
+  app.post('/18r/user/:id/edit', checkLogin, AdminController.isAdmin, AdminController.rolesByRedis, AdminController.postuser);
   app.delete('/18r/users/deletezerousers', checkLogin, AdminController.isAdmin, AdminController.deletzerousers);
   app.get('/18r/roles/add', checkLogin, AdminController.isAdmin, AdminController.getaddroles);
   app.post('/18r/roles/add', checkLogin, AdminController.isAdmin, AdminController.postaddroles);
