@@ -183,7 +183,7 @@ exports.getaddtags = function(req, res) {
                     if(err) {
                       console.log(err);
                     }
-                    if(movie.creator.postcounts == 3){
+                    if(movie.creator.postcounts < 13){
                       if(review==1){
                         exports.addCounts(movie.creator._id, 10, req.roles);
                       }
@@ -470,6 +470,9 @@ exports.checkLimitView = function(req, res, next) {
                                     if(err) {
                                       console.log(err);
                                     }
+                                    console.log(start);
+                                    console.log(count);
+                                    console.log(req.session.user.role.limitview);
                                     if(count>=req.session.user.role.limitview) {
                                       req.flash('error',{'msg': '对不起，您所在用户组每天只能查看'+ req.session.user.role.limitview + '个电影资源'});
                                       return res.redirect('back');
