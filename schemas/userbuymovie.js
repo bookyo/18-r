@@ -5,5 +5,11 @@ var UserBuyMovieSchema = new Schema({
   userid: Schema.Types.ObjectId,
   createAt: {type: Date, default: Date.now()}
 });
+UserBuyMovieSchema.pre('save', function(next) {
+  if (this.isNew) {
+    this.createAt = Date.now();
+  }
+  next();
+});
 UserBuyMovieSchema.index({movieid: 1, userid: 1});
 module.exports = UserBuyMovieSchema;
