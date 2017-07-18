@@ -10,7 +10,7 @@ append head
 block content
   .container
     .row
-      section.tags.clearfix
+      section.tags.tagsbody.clearfix
         each tag in tags
             .col-md-3
               a.tag(href="/tag/#{tag._id}" title="#{tag.tag}电影大全") #{tag.tag}
