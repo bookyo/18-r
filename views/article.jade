@@ -48,6 +48,10 @@ block content
             each notice in locals.notices
               a.btn.btn-default.btn-do(href="/notice/#{notice._id}" title="#{notice.title}") #{notice.title}
       .col-md-9.article
+        ol.breadcrumb
+          li
+            a(href="/") 首页
+          li.active 电影详情页
         h1 #{movie.title}
         .author
           a.author-info(href="/user/#{movie.creator._id}" title="#{movie.creator.name}")

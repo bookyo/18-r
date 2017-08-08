@@ -10,7 +10,12 @@ append head
 block content
   .container
     .row
+      ol.breadcrumb.clearfix
+          li
+            a(href="/") 首页
+          li.active 电影分类
       section.tags.tagsbody.clearfix
-        each tag in tags
-            .col-md-3
-              a.tag(href="/tag/#{tag._id}" title="#{tag.tag}电影大全") #{tag.tag}
+        .movie-tags.clearfix
+          each tag in tags
+              .col-md-3
+                a.tag(href="/tag/#{tag._id}" title="#{tag.tag}电影大全") #{tag.tag}

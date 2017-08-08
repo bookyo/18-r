@@ -28,4 +28,6 @@ block content
           div.btn-group.text-center
             each notice in locals.notices
               a.btn.btn-default.btn-do(href="/notice/#{notice._id}" title="#{notice.title}") #{notice.title}
-      include movie
+      .col-md-9
+         section#main-body.clearfix
+           include movie

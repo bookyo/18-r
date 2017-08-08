@@ -92,6 +92,11 @@ exports.getaddtags = function(req, res) {
       Movie.findOne({_id:id})
                   .exec(function(err, movie) {
                     exports.addCounts(movie.creator, -3, req.roles);
+                    Resource.remove({_id:{ $in: movie.resources}}, function(err) {
+                      if(err) {
+                        console.log(err);
+                      }
+                    });
                     movie.remove(function(err) {
                       if(err) {
                         console.log(err);
@@ -99,7 +104,7 @@ exports.getaddtags = function(req, res) {
                       }
                       res.json({success: 1});
                     });
-                  });
+                  })
     }
   }
   exports.postmovieedit = function(req, res) {

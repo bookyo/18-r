@@ -25,6 +25,10 @@ block content
             each notice in locals.notices
               a.btn.btn-default.btn-do(href="/notice/#{notice._id}" title="#{notice.title}") #{notice.title}
       .col-md-9
+        ol.breadcrumb.clearfix
+          li
+            a(href="/") 首页
+          li.active 电影专题
         section#main-body.clearfix
           each topic in topics
             .col-md-4.col-sm-6.col-xs-12
