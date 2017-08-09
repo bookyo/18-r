@@ -18,6 +18,6 @@ each movie in movies
              a(href="/tag/#{type._id}" title="#{type.tag}电影大全")
                 span.category #{type.tag}
 nav.pages
-if( pages> 1) 
-  ul.pagination
-    != createPagination(pages, page)
+  if( pages> 1) 
+    ul.pagination
+      != createPagination(pages, page)
