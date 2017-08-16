@@ -32,9 +32,9 @@ block content
             each notice in locals.notices
               a.btn.btn-default.btn-do(href="/notice/#{notice._id}" title="#{notice.title}") #{notice.title}
        .col-md-9
-       ol.breadcrumb.clearfix
-          li
-            a(href="/") 首页
-          li.active #{tagname}电影大全
+         ol.breadcrumb.clearfix
+            li
+              a(href="/") 首页
+            li.active #{tagname}电影大全
          section#main-body.clearfix
            include movie
