@@ -166,7 +166,7 @@ block content
                           input(type="hidden", name="id", value="#{movie._id}")
                           button(type="submit").btn.btn-info 查看资源
             if user
-              a.btn.btn-default.btn-block(href="/resource/#{movie._id}/add") 添加《#{movie.title}》的资源
+              a.btn.btn-default.btn-block(href="/resource/#{movie._id}/add") 添加本电影资源
             if movieintopics.length
               .movie-topics
                 h3.coltopic 收录于以下专题
