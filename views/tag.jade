@@ -12,7 +12,7 @@ block content
     .row
       .col-md-3
         section.tags.clearfix
-          a.tag(href="/" title="bt老司机") 全部
+          a.tag(href="/" title="bttags") 全部
           each tag in tags 
             - if(tag.tag==tagname)
               a.current.tag(href="/tag/#{tag._id}" title="#{tag.tag}电影大全") #{tag.tag}
