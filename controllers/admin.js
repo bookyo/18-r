@@ -298,14 +298,27 @@ exports.getusers = function(req, res) {
 
 exports.searchusers = function(req, res) {
   var id = req.body.user
-  User.findOne({_id: id})
-           .populate('role')
-           .exec(function(err, user) {
+  var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+  if(!myreg.test(id)){
+    User.findOne({_id: id})
+             .populate('role')
+             .exec(function(err, user) {
+                res.render('adminusers', {
+                  user:req.session.user,
+                  resultuser: user
+                });
+             });
+  } else {
+    User.findOne({email: id})
+            .populate('role')
+            .exec(function(err, user) {
               res.render('adminusers', {
-                user:req.session.user,
+                user: req.session.user,
                 resultuser: user
               });
-           });
+            });
+  }
+  
 
 }
 
@@ -472,18 +485,30 @@ exports.checkLimitView = function(req, res, next) {
     var now = new Date();
     var day = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
     var start = new Date(day);
-    UserBuyMovie.find({userid: req.session.user._id})
-                                 .where('createAt').gt(start)
-                                 .count(function(err, count){
-                                    if(err) {
-                                      console.log(err);
-                                    }
-                                    if(count>=req.session.user.role.limitview) {
-                                      req.flash('error',{'msg': '对不起，您所在用户组每天只能查看'+ req.session.user.role.limitview + '个电影资源'});
-                                      return res.redirect('back');
-                                    }
-                                    next();
-                                 });
+    User.findOne({_id: req.session.user._id})
+            .select('_id role')
+            .populate('role', 'limitview')
+            .exec(function(err, user) {
+              if(err) {
+                console.log(err);
+              }
+              if(!user) {
+                req.flash('error', {'msg': '对不起，没有找到对应用户！'});
+                return res.redirect('back');
+              }
+              UserBuyMovie.find({userid: user._id})
+                                      .where('createAt').gt(start)
+                                      .count(function(err, count) {
+                                        if(err) {
+                                          console.log(err);
+                                        }
+                                        if(count >= user.role.limitview) {
+                                          req.flash('error', {'msg': '对不起，您所在用户组每天只能查看' + user.role.limitview + '个电影资源!'});
+                                          return res.redirect('back')
+                                        }
+                                        next();
+                                      })
+            })
   }
 
 exports.checkRole = function(postcounts, roles) {
