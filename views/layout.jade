@@ -24,7 +24,11 @@ html(lang="zh-CN")
             span.icon-bar
             span.icon-bar
           a.navbar-brand(href="/" title="bttags") bttags
-
+          form(method="get" action="/search")
+            .input-group.wapserach
+              input.form-control(type="text" placeholder="电影名搜索" name="q")
+              span.input-group-btn
+                button.btn.btn-default(type="submit") Go
         .collapse.navbar-collapse#18r-navbar
           p.navbar-text 最好用的电影分享社区
           ul.nav.navbar-nav
@@ -38,7 +42,7 @@ html(lang="zh-CN")
               a(href="/topics" title="电影专题") 电影专题
            if user
             .navbar-right
-              form.navbar-form.navbar-left(method="get" action="/search")
+              form.navbar-form.navbar-left.pc-search(method="get" action="/search")
                 .form-group
                   input.form-control(type="text" placeholder="输入电影名" name="q")
                 button.btn.btn-default(type="submit") 搜索
