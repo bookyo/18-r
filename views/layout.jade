@@ -51,7 +51,7 @@ html(lang="zh-CN")
                 img(src="/upload/avatar/avatar-#{user.avatar}.jpg")
           else
             .navbar-right
-              form.navbar-form.navbar-left(method="get" action="/search")
+              form.navbar-form.navbar-left.pc-search(method="get" action="/search")
                 .form-group
                   input.form-control(type="text" placeholder="输入电影名")
                 button.btn.btn-default(type="submit") 搜索
