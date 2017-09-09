@@ -128,10 +128,11 @@ block content
                 .panel-heading bt磁力链接
                 ul.list-group
                   each cilire in cilires
-                    - var cili = cilire.resource.split('&')
+                    - var cilireg = /magnet:\?xt=urn:btih:[\s\S]{40}/;
+                    - var cili = cilire.resource.match(cilireg);
                     if buy
-                      li.list-group-item 
-                        a(href="#{cili[0]}" target='_blank') 磁力链接
+                      li.list-group-item
+                        a(href="#{cili}" target="_blank") 磁力链接
                     else
                       li.list-group-item
                         form.form(method="post",action="/movie/buy")

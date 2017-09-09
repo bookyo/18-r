@@ -3,6 +3,7 @@ var UserBuyMovie = require('../models/userbuymovie');
 var Resource = require('../models/resource');
 var adminController = require('./admin');
 var async = require('async');
+var xss = require('xss');
 exports.getadd =  function(req,res) {
     var movieid = req.params.id;
     Movie.findOne({_id: movieid})
@@ -31,8 +32,9 @@ exports.getadd =  function(req,res) {
         }
         for(var i=0; i<resources.length;i++) {
           var typeid = checkResTypeId(resources[i]);
+          var resource = xss(resources[i]);
           var resourceObj = {
-            resource: resources[i],
+            resource: resource,
             tomovie: movieid,
             creator: req.session.user,
             typeid: typeid
@@ -52,7 +54,7 @@ exports.getadd =  function(req,res) {
                           });
             });
           } else {
-            req.flash('error', {'msg': '输入的资源类型有误,本站只支持百度云，360云，磁力和电驴'});
+            req.flash('error', {'msg': '输入的资源类型有误,本站只支持百度云，磁力和电驴'});
             return res.redirect('back');
           }
 

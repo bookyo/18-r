@@ -117,7 +117,18 @@ exports.post = function(req, res) {
 
     }
     
-    var summary = req.body.summary;
+    var title = req.sanitize('title').trim();
+    var doctor = req.sanitize('doctor').trim();
+    var players = req.sanitize('players').trim();
+    var country = req.sanitize('country').trim();
+    var year = req.sanitize('year').trim();
+    var summary = req.sanitize('summary').trim();
+    title = xss(title);
+    doctor = xss(doctor);
+    players = xss(players);
+    country = xss(country);
+    year = xss(year);
+    summary = xss(summary);
     var htmlsummary = xss(summary, {
       whiteList: [],
       stripIgnoreTag: true,
@@ -125,11 +136,11 @@ exports.post = function(req, res) {
     });
     var user= req.session.user;
     var movieObj = {
-      title: req.body.title,
-      doctor: req.body.doctor,
-      players: req.body.players,
-      country: req.body.country,
-      year: req.body.year,
+      title: title,
+      doctor: doctor,
+      players: players,
+      country: country,
+      year: year,
       types: req.body.types,
       summary: htmlsummary,
       img: filename,
@@ -143,6 +154,7 @@ exports.post = function(req, res) {
       var resources_id = [];
       for(var i=0; i<resources.length;i++){
         var resource = resources[i];
+        resource = xss(resource);
         var typeid = checkResTypeId(resource);
         var resourceObj = {
           resource: resource,
@@ -318,11 +330,12 @@ exports.new = function(req, res) {
   }
   exports.postupdate = function(req, res) {
     var id = req.params.id;
-    var title = req.body.title;
-    var doctor = req.body.doctor;
-    var players = req.body.players;
-    var country = req.body.country;
-    var year = req.body.year;
+    var title = req.sanitize('title').trim();
+    var doctor = req.sanitize('doctor').trim();
+    var players = req.sanitize('players').trim();
+    var country = req.sanitize('country').trim();
+    var year = req.sanitize('year').trim();
+    var summary = req.sanitize('summary').trim();
     var types =  req.body.types;
     var img;
     req.checkBody({
@@ -378,7 +391,6 @@ exports.new = function(req, res) {
         });
         img = req.file.filename;
     }
-    var summary = req.body.summary;
     var htmlsummary = xss(summary, {
       whiteList: [],
       stripIgnoreTag: true,

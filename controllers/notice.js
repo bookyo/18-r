@@ -28,8 +28,8 @@ exports.postadd = function(req, res) {
   };
   var title = req.sanitize('title').trim();
   var content = req.sanitize('editorValue').trim();
-  var title = xss(title);
-  var content = xss(content);
+  title = xss(title);
+  content = xss(content);
   var noticeObj = {
     title: title,
     content: content,
