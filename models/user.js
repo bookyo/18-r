@@ -26,7 +26,7 @@ User.getRanksByRedis = function(cb) {
 }
 function getRanksFromMongo(cb) {
   User.where('postcounts').gt(13)
-             .limit(100)
+             .limit(99)
              .sort('-postcounts')
              .populate('role', 'role')
              .select('_id name signature postcounts avatar role')
