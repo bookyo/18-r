@@ -15,6 +15,7 @@ var MongoStore = require('connect-mongo')(session);
 var routes = require('./routes/index');
 var config = require('./config/db');
 var Notice = require('./models/notice');
+var User = require('./models/user');
 var qiniu = require('./config/qiniu');
 
 var app = express();
@@ -62,6 +63,9 @@ app.use(session({
 app.use(function(req, res, next) {
   Notice.getNoticesByRedis(function(err, notices) {
     res.locals.notices = notices;
+  });
+  User.getRanksByRedis(function(err, ranks) {
+    res.locals.userranks = ranks;
   });
   res.locals.cdnhost = qiniu.host;
   res.locals.createPagination = function (pages, page) {

@@ -285,3 +285,16 @@ exports.getreg = function(req, res) {
     }
 
   }
+
+  exports.userranks = function(req, res) {
+    User.getRanksByRedis(function(err, userranks) {
+      res.render('userranks', {
+        tags: req.tags,
+        hots: req.hots,
+        error: req.flash('error'),
+        success: req.flash('success').toString(),
+        user: req.session.user,
+        userranks: userranks
+      })
+    })
+  }

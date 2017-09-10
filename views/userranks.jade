@@ -1,14 +1,18 @@
 extends layout
 
+append head
+  meta(name="keywords" content="用户天梯榜,bttags名人榜")
+  meta(name="description" content="用户天梯榜，用户贡献积分排行榜，bttags名人榜！")
+
 append title
-  title #{notice.title}
+  title 用户天梯榜_bttags名人榜
 
 block content
   .container
     .row
       .col-md-3
         section.tags.clearfix
-          a.tag.current(href="/") 全部
+          a.tag.current(href="/" title="bttags") 全部
           each tag in tags 
             a.tag(href="/tag/#{tag._id}" title="#{tag.tag}电影大全") #{tag.tag}
         section.hots
@@ -47,12 +51,32 @@ block content
             each notice in locals.notices
               a.btn.btn-default.btn-do(href="/notice/#{notice._id}" title="#{notice.title}") #{notice.title}
       .col-md-9
-        .notice-box
-          h1 #{notice.title}
-          span.pubdate 发表于 #{pubdate}
-          if user && user.isadmin
-            a(href="/notice/#{notice._id}/update") 
-              |   修改
-            button.btn.btn-sm.btn-danger.del-notice(type="button", data-id="#{notice._id}") 删除
-          .notice-content
-            != notice.content
+         section#main-body.clearfix
+           ol.breadcrumb
+             li
+               a(href="/") 首页
+             li.active 用户天梯榜
+           table.table.table-bordered
+             tr
+               th 天梯排名
+               th 个人签名
+               th 用户组
+               th 贡献积分
+             each rank,i in userranks
+               tr
+                 td 
+                   case i
+                     when 0
+                       span.hot-ranks.hot-ranks-1 #{i+1}
+                     when 1
+                       span.hot-ranks.hot-ranks-2 #{i+1}
+                     when 2
+                       span.hot-ranks.hot-ranks-3 #{i+1}
+                     default
+                       span.hot-ranks #{i+1}
+                   a.rank-a(href="/user/#{rank._id}") 
+                     img.rank-avatar(src="/upload/avatar/avatar-#{rank.avatar}.jpg" width="40" height="40" alt="#{rank.name}")
+                     | #{rank.name}
+                 td #{rank.signature}
+                 td #{rank.role.role}
+                 td #{rank.postcounts}

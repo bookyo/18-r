@@ -104,6 +104,9 @@ module.exports = function(app) {
   app.get('/notice/:id/update', checkLogin, AdminController.isAdmin, NoticeController.getupdate);
   app.post('/notice/:id/update', checkLogin, AdminController.isAdmin, NoticeController.postupdate);
   app.delete('/notice/delete', checkLogin, AdminController.isAdmin, NoticeController.delete);
+  
+  app.get('/userranks', Tagcontroller.tagsByRedis,MovieController.hotsByRedis, UserController.userranks);
+
   function checkLogin(req, res, next) {
     if( !req.session.user ) {
       req.flash('error', {'msg': '未登录！'});

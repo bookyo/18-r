@@ -163,5 +163,11 @@ a {
 }
 .topic-box img{margin:0 auto;}
 .wapserach{padding:8px 0;padding-right:10px;display:none;}
+.hot-ranks{display:inline-block;padding:1px 0;color:#fff; width:14px; line-height:100%; font-size:12px; text-align:center;background-color:#8eb9f5; margin-right: 5px;}
+.hot-ranks-1{background-color: #f54545;}
+.hot-ranks-2{background-color: #ff8547;}
+.hot-ranks-3{background-color: #ffac38;}
+.rank-avatar{margin-right:3px;}
+.rank-a:hover{text-decoration: none;}
 @media (max-width:991px){.movie-info{margin-top:20px;} .pc-search{display:none;}}
-@media(max-width:767px) {.breadcrumb{margin-bottom:10px;margin-top:10px;}.article h1{font-size:20px;margin-top:10px;margin-bottom:5px;}.hot-title{font-size:16px;} .notice{display:none;} .hots{display:none;}.wapserach{display:table;}}
+@media(max-width:767px) {.breadcrumb{margin-bottom:10px;margin-top:10px;}.article h1{font-size:20px;margin-top:10px;margin-bottom:5px;}.hot-title{font-size:16px;} .notice{display:none;} .hots{display:none;}.side-ranks{display:none;}.wapserach{display:table;}}

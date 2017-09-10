@@ -18,6 +18,28 @@ block content
           div.list-group
             each hottopic,i in hottopics
               a.list-group-item(href="/topic/#{hottopic._id}" title="#{hottopic.topic}") #{hottopic.topic}
+        section.side-ranks
+          h3.hot-title 用户天梯榜
+            a.notice-btn.pull-right(href="/userranks") 全部排名
+          table.table.table-condensed
+            tr
+              th 排名
+              th 贡献积分
+            each userrank,i in locals.userranks
+              if i<5
+                tr
+                  td
+                    case i
+                      when 0
+                        span.hot-ranks.hot-ranks-1 #{i+1}
+                      when 1
+                        span.hot-ranks.hot-ranks-2 #{i+1}
+                      when 2
+                        span.hot-ranks.hot-ranks-3 #{i+1}
+                      default
+                        span.hot-ranks #{i+1}
+                    a(href="/user/#{userrank._id}") #{userrank.name}
+                  td #{userrank.postcounts}
         section.notice
           h3.hot-title 全站公告
             if user && user.isadmin

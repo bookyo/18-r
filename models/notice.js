@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var NoticeSchema = require('../schemas/notice');
 var Notice = mongoose.model('Notice', NoticeSchema);
-var redis = require('redis')
+var redis = require('redis');
 var client = redis.createClient();
 
 Notice.getNoticesByRedis = function(cb) {
