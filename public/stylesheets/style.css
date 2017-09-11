@@ -60,6 +60,7 @@ a {
 }
 .pages{
 	text-align:center;
+      clear: both;
 }
 .article{margin-bottom:20px;}
 .article h1{padding-left:15px;}

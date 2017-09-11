@@ -4,6 +4,7 @@ var Tag = require('../models/tag');
 var Topic = require('../models/topic');
 var Resource = require('../models/resource');
 var UserBuyMovie = require('../models/userbuymovie');
+var Category = require('../models/category');
 var adminController = require('./admin');
 var xss = require('xss');
 var async = require('async');
@@ -287,6 +288,119 @@ exports.getMovie = function(req, res) {
           
         }
       );
+}
+
+exports.getbyyear = function(req, res) {
+  var year = req.params.year;
+  var title;
+  var keywords;
+  Category.getCategoriesByRedis(function(err, categories) {
+    var exist = _.find(categories, function(category) { return category.name == year});
+    if(!exist) {
+      return res.status(404).send( '错误的分类条件！');
+    }else{
+      var perPage = 16;
+      var page = req.query.page > 0 ? req.query.page : 1;
+      var condition;
+      switch(exist.operator)
+      {
+        case 'equal':
+          condition = {year: exist.condition};
+          title = year + '年电影大全_' + year + '年上映的电影';
+          keywords = year + '年电影大全,' + year + '年上映的电影';
+          break;
+        case 'lessthan':
+          condition = {year: {$lt: exist.condition}};
+          title = '老电影大全_经典老电影_早期电影';
+          keywords = '老电影大全,经典老电影,早期电影';
+          break;
+        case 'greaterthan':
+          condition = {year: {$gt: exist.condition}};
+          title = year + '年以后上映的电影';
+          keywords = year + '年以后上映的电影';
+          break;
+      }
+      Movie
+        .find(condition)
+        .where({'review': 3})
+        .select('title _id doctor players types img')
+        .populate('types', '_id tag')
+        .limit(perPage)
+        .skip(perPage * (page-1))
+        .sort('-meta.updateAt')
+        .exec( function(err, movies) {
+           if(err) {
+             console.log(err);
+           }
+            Movie.find(condition).where({'review': 3}).count(function(err, count) {
+              res.render('tags', { 
+                 title: title,
+                 keywords: keywords,
+                 page: page,
+                 pages: Math.ceil(count/perPage),
+                 tags: req.tags,
+                 categories: categories,
+                 user: req.session.user,
+                 error: req.flash('error'),
+                 movies: movies,
+                 success: req.flash('success').toString()
+              });
+            });
+           
+         });
+
+    }
+  });
+  
+}
+
+exports.getbycountry = function(req, res) {
+  var country = req.params.country;
+  var title;
+  var keywords;
+  var reg = new RegExp(country);
+  Category.getCategoriesByRedis(function(err, categories) {
+    var exist = _.find(categories, function(category) { return category.name == country});
+    if(!exist) {
+      return res.status(404).send( '错误的分类条件！');
+    }else{
+      var perPage = 16;
+      var page = req.query.page > 0 ? req.query.page : 1;
+      var condition;
+      condition = { country: reg };
+      title = country + '电影大全_' + '好看的' + country + '电影_' + '经典的' + country + '电影';
+      keywords = country + '电影大全,' + '好看的' + country + '电影,' + '经典的' + country + '电影';
+      Movie
+        .find(condition)
+        .where({'review': 3})
+        .select('title _id doctor players types img')
+        .populate('types', '_id tag')
+        .limit(perPage)
+        .skip(perPage * (page-1))
+        .sort('-meta.updateAt')
+        .exec( function(err, movies) {
+           if(err) {
+             console.log(err);
+           }
+            Movie.find(condition).where({'review': 3}).count(function(err, count) {
+              res.render('tags', { 
+                 title: title,
+                 keywords: keywords,
+                 page: page,
+                 pages: Math.ceil(count/perPage),
+                 tags: req.tags,
+                 categories: categories,
+                 user: req.session.user,
+                 error: req.flash('error'),
+                 movies: movies,
+                 success: req.flash('success').toString()
+              });
+            });
+           
+         });
+
+    }
+  });
 }
 
 exports.new = function(req, res) {

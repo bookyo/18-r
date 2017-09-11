@@ -1,0 +1,26 @@
+extends adminlayout
+
+append title
+  title 后台分类信息管理
+
+block content
+   .container
+    .row
+      .col-md-12
+        a(href="/18r/category/add") 添加分类信息
+        table.table.table-bordered
+          tr
+            th 类别
+            th 名称
+            th 运算符
+            th 分类条件
+            th 操作
+          tbody
+            each category in categories
+              tr(class="item-id-#{category._id}")
+                td #{category.class}
+                td #{category.name}
+                td #{category.operator}
+                td #{category.condition}
+                td 
+                  button.btn.btn-danger.categorydel(type="button", data-id="#{category._id}") 删除

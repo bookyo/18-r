@@ -1,0 +1,42 @@
+extends adminlayout
+
+append title
+  title 添加分类信息
+
+block content
+   .container
+    .row
+      .col-md-8.col-md-offset-2
+        form.form-horizontal(method="post")
+          .form-group
+            label.col-sm-3.control-label(for="class") 分类类别
+            .col-sm-9
+              label.radio-inline
+                input.types(type="radio" value="country" name="class")
+                | 发型国家
+              label.radio-inline
+                input.types(type="radio" value="year" name="class" checked)
+                | 年份
+          .form-group
+            label.col-sm-3.control-label(for="name") 分类名称
+            .col-sm-9
+              input#name.form-control(type="text" name="name")
+          .form-group
+            label.col-sm-3.control-label(for="operator") 分类操作符
+            .col-sm-9
+              label.radio-inline
+                input.types(type="radio" value="lessthan" name="operator")
+                | 小于
+              label.radio-inline
+                input.types(type="radio" value="equal" name="operator" checked)
+                | 等于
+              label.radio-inline
+                input.types(type="radio" value="greaterthan" name="operator")
+                | 大于
+          .form-group
+            label.col-sm-3.control-label(for="condition") 分类条件
+            .col-sm-9
+              input#condition.form-control(type="text" name="condition")
+          .form-group
+              .col-sm-offset-3.col-sm-8
+                button(type="submit").btn.btn-default.addrow 确认

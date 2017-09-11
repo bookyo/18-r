@@ -1,11 +1,18 @@
 extends layout
 
 append title
-  title 电影分类页_bttags
+  if title
+    title #{title}_bttags
+  else
+    title 电影检索分类信息_bttags
 
 append head
-  meta(name="keywords" content="电影分类查询")
-  meta(name="description" content="bttags电影分类查询，可以通过电影分类，电影年份等进行电影检索！")
+  if title
+    meta(name="keywords" content="#{keywords}")
+    meta(name="description" content="bttags电影分类查询，#{title}")
+  else
+    meta(name="keywords" content="电影分类检索")
+    meta(name="description" content="bttags电影分类查询，可以根据年份，类型或者国家进行分类查询！")
 
 block content
   .container
@@ -14,8 +21,49 @@ block content
           li
             a(href="/") 首页
           li.active 电影分类
+      h2.hots-title 按电影类型分类
       section.tags.tagsbody.clearfix
         .movie-tags.clearfix
           each tag in tags
-              .col-md-3
-                a.tag(href="/tag/#{tag._id}" title="#{tag.tag}电影大全") #{tag.tag}
+            a.tag(href="/tag/#{tag._id}" title="#{tag.tag}电影大全") #{tag.tag}
+      - var years = [];
+      - var countries = [];
+      each category in categories
+        if category.class == 'year'
+          - years.push(category);
+        else if category.class == 'country'
+          - countries.push(category);
+      h2.hots-title 按电影年份分类
+      section.tags.tagsbody.clearfix
+        .year-tags.clearfix
+          each year in years
+            a.tag(href='/year/#{year.name}') #{year.name}
+      h2.hots-title 按发行国家分类
+      section.tags.tagsbody.clearfix
+        .country-tags.clearfix
+          each country in countries
+            a.tag(href='/country/#{country.name}') #{country.name}
+      if movies
+        each movie in movies
+          .col-md-3.col-sm-4.col-xs-6
+            .movie-box
+              a(href="/movie/#{movie._id}" title="#{movie.title}")
+                img.img-responsive(src="#{locals.cdnhost}/uploads/400/#{movie.img}" alt="#{movie.title}")
+              h2 
+                a(href="/movie/#{movie._id}" title="#{movie.title}")= movie.title
+              dl
+                dt.dtleft 导演：
+                dd.ddright #{movie.doctor}
+              dl 
+                dt.dtleft 主演：
+                dd.ddright #{movie.players}
+              dl 
+                dt 电影类型：
+                each type in movie.types
+                   dd 
+                     a(href="/tag/#{type._id}" title="#{type.tag}电影大全")
+                        span.category #{type.tag}
+        nav.pages.clearfix
+          if( pages> 1) 
+            ul.pagination
+              != createPagination(pages, page)

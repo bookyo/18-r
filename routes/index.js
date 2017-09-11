@@ -79,9 +79,18 @@ module.exports = function(app) {
   app.get('/18r/roles', checkLogin, AdminController.isAdmin,AdminController.getroles);
   app.get('/18r/role/:id/edit', checkLogin, AdminController.isAdmin,AdminController.getroleedit);
   app.post('/18r/role/:id/edit',checkLogin, AdminController.isAdmin,AdminController.postroleedit);
+  app.get('/18r/categories', checkLogin, AdminController.isAdmin, AdminController.getcategories);
+  app.get('/18r/category/add', checkLogin, AdminController.isAdmin, AdminController.addcategory);
+  app.post('/18r/category/add', checkLogin, AdminController.isAdmin, AdminController.postaddcategory);
+  app.delete('/18r/category/delete', checkLogin, AdminController.isAdmin, AdminController.delcategory);
+  
+
   app.get('/tags', Tagcontroller.tagsByRedis,Tagcontroller.gettags);
  
   app.get('/tag/:id', Tagcontroller.tagsByRedis,MovieController.hotsByRedis,Tagcontroller.gettag);
+  app.get('/year/:year', Tagcontroller.tagsByRedis, MovieController.getbyyear);
+  app.get('/country/:country', Tagcontroller.tagsByRedis, MovieController.getbycountry);
+
 
   app.get('/topics', TopicController.topicsByRedis,  TopicController.getTopics);
   app.get('/topic/new', checkLogin, AdminController.canaddres, TopicController.getNew);

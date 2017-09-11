@@ -1,5 +1,6 @@
 var Movie = require('../models/movie');
 var Tag = require('../models/tag');
+var Category = require('../models/category');
 var redis = require("redis");
 var client = redis.createClient();
 
@@ -48,12 +49,18 @@ function getTagsFromRedis(cb) {
 }
 
 exports.gettags= function(req,res) {
-      res.render('tags', { 
-        user: req.session.user,
-        tags: req.tags,
-        error: req.flash('error'),
-        success: req.flash('success').toString()
-      });
+      Category.getCategoriesByRedis(function(err, categories) {
+        if(err) {
+          console.log(err);
+        }
+        res.render('tags', {
+          user: req.session.user,
+          tags: req.tags,
+          categories: categories,
+          error: req.flash('error'),
+          success: req.flash('success').toString()
+        })
+      })
   }
 
  exports.gettag = function(req, res) {

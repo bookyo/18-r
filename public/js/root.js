@@ -43,4 +43,15 @@ $(function() {
      window.location = '/18r/users';
    })
   })
+  $('.categorydel').click(function(e) {
+    var target = $(e.target);
+    var id = target.data('id');
+    $.ajax({
+      type: 'DELETE',
+      url: '/18r/category/delete?id=' + id
+    })
+    .done(function(results) {
+      window.location= '/18r/categories';
+    });
+  });
 });

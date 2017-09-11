@@ -4,6 +4,7 @@ var Movie = require('../models/movie');
 var Resource = require('../models/resource');
 var User = require('../models/user');
 var UserBuyMovie = require('../models/userbuymovie');
+var Category = require('../models/category');
 var redis = require("redis");
 var xss = require('xss');
 var client = redis.createClient();
@@ -416,6 +417,58 @@ exports.postroleedit = function(req, res) {
             });
           });
 }
+
+exports.getcategories = function(req, res) {
+  Category.getCategories(function(err, categories) {
+    if(err) {
+      console.log(err);
+    }
+    res.render('admincategories', {
+      categories: categories,
+      user: req.session.user
+    })
+  })
+}
+
+exports.addcategory = function(req, res) {
+  res.render('adminaddcategory', {
+    user: req.session.user
+  })
+}
+
+exports.postaddcategory = function(req, res) {
+  var cateclass = req.body.class;
+  var name = req.body.name;
+  var operator = req.body.operator;
+  var condition = req.body.condition;
+  var categoryObj = {
+    class: cateclass,
+    name: name,
+    operator: operator,
+    condition: condition
+  }
+  var newcategory = new Category(categoryObj);
+  newcategory.save(function(err) {
+    if(err) {
+      console.log(err)
+    }
+    res.redirect('/18r/categories');
+  })
+}
+
+exports.delcategory = function(req, res) {
+  var id = req.query.id;
+  Category.remove({_id: id})
+          .exec(function(err, category) {
+            if(err){
+              console.log(err);
+              res.json({success: 0});
+            }else {
+              res.json({success: 1});
+            }
+          })
+}
+
 exports.rolesByRedis = function(req, res, next) {
   getRolesFromRedis(function(err, roles) {
     if(err) return next(err);

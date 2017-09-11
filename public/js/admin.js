@@ -22,6 +22,7 @@ $(function() {
       window.location= '/movie/'+movieid;
     });
   });
+
   $('.deltopic').click(function(e) {
    var target = $(e.target);
    var id = target.data('id');
