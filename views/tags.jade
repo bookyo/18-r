@@ -28,7 +28,7 @@ block content
             a.tag(href="/tag/#{tag._id}" title="#{tag.tag}电影大全") #{tag.tag}
       - var years = [];
       - var countries = [];
-      each category in categories
+      each category in locals.categories
         if category.class == 'year'
           - years.push(category);
         else if category.class == 'country'

@@ -16,6 +16,7 @@ var routes = require('./routes/index');
 var config = require('./config/db');
 var Notice = require('./models/notice');
 var User = require('./models/user');
+var Category = require('./models/category');
 var qiniu = require('./config/qiniu');
 
 var app = express();
@@ -66,6 +67,9 @@ app.use(function(req, res, next) {
   });
   User.getRanksByRedis(function(err, ranks) {
     res.locals.userranks = ranks;
+  });
+  Category.getCategoriesByRedis(function(err, categories) {
+    res.locals.categories = categories;
   });
   res.locals.cdnhost = qiniu.host;
   res.locals.createPagination = function (pages, page) {

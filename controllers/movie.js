@@ -294,7 +294,7 @@ exports.getbyyear = function(req, res) {
   var year = req.params.year;
   var title;
   var keywords;
-  Category.getCategoriesByRedis(function(err, categories) {
+  Category.getCategoriesByRedis(function(err,categories){
     var exist = _.find(categories, function(category) { return category.name == year});
     if(!exist) {
       return res.status(404).send( '错误的分类条件！');
@@ -339,7 +339,6 @@ exports.getbyyear = function(req, res) {
                  page: page,
                  pages: Math.ceil(count/perPage),
                  tags: req.tags,
-                 categories: categories,
                  user: req.session.user,
                  error: req.flash('error'),
                  movies: movies,
@@ -349,8 +348,9 @@ exports.getbyyear = function(req, res) {
            
          });
 
-    }
-  });
+      }
+  })
+  
   
 }
 
@@ -359,7 +359,7 @@ exports.getbycountry = function(req, res) {
   var title;
   var keywords;
   var reg = new RegExp(country);
-  Category.getCategoriesByRedis(function(err, categories) {
+  Category.getCategoriesByRedis(function(err,categories){
     var exist = _.find(categories, function(category) { return category.name == country});
     if(!exist) {
       return res.status(404).send( '错误的分类条件！');
@@ -389,7 +389,6 @@ exports.getbycountry = function(req, res) {
                  page: page,
                  pages: Math.ceil(count/perPage),
                  tags: req.tags,
-                 categories: categories,
                  user: req.session.user,
                  error: req.flash('error'),
                  movies: movies,
@@ -400,7 +399,8 @@ exports.getbycountry = function(req, res) {
          });
 
     }
-  });
+  })
+  
 }
 
 exports.new = function(req, res) {

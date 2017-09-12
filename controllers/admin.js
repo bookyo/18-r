@@ -419,7 +419,7 @@ exports.postroleedit = function(req, res) {
 }
 
 exports.getcategories = function(req, res) {
-  Category.getCategories(function(err, categories) {
+  Category.getCategoriesByRedis(function(err, categories) {
     if(err) {
       console.log(err);
     }

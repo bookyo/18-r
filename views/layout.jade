@@ -70,6 +70,26 @@ html(lang="zh-CN")
                 div=err.msg 
     block content
     .footer
+      .container
+        .row
+          .col-md-12
+            - var years = [];
+            - var countries = [];
+            each category in locals.categories
+              if category.class == 'year'
+                - years.push(category);
+              else if category.class == 'country'
+                - countries.push(category);
+            h3.foot-title 电影年份检索
+            section.tags.tagsfoot.clearfix
+              .year-tags.clearfix
+                each year in years
+                  a.tag(href='/year/#{year.name}') #{year.name}
+            h3.foot-title 出品国家检索
+            section.tags.tagsfoot.clearfix
+              .country-tags.clearfix
+                each country in countries
+                  a.tag(href='/country/#{country.name}') #{country.name}
       p
         | &copy;  2017 bttags   
         | 本站不提供任何视听上传服务，所有内容均来自视频分享站点所提供的公开引用资源<script language="javascript" type="text/javascript" src="//js.users.51.la/19240881.js"></script>

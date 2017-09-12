@@ -150,6 +150,7 @@ a {
   padding-top:10px;
   padding-bottom:10px;
   background-color:#f8f8f8;
+  margin-top:20px;
 }
 .footer p{
   text-align:center;
@@ -170,5 +171,7 @@ a {
 .hot-ranks-3{background-color: #ffac38;}
 .rank-avatar{margin-right:3px;}
 .rank-a:hover{text-decoration: none;}
+.foot-title{font-size:14px;margin-bottom:0;margin-top:10px;text-align:center;color:#777;}
+.tagsfoot{margin:0;}
 @media (max-width:991px){.movie-info{margin-top:20px;} .pc-search{display:none;}}
 @media(max-width:767px) {.breadcrumb{margin-bottom:10px;margin-top:10px;}.article h1{font-size:20px;margin-top:10px;margin-bottom:5px;}.hot-title{font-size:16px;} .notice{display:none;} .hots{display:none;}.side-ranks{display:none;}.wapserach{display:table;}}
