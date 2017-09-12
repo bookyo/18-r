@@ -1,0 +1,81 @@
+doctype html
+html(lang="zh-CN")
+  head
+    block title
+    block head
+      meta(charset="utf-8")
+      meta(http-equiv="X-UA-Compatible", content="IE=edge")
+      meta(name="viewport", content="width=device-width, initial-scale=1")
+      meta(name="applicable-device", content="pc,mobile")
+      meta(http-equiv="Cache-Control", content="no-transform")
+    link(rel='stylesheet', href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css")
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  body
+    nav.navbar.navbar-fixed-top.navbar-default
+      .container
+        .navbar-header
+          button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#18r-navbar', aria-expanded='false')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href="/" title="bttags") bttags
+          form(method="get" action="/search")
+            .input-group.wapserach
+              input.form-control(type="text" placeholder="电影名搜索" name="q")
+              span.input-group-btn
+                button.btn.btn-default(type="submit") Go
+        .collapse.navbar-collapse#18r-navbar
+          p.navbar-text 最好用的电影分享社区
+          ul.nav.navbar-nav
+            li
+              a(href='/' title="bttags") 首页
+            li 
+              a(href="/tags" title="电影大全分类") 电影分类
+            li 
+              a(href="/hots" title="热门电影") 热门电影
+            li
+              a(href="/topics" title="电影专题") 电影专题
+           if user
+            .navbar-right
+              form.navbar-form.navbar-left.pc-search(method="get" action="/search")
+                .form-group
+                  input.form-control(type="text" placeholder="输入电影名" name="q")
+                button.btn.btn-default(type="submit") 搜索
+              a.btn.btn-primary.navbar-btn(href="/post" title="发布电影") 发布
+              a.btn.btn-default.avatar(href="/user/#{user._id}",style="margin-left:10px;",title="#{user.name}") 
+                img(src="/upload/avatar/avatar-#{user.avatar}.jpg")
+          else
+            .navbar-right
+              form.navbar-form.navbar-left.pc-search(method="get" action="/search")
+                .form-group
+                  input.form-control(type="text" placeholder="输入电影名")
+                button.btn.btn-default(type="submit") 搜索
+              a.btn.btn-primary.navbar-btn(href="/reg" title="注册") 注册
+              a.btn.btn-default(href="/login",style="margin-left:10px;" title="登录") 登陆
+    .flash-message.container
+      .row
+        .col-md-12
+          - if (success)
+            .alert.alert-success= success
+              a.close(href='#', data-dismiss='alert', aria-label='close') ×
+          - if (error.length)
+            .alert.alert-danger
+              a.close(href='#', data-dismiss='alert', aria-label='close') ×
+              for err in error
+                div=err.msg 
+    block content
+    .footer
+      p
+        | &copy;  2017 bttags   
+        | 本站不提供任何视听上传服务，所有内容均来自视频分享站点所提供的公开引用资源<script language="javascript" type="text/javascript" src="//js.users.51.la/19240881.js"></script>
+    script(src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js")
+    script(src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js")
+    script(src="/js/custom.js")
+    if user && user.isadmin
+      script(src='/js/admin.js')
+    

@@ -43,7 +43,7 @@ exports.getTopics = function(req, res) {
 }
 
 exports.getNew = function(req, res) {
-  res.render( 'topic_new', {
+  res.render('topic_new', {
     user: req.session.user,
     error: req.flash('error'),
     success: req.flash('success').toString()

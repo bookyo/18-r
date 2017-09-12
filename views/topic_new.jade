@@ -1,11 +1,12 @@
-extends layout
+extends layoutnolocals
 
 append title
-  title 创建电影专题_bttags
+  title 发布电影专题
 
 block content
   .container
     .row
+      span #{locals.userranks}
       .col-md-8.col-md-offset-2
         form.form-horizontal(method="post")
           .form-group

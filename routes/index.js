@@ -91,7 +91,6 @@ module.exports = function(app) {
   app.get('/year/:year', Tagcontroller.tagsByRedis, MovieController.getbyyear);
   app.get('/country/:country', Tagcontroller.tagsByRedis, MovieController.getbycountry);
 
-
   app.get('/topics', TopicController.topicsByRedis,  TopicController.getTopics);
   app.get('/topic/new', checkLogin, AdminController.canaddres, TopicController.getNew);
   app.post('/topic/new', checkLogin, AdminController.canaddres, TopicController.postNew);
