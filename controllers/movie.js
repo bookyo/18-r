@@ -336,6 +336,7 @@ exports.getbyyear = function(req, res) {
               res.render('tags', { 
                  title: title,
                  keywords: keywords,
+                 navname: exist.name,
                  page: page,
                  pages: Math.ceil(count/perPage),
                  tags: req.tags,
@@ -386,6 +387,7 @@ exports.getbycountry = function(req, res) {
               res.render('tags', { 
                  title: title,
                  keywords: keywords,
+                 navname: exist.name,
                  page: page,
                  pages: Math.ceil(count/perPage),
                  tags: req.tags,

@@ -128,11 +128,6 @@ $('#subaddto').click(function(e) {
   }
 
 });
-$(".tagsbody .tag").each(function() {
-  if($($(this))[0].href == String(window.location)) {
-    $(this).addClass('current');
-  }
-});
 $(".btn-get").click(function(e) {
   var url = $('#douban').val();
   console.log(url);
