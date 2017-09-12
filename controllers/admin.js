@@ -452,6 +452,7 @@ exports.postaddcategory = function(req, res) {
     if(err) {
       console.log(err)
     }
+    client.del('categories');
     res.redirect('/18r/categories');
   })
 }
@@ -464,6 +465,7 @@ exports.delcategory = function(req, res) {
               console.log(err);
               res.json({success: 0});
             }else {
+              client.del('categories');
               res.json({success: 1});
             }
           })
