@@ -69,7 +69,7 @@ app.use(function(req, res, next) {
     res.locals.userranks = ranks;
   });
   Category.getCategoriesByRedis(function(err, categories) {
-    res.locals.categories = categories;
+    app.locals.categories = categories;
   });
   res.locals.cdnhost = qiniu.host;
   res.locals.createPagination = function (pages, page) {
