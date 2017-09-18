@@ -130,10 +130,8 @@ $('#subaddto').click(function(e) {
 });
 $(".btn-get").click(function(e) {
   var url = $('#douban').val();
-  console.log(url);
   var idreg = /subject\/(\d+)\//;
   var id = url.match(idreg);
-  console.log(id[1]);
   $.ajax({
     url: 'https://api.douban.com/v2/movie/subject/'+id[1],
     type: 'GET',
@@ -141,7 +139,7 @@ $(".btn-get").click(function(e) {
     crossDomain: true,
     success: function(data) {
       if(data) {
-        console.log(data);
+        // console.log(data);
         var title = data.title;
         var year = data.year;
         var directors=[];
@@ -162,7 +160,12 @@ $(".btn-get").click(function(e) {
         var summary = data.summary;
         var img = data.images.large;
         var types = data.genres;
-        console.log(img);
+        var aka = data.aka;
+        var original_title = data.original_title;
+        if(original_title || aka) {
+          summary = '电影名：'+ original_title +'  '+ aka.join('  ') + '\n' + summary;
+        }
+        summary = summary.replace(/©豆瓣/, "");
         $(".checkbox-inline").each(function(e) {
           var tag = $(this).text().trim();
           var checkbox = $(this).find("input:checkbox");
