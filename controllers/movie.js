@@ -181,6 +181,23 @@ exports.post = function(req, res) {
               console.log(err);
             }
             adminController.addCounts(req.session.user._id, 3,req.roles);
+            var uri = 'http://data.zz.baidu.com/urls?site=https://bttags.com&token=iqs1eByPNQ45en6A';
+            var url = 'https://bttags.com/movie/'+movie._id;
+            request({
+              url: uri,
+              method: "POST",
+              headers: {
+                "content-type": "text/plain"
+              },
+              body: url
+            }, function(error, response, body) {
+              if(error) {
+                console.log(error);
+              }
+              if(response.statusCode != 200) {
+                console.log(body);
+              }
+            });
             if(req.session.user.isadmin) {
               req.flash('success', '恭喜，发布电影成功！');
               return res.redirect('/movie/'+ movie._id);
