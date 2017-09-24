@@ -173,5 +173,6 @@ a {
 .rank-a:hover{text-decoration: none;}
 .foot-title{font-size:14px;margin-bottom:0;margin-top:10px;text-align:center;color:#777;}
 .tagsfoot{margin:0;}
+#pop{font-family:"Microsoft Yahei";font-size:14px;}
 @media (max-width:991px){.movie-info{margin-top:20px;} .pc-search{display:none;}}
 @media(max-width:767px) {.breadcrumb{margin-bottom:10px;margin-top:10px;}.article h1{font-size:20px;margin-top:10px;margin-bottom:5px;}.hot-title{font-size:16px;} .notice{display:none;} .hots{display:none;}.side-ranks{display:none;}.wapserach{display:table;}.categories-tags{display:none;}}

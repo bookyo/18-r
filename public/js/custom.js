@@ -128,6 +128,23 @@ $('#subaddto').click(function(e) {
   }
 
 });
+$("input#title").change(function(){
+  var title = $(this).val();
+  $.ajax({
+          url: '/movie/search?title='+title,
+          type: 'POST',
+          success: function(movies) {
+            if(movies.length>0) {
+              $('#title').popover({
+                content: "<div id='pop'>已有用户发布名为<b>"+movies[0].title+"</b>的电影！点击查看：<a href='/search?q="+movies[0].title+"' target='_blank'>"+movies[0].title+"</a>，如不是同一部电影，请无视！</div>",
+                placement: 'top',
+                html: true,
+                trigger: 'focus'
+              }).focus();
+            }
+          }
+        })
+});
 $(".btn-get").click(function(e) {
   var url = $('#douban').val();
   var idreg = /subject\/(\d+)\//;
@@ -181,6 +198,20 @@ $(".btn-get").click(function(e) {
         $('#summary').val(summary);
         $(".doubanimg").attr('src', img);
         $("input[name='eimg']").val(img);
+        $.ajax({
+          url: '/movie/search?title='+title,
+          type: 'POST',
+          success: function(movies) {
+            if(movies.length>0) {
+              $('#title').popover({
+                content: "<div id='pop'>已有用户发布名为<b>"+movies[0].title+"</b>的电影！点击查看：<a href='/search?q="+movies[0].title+"' target='_blank'>"+movies[0].title+"</a>，如不是同一部电影，请无视！</div>",
+                placement: 'top',
+                html: true,
+                trigger: 'focus'
+              }).focus();
+            }
+          }
+        })
       }
     }
   })

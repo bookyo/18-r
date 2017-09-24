@@ -103,7 +103,7 @@ module.exports = function(app) {
   app.get('/topic/:id/addmovie', checkLogin, TopicController.addmoviebyid);
   app.post('/topic/:id/addmovie', checkLogin, TopicController.postaddmovie);
 
-  app.post('/movie/search', MovieController.search);
+  app.post('/movie/search', checkLogin, MovieController.search);
   app.get('/search', checkLogin, Tagcontroller.tagsByRedis,  UserController.search);
 
   app.get('/notice/add', checkLogin, AdminController.isAdmin, NoticeController.getadd);
