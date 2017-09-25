@@ -17,7 +17,7 @@ var config = require('./config/db');
 var Notice = require('./models/notice');
 var User = require('./models/user');
 var Category = require('./models/category');
-var qiniu = require('./config/qiniu');
+// var qiniu = require('./config/qiniu'); #千牛CDN
 
 var app = express();
 app.use(compression());
@@ -71,7 +71,7 @@ app.use(function(req, res, next) {
   Category.getCategoriesByRedis(function(err, categories) {
     app.locals.categories = categories;
   });
-  res.locals.cdnhost = qiniu.host;
+  // res.locals.cdnhost = qiniu.host;  #千牛CDN
   res.locals.createPagination = function (pages, page) {
     var url = require('url')
       , qs = require('querystring')

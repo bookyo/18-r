@@ -56,7 +56,7 @@ block content
             .col-md-4.col-sm-6.col-xs-12
               .movie-box.topic-box
                 a(href="/topic/#{topic._id}" title="#{topic.topic}")
-                  img.img-responsive(src="#{locals.cdnhost}/uploads/400/#{topic.movies[0].img}" alt="#{topic.topic}")
+                  img.img-responsive(src="/uploads/400/#{topic.movies[0].img}" alt="#{topic.topic}")
                 h2 
                   a(href="/topic/#{topic._id}" title="#{topic.topic}")= topic.topic
                 .collection
