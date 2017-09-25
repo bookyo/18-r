@@ -89,7 +89,7 @@ block content
               button.btn.btn-danger.del(type="button", data-id="#{movie._id}") 删除
         .movie-main.clearfix
             .col-md-5
-              img.img-responsive(src="/uploads/400/#{movie.img}" alt="#{movie.title}")
+              img.img-responsive.lazy(data-original="/uploads/400/#{movie.img}" alt="#{movie.title}")
             .col-md-7.movie-info
               dl.clearfix
                 dt 导演:  
@@ -201,7 +201,7 @@ block content
                 .col-md-3.col-sm-4.col-xs-6
                   .movie-box
                     a(href="/movie/#{movie._id}" title="#{movie.title}")
-                      img.img-responsive(src="/uploads/400/#{movie.img}" alt="#{movie.title}")
+                      img.img-responsive.lazy(data-original="/uploads/400/#{movie.img}" alt="#{movie.title}")
                     h4 
                       a(href="/movie/#{movie._id}" title="#{movie.title}")= movie.title
             div.modal.fade#addtotopic(tabindex="-1" role="dialog" aria-labelledby="addtotopictitle")
