@@ -1,0 +1,26 @@
+extends layout
+
+append title
+  title 添加《#{movie.title}》的图片
+
+block content
+  .container
+    .row
+      .col-md-8.col-md-offset-2
+        form.form-horizontal(method="post" enctype="multipart/form-data" action="/uploadimgs")
+          .form-group
+            label.col-sm-3.control-label 添加图片的电影为
+            .col-sm-9
+              p.form-control-static #{movie.title} 
+              input(type="hidden" name="movieid" value="#{movie._id}")
+          .form-group
+            label.col-sm-3.control-label(for="imgs") 选择图片(可多选)
+            .col-sm-9.resources
+              .input-group
+                input#imgs.form-control(type="file" name="imgs" multiple="multiple" accept="image/*")
+          .form-group
+              .col-sm-offset-2.col-sm-10
+                button(type="submit").btn.btn-default.btn-uploadimgs 点击上传
+    append footerjs
+      script(src="/js/uploadimgs.js")
+    

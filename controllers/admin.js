@@ -5,6 +5,7 @@ var Resource = require('../models/resource');
 var User = require('../models/user');
 var UserBuyMovie = require('../models/userbuymovie');
 var Category = require('../models/category');
+var Image = require('../models/image');
 var redis = require("redis");
 var xss = require('xss');
 var client = redis.createClient();
@@ -469,6 +470,31 @@ exports.delcategory = function(req, res) {
               res.json({success: 1});
             }
           })
+}
+
+exports.getimages = function(req, res) {
+  var perPage = 12;
+  var page = req.query.page > 0 ? req.query.page : 1;
+  Image.find()
+    .select('_id img originalimg tomovie')
+    .sort('-meta.updataAt')
+    .populate('tomovie', '_id title')
+    .limit(perPage)
+    .skip(perPage * (page - 1))
+    .exec(function (err, images) {
+      Image.count()
+        .exec(function (err, count) {
+          if (err) {
+            console.log(err);
+          }
+          res.render('adminimage', {
+            images: images,
+            user: req.session.user,
+            page: page,
+            pages: Math.ceil(count / perPage)
+          })
+        })
+    })
 }
 
 exports.rolesByRedis = function(req, res, next) {

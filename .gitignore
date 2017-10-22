@@ -2,3 +2,5 @@ node_modules/
 public/uploads/
 config
 dump.rdb
+package-lock.json
+.DS_Store

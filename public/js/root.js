@@ -54,4 +54,16 @@ $(function() {
       window.location= '/18r/categories';
     });
   });
+  $('.btn-delimage').click(function(e) {
+    var target = $(e.target);
+    var id = target.data('id');
+    $.ajax({
+      type: 'DELETE',
+      url: '/image/del?id=' + id
+    }).done(function(results) {
+      if(results.success) {
+        window.location.reload();
+      }
+    })
+  });
 });

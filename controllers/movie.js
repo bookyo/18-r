@@ -5,6 +5,7 @@ var Topic = require('../models/topic');
 var Resource = require('../models/resource');
 var UserBuyMovie = require('../models/userbuymovie');
 var Category = require('../models/category');
+var Image = require('../models/image');
 var adminController = require('./admin');
 var xss = require('xss');
 var async = require('async');
@@ -266,6 +267,19 @@ exports.getMovie = function(req, res) {
                     }
                     callback(null, topics);
                    })
+      },
+      images: function(callback) {
+        Image.find({tomovie: id})
+             .select('img originalimg')
+             .sort('-meta.updateAt')
+             .limit(5)
+             .exec(function(err, images) {
+               if(err) {
+                 console.log(err);
+               }
+               callback(null, images);
+             })
+
       }
       },
         function(err, results) {
@@ -288,6 +302,7 @@ exports.getMovie = function(req, res) {
             var movie = results.movie;
             var topics = results.userstopics;
             var movieintopics = results.movieintopics;
+            var images = results.images;
             res.render('article', {
                 hots: req.hots,
                 buy: count,
@@ -298,6 +313,7 @@ exports.getMovie = function(req, res) {
                 removies: removies,
                 tags: tags,
                 movie: movie,
+                images: images,
                 error: req.flash('error'),
                 success: req.flash('success').toString()
             });

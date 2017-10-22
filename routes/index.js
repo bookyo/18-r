@@ -6,6 +6,7 @@ var Tagcontroller = require('../controllers/tag');
 var ResourceController = require('../controllers/resource');
 var TopicController = require('../controllers/topic');
 var NoticeController = require('../controllers/notice');
+var ImgController = require('../controllers/image');
 var multer = require('multer');
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -39,6 +40,10 @@ module.exports = function(app) {
   app.delete('/movie/delete', checkLogin, AdminController.isAdmin, MovieController.delete);
   app.get('/movie/:id/update', checkLogin,AdminController.isAdmin, Tagcontroller.tagsByRedis,MovieController.getupdate);
   app.post('/movie/:id/update', checkLogin, AdminController.isAdmin, upload.single('img'),  MovieController.postupdate);
+  app.get('/movie/:id/uploadimgs', checkLogin, ImgController.getupload);
+  app.post('/uploadimgs', checkLogin, AdminController.canaddres, upload.array('imgs',8), ImgController.postupload);
+  app.get('/movie/:id/images', ImgController.getimages);
+  app.delete('/image/del',checkLogin, AdminController.isAdmin, ImgController.delimage);
   app.get('/hots', MovieController.hotsByRedis, MovieController.gethots);
   app.get('/resource/:id/add', checkLogin, AdminController.canaddres,ResourceController.getadd);
   app.post('/resource/:id/add', checkLogin, AdminController.canaddres, AdminController.rolesByRedis, ResourceController.postadd);
@@ -83,7 +88,7 @@ module.exports = function(app) {
   app.get('/18r/category/add', checkLogin, AdminController.isAdmin, AdminController.addcategory);
   app.post('/18r/category/add', checkLogin, AdminController.isAdmin, AdminController.postaddcategory);
   app.delete('/18r/category/delete', checkLogin, AdminController.isAdmin, AdminController.delcategory);
-  
+  app.get('/18r/images', checkLogin, AdminController.isAdmin, AdminController.getimages);
 
   app.get('/tags', Tagcontroller.tagsByRedis,Tagcontroller.gettags);
  

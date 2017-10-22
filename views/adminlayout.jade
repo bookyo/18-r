@@ -23,7 +23,6 @@ html(lang="zh-CN")
           a.navbar-brand(href="/") 18-r
 
         .collapse.navbar-collapse#18r-navbar
-          p.navbar-text 电影爱好者的私密社区
           ul.nav.navbar-nav
             li
               a(href='/18r/movies') 电影管理
@@ -37,7 +36,9 @@ html(lang="zh-CN")
               a(href="/18r/roles") 用户组管理
             li
               a(href="/18r/categories") 分类信息管理
-           if user
+            li
+              a(href="/18r/images") 图片管理
+          if user
             .pull-right
               a.btn.btn-primary.navbar-btn(href="/post") 发布
               a.btn.btn-default.avatar(href="/user/#{user._id}",style="margin-left:10px;") 

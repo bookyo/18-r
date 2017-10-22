@@ -17,6 +17,7 @@ append head
     - classarr.push(type.tag);
   - var classes=classarr.join("、");
   meta(property="og:video:class" content="#{classes}")
+  link(rel='stylesheet', href='/css/lightbox.css')
 
 append title
   - var classarr = [];
@@ -116,6 +117,19 @@ block content
                 dd.summary!= newsummary 
                 dd.summary-hidden!=newsummary
         .col-md-12
+            .panel.panel-default
+              .panel-heading #{movie.title}的图片( 
+                a(href="#{movie._id}/images") 全部图片
+                |  | 
+                a(href="#{movie._id}/uploadimgs") 添加图片
+                |  )
+              .panel-body
+                .movie-imgs
+                  a(href="/uploads/#{movie.img}" data-lightbox="movie-images")
+                    img.movie-img.lazy(src="/uploads/400/#{movie.img}")
+                  each image in images
+                    a(href="/uploads/#{image.originalimg}" data-lightbox="movie-images")
+                      img.movie-img.lazy(src="/uploads/250/#{image.img}")
             - var baidures = [];
             - var cilires = [];
             - var dianlvres = [];
@@ -233,5 +247,5 @@ block content
                     button.btn.btn-default(type="button" data-dismiss="modal") 关闭
                     if topics.length > 0
                       button.btn.btn-primary#subaddto(type="button" ) 提交
-
-          
+append footerjs
+  script(src="/js/lightbox.js")

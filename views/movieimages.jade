@@ -1,0 +1,36 @@
+extends layout
+
+append title
+  title #{movie.title}的全部图片_bttags
+
+append head
+  meta(name="keywords" content="#{movie.title}的全部图片")
+  meta(name="description" content="#{movie.title}的全部图片，用户上传的关于#{movie.title}的全部图片！")
+  link(rel='stylesheet', href='/css/lightbox.css')
+
+block content
+  .container
+    .row
+      .col-md-3
+        a.btn.btn-info.btn-topic(href="/movie/#{movie._id}" title="返回#{movie.title}的页面") 返回#{movie.title}
+      .col-md-9
+        ol.breadcrumb.clearfix
+          li
+            a(href="/") 首页
+          li
+            a(href="/movie/#{movie._id}") #{movie.title}
+          li.active 图片
+        section#main-body.clearfix
+          each image in images
+            .col-md-3.col-xs-4
+              .image-box
+                a(href="/uploads/#{image.originalimg}" data-lightbox="movie-images")
+                  img.img-responsive.lazy(src="/uploads/250/#{image.img}")
+                if user && user.isadmin
+                  button.btn.btn-danger.btn-xs.btn-delimage(type="button" data-id="#{image._id}") 删除
+        nav.pages
+          if( pages> 1) 
+            ul.pagination
+              != createPagination(pages, page)
+append footerjs
+  script(src="/js/lightbox.js")
