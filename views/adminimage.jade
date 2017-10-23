@@ -12,6 +12,6 @@ block content
             a(href="/uploads/#{image.originalimg}" data-lightbox="movie-images")
               img.img-responsive.lazy(src="/uploads/250/#{image.img}")
             p.admin-image-movie 电影：
-              a(href="/movie/#{image.tomovie._id}") #{image.tomovie.title}
+              a(href="/movie/#{image.tomovie._id}" title="#{image.tomovie.title}") #{image.tomovie.title}
             if user && user.isadmin
               button.btn.btn-danger.btn-xs.btn-delimage(type="button" data-id="#{image._id}") 删除
