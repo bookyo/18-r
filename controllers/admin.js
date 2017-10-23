@@ -477,7 +477,7 @@ exports.getimages = function(req, res) {
   var page = req.query.page > 0 ? req.query.page : 1;
   Image.find()
     .select('_id img originalimg tomovie')
-    .sort('-meta.updataAt')
+    .sort('-meta.updateAt')
     .populate('tomovie', '_id title')
     .limit(perPage)
     .skip(perPage * (page - 1))

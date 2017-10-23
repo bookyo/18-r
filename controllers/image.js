@@ -82,7 +82,7 @@ exports.getimages = function(req, res) {
          }
          Img.find({tomovie:id})
             .select('_id img originalimg')
-            .sort('-meta.updataAt')
+            .sort('-meta.updateAt')
             .limit(perPage)
             .skip(perPage * (page-1))
             .exec(function(err, images) {
