@@ -14,6 +14,10 @@ block content
               p.form-control-static #{movie.title} 
               input(type="hidden" name="movieid" value="#{movie._id}")
           .form-group
+            label.col-sm-3.control-label 注意
+            .col-sm-9
+              p.form-control-static 一次最多上传8张图片，可上传jpg，png，jpeg格式的图片。
+          .form-group
             label.col-sm-3.control-label(for="imgs") 选择图片(可多选)
             .col-sm-9.resources
               .input-group
