@@ -121,7 +121,13 @@ module.exports = function(app) {
   app.delete('/notice/delete', checkLogin, AdminController.isAdmin, NoticeController.delete);
   
   app.get('/userranks', Tagcontroller.tagsByRedis,MovieController.hotsByRedis, UserController.userranks);
-
+  app.use(function (err, req, res, next) {
+    if (err.code !== 'EBADCSRFTOKEN') return next(err);
+    // handle CSRF token errors here
+    res.status(403);
+    req.flash('error',{'msg':'参数错误或者重复提交！'});
+    res.redirect('back');
+  });
   function checkLogin(req, res, next) {
     if( !req.session.user ) {
       req.flash('error', {'msg': '未登录！'});
