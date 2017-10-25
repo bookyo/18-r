@@ -143,6 +143,18 @@ $('#subaddto').click(function(e) {
   }
 
 });
+$(".btn-post").click(function(e) {
+  e.preventDefault();
+  $(this).attr('disabled','disabled');
+  $(this).text('电影发布中，请稍候...');
+  $("form.form-post").submit();
+});
+$(".btn-resources").click(function(e) {
+  e.preventDefault();
+  $(".btn-resources").attr("disabled", "disabled");
+  $(".btn-resources").text("获取资源中，请稍候...");
+  $(this).parent().submit();
+});
 $("input#title").change(function(){
   var title = $(this).val();
   $.ajax({

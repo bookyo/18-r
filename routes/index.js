@@ -8,6 +8,8 @@ var TopicController = require('../controllers/topic');
 var NoticeController = require('../controllers/notice');
 var ImgController = require('../controllers/image');
 var multer = require('multer');
+var csrf = require('csurf');
+var csrfProtection = csrf();
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, './public/uploads');
@@ -32,11 +34,11 @@ var upload = multer({
 module.exports = function(app) {
   app.get('/', Tagcontroller.tagsByRedis, MovieController.hotsByRedis, IndexController.index);
 
-  app.get('/post', checkLogin,  Tagcontroller.tagsByRedis, AdminController.rolesByRedis, MovieController.checkLimitPost, MovieController.new);
+  app.get('/post', checkLogin, csrfProtection, Tagcontroller.tagsByRedis, AdminController.rolesByRedis, MovieController.checkLimitPost, MovieController.new);
 
-  app.post('/post', checkLogin, AdminController.rolesByRedis, MovieController.checkLimitPost, upload.single('img'), MovieController.post);
+  app.post('/post', checkLogin, AdminController.rolesByRedis, MovieController.checkLimitPost, upload.single('img'), csrfProtection, MovieController.post);
 
-  app.get('/movie/:id', Tagcontroller.tagsByRedis,MovieController.hotsByRedis,MovieController.getMovie );
+  app.get('/movie/:id', csrfProtection, Tagcontroller.tagsByRedis,MovieController.hotsByRedis,MovieController.getMovie );
   app.delete('/movie/delete', checkLogin, AdminController.isAdmin, MovieController.delete);
   app.get('/movie/:id/update', checkLogin,AdminController.isAdmin, Tagcontroller.tagsByRedis,MovieController.getupdate);
   app.post('/movie/:id/update', checkLogin, AdminController.isAdmin, upload.single('img'),  MovieController.postupdate);
@@ -47,7 +49,7 @@ module.exports = function(app) {
   app.get('/hots', MovieController.hotsByRedis, MovieController.gethots);
   app.get('/resource/:id/add', checkLogin, AdminController.canaddres,ResourceController.getadd);
   app.post('/resource/:id/add', checkLogin, AdminController.canaddres, AdminController.rolesByRedis, ResourceController.postadd);
-  app.post('/movie/buy', checkLogin, AdminController.checkLimitView, ResourceController.buymovie);
+  app.post('/movie/buy', csrfProtection, checkLogin, AdminController.checkLimitView, ResourceController.buymovie);
   
   app.get('/reg', checkNotLogin,UserController.getreg);
 

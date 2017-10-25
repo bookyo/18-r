@@ -156,9 +156,10 @@ block content
                           button.btn.btn-danger.resdel(type="button", data-movieid="#{movie._id}", data-id="#{baidure._id}") 删除
                     else
                       li.list-group-item
-                        form.form(method="post",action="/movie/buy")
+                        form.form.form-res(method="post",action="/movie/buy")
                           input(type="hidden", name="id", value="#{movie._id}")
-                          button(type="submit").btn.btn-info 查看资源
+                          input(type="hidden", name="_csrf", value="#{csrfToken}")
+                          button(type="submit").btn.btn-info.btn-resources 查看资源
             if cilires.length
               .panel.panel-default
                 .panel-heading bt磁力链接
@@ -171,9 +172,10 @@ block content
                         a(href="#{cili}" target="_blank") 磁力链接
                     else
                       li.list-group-item
-                        form.form(method="post",action="/movie/buy")
+                        form.form.form-res(method="post",action="/movie/buy")
                           input(type="hidden", name="id", value="#{movie._id}")
-                          button(type="submit").btn.btn-info 查看资源
+                          input(type="hidden", name="_csrf", value="#{csrfToken}")
+                          button(type="submit").btn.btn-info.btn-resources 查看资源
             if dianlvres.length
               .panel.panel-default
                 .panel-heading 电驴ed2k链接
@@ -186,9 +188,10 @@ block content
                         a(href="#{dianlvre.resource}" target='_blank')  #{restitle}
                     else
                       li.list-group-item
-                        form.form(method="post",action="/movie/buy")
+                        form.form.form-res(method="post",action="/movie/buy")
                           input(type="hidden", name="id", value="#{movie._id}")
-                          button(type="submit").btn.btn-info 查看资源
+                          input(type="hidden", name="_csrf", value="#{csrfToken}")
+                          button(type="submit").btn.btn-info.btn-resources 查看资源
             if qihures.length
               .panel.panel-default
                 .panel-heading 360云网盘资源
@@ -199,9 +202,10 @@ block content
                       li.list-group-item!= qihu
                     else
                       li.list-group-item
-                        form.form(method="post",action="/movie/buy")
+                        form.form.form-res(method="post",action="/movie/buy")
                           input(type="hidden", name="id", value="#{movie._id}")
-                          button(type="submit").btn.btn-info 查看资源
+                          input(type="hidden", name="_csrf", value="#{csrfToken}")
+                          button(type="submit").btn.btn-info.btn-resources 查看资源
             if user
               a.btn.btn-default.btn-block(href="/resource/#{movie._id}/add") 添加本电影资源
             if movieintopics.length

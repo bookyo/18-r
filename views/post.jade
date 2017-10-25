@@ -15,7 +15,8 @@ block content
                 input#douban.form-control(type="text" name="douban" placeholder="输入豆瓣链接，例如：https://movie.douban.com/subject/25934014/")
                 span.input-group-btn
                   button.btn.btn-default.btn-get(type="button") 获取
-        form.form-horizontal(method="post" enctype="multipart/form-data")
+        form.form-horizontal.form-post(method="post" enctype="multipart/form-data")
+          input(type="hidden" name="_csrf" value="#{csrfToken}")
           .form-group
             label.col-sm-3.control-label(for="title") 电影名称
             .col-sm-9
@@ -62,4 +63,4 @@ block content
                   button.btn.btn-default.addrow(type="button") 增加一行
           .form-group
               .col-sm-offset-2.col-sm-10
-                button(type="submit").btn.btn-default 发布
+                button(type="submit").btn.btn-default.btn-post 发布

@@ -19,7 +19,6 @@ var request = require('request');
 var qiniuapi = require('../config/qiniu');
 
 exports.post = function(req, res) {
-
     req.checkBody({
       'title': {
         notEmpty: true,
@@ -308,6 +307,7 @@ exports.getMovie = function(req, res) {
                 buy: count,
                 user: req.session.user,
                 pubdate: pubdate,
+                csrfToken: req.csrfToken(),
                 topics: topics,
                 movieintopics: movieintopics,
                 removies: removies,
@@ -444,6 +444,7 @@ exports.new = function(req, res) {
     res.render('post', {
       tags: req.tags,
       user: req.session.user,
+      csrfToken: req.csrfToken(),
       success: req.flash('success').toString(),
       error: req.flash('error')
     });
