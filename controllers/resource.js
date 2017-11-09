@@ -49,7 +49,7 @@ exports.getadd =  function(req,res) {
                               if(err) {
                                 console.log(err);
                               }
-                              adminController.addCounts(movie.creator, 1, req.roles);
+                              adminController.addCounts(req.session.user._id, 1, req.roles);
                             });
                           });
             });
