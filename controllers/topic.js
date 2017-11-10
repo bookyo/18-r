@@ -58,8 +58,8 @@ exports.postNew = function(req, res) {
     'topic': {
       notEmpty: true,
       isLength: {
-        options:[{ min:5, max:20}],
-        errorMessage: '请输入5到20字之间主题标题'
+        options:[{ min:5, max:40}],
+        errorMessage: '请输入5到40字之间主题标题'
       },
       errorMessage: '主题标题不能为空'
     },
@@ -132,8 +132,8 @@ exports.updateTopic = function(req, res) {
     'topic': {
       notEmpty: true,
       isLength: {
-        options:[{ min:5, max:40}],
-        errorMessage: '请输入5到40字之间主题标题'
+        options:[{ min:5, max:30}],
+        errorMessage: '请输入5到30字之间主题标题'
       },
       errorMessage: '主题标题不能为空'
     },
