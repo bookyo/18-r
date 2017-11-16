@@ -93,7 +93,18 @@ exports.getaddtags = function(req, res) {
     if(id) {
       Movie.findOne({_id:id})
                   .exec(function(err, movie) {
-                    exports.addCounts(movie.creator, -3, req.roles);
+                    Movie.find({creator: movie.creator})
+                      .count(function(err, count) {
+                        if(err) {
+                          console.log(err);
+                        }
+                        console.log(count);
+                        if(count==1) {
+                          exports.addCounts(movie.creator, -13, req.roles);
+                        }else{
+                          exports.addCounts(movie.creator, -3, req.roles);
+                        }
+                      });
                     Resource.remove({_id:{ $in: movie.resources}}, function(err) {
                       if(err) {
                         console.log(err);
@@ -190,11 +201,16 @@ exports.getaddtags = function(req, res) {
                     if(err) {
                       console.log(err);
                     }
-                    if(movie.creator.postcounts < 13){
-                      if(review==1){
-                        exports.addCounts(movie.creator._id, 10, req.roles);
-                      }
-                    }
+                    Movie.find({creator: movie.creator})
+                      .count(function(err, count) {
+                        console.log(count);
+                        if(err) {
+                          console.log(err);
+                        }
+                        if(count==1) {
+                          exports.addCounts(movie.creator._id, 10, req.roles);
+                        }
+                      });
                     res.redirect('/18r/movies' );
                   });
                 });
