@@ -593,6 +593,84 @@ exports.search = function(req, res) {
 
 }
 
+exports.play = function(req, res) {
+  var url = req.query.url;
+  var id = req.params.id;
+  if (url) {
+    var purlurl = url.replace(/\s/g, "");
+  } else {
+    return res.status(404).send('错误的播放地址！');
+  }
+  if (!/^(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/.test(purlurl)) {
+    return res.status(404).send('错误的播放地址！');
+  }
+  if(id) {
+    async.parallel({
+      movie: function (callback) {
+        Movie.findByIdAndUpdate(id, { $inc: { pv: 1 } })
+          .exec(function (err, movie) {
+            if (err) console.log(err);
+            callback(null, movie);
+          });
+      },
+      movieintopics: function (callback) {
+        Topic.find({ movies: id })
+          .select('topic _id')
+          .sort('-pv')
+          .limit(10)
+          .exec(function (err, topics) {
+            if (err) {
+              console.log(err);
+            }
+            callback(null, topics);
+          })
+      }
+    },
+      function (err, results) {
+        if (!results.movie) {
+          return res.status(404).send('此页面已经不存在了！');
+        }
+        if (results.movie.review == 1 || results.movie.review == 2) {
+          return res.status(404).send('此页面已经不存在了！');
+        }
+        recommendByRedis(results.movie, function (err, removies) {
+          if (err) {
+            console.log(err);
+          }
+          var pubdate = moment(results.movie.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
+          var movie = results.movie;
+          var movieintopics = results.movieintopics;
+          return res.render('play',{
+            hots: req.hots,
+            tags: req.tags,
+            url: purlurl,
+            csrfToken: req.csrfToken(),
+            user: req.session.user,
+            movieintopics: movieintopics,
+            removies: removies,
+            movie: movie,
+            error: req.flash('error'),
+            success: req.flash('success').toString()
+          });
+        });
+
+      }
+    );
+  }else{
+    res.render('play', {
+      title: '通用在线播放',
+      url: purlurl,
+      tags: req.tags,
+      hots: req.hots,
+      user: req.session.user,
+      success: req.flash('success').toString(),
+      error: req.flash('error')
+    })
+  }
+  
+  
+}
+
  exports.checkLimitPost = function(req, res, next) {
     if (req.session.user.isadmin) {
       return next();
@@ -623,9 +701,11 @@ function checkResTypeId( resource) {
           return 2;
         }else if(/^ed2k:\/\/\|file\|(.*)\|\/$/.test(resource)){
           return 3;
-        }else if(/yunpan.cn\/[\s\S]{13}/i.test(resource)){
+        } else if (/yunpan.cn\/[\s\S]{13}/i.test(resource)) {
           return 4;
-        }else{
+        } else if (/^(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?\.m3u8$/.test(resource)) {
+          return 5;
+        }else {
           return false;
         }
   }

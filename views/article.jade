@@ -134,6 +134,7 @@ block content
             - var cilires = [];
             - var dianlvres = [];
             - var qihures = [];
+            - var zaixians = [];
             - var urlreg = /(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-)+)/g;
             each resource in movie.resources
               if resource.typeid == 1
@@ -144,6 +145,8 @@ block content
                 - dianlvres.push(resource);
               else if resource.typeid == 4
                 - qihures.push(resource);
+              else if resource.typeid == 5
+                - zaixians.push(resource);
             if baidures.length
               .panel.panel-default
                 .panel-heading 百度云网盘资源
@@ -206,6 +209,13 @@ block content
                           input(type="hidden", name="id", value="#{movie._id}")
                           input(type="hidden", name="_csrf", value="#{csrfToken}")
                           button(type="submit").btn.btn-info.btn-resources 查看资源
+            if zaixians.length
+              .panel.panel-default
+                .panel-heading 在线播放
+                ul.list-group
+                  each zaixian,i in zaixians
+                    li.list-group-item
+                      a(href="/movie/#{movie._id}/play?url=#{zaixian.resource}" target="_blank") 在线播放#{i+1}
             if user
               a.btn.btn-default.btn-block(href="/resource/#{movie._id}/add") 添加本电影资源
             if movieintopics.length

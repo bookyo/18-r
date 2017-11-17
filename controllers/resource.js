@@ -89,6 +89,8 @@ exports.getadd =  function(req,res) {
           return 3;
         }else if(/yunpan.cn\/[\s\S]{13}/i.test(resource)){
           return 4;
+        }else if(/^(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?\.m3u8$/.test(resource)){
+          return 5;
         }else{
           return false;
         }
