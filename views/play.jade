@@ -2,7 +2,10 @@ extends layout
 
 append title
   if movie
-    title #{movie.title}在线播放
+    meta(name="keywords",content="#{movie.title},在线观看,无删减完整版")
+    - var description = movie.summary.replace(/\r?\n/g,"").substring(0,100)
+    meta(name="description" content="#{description}")
+    title #{movie.title}(#{movie.year}年电影)_在线观看_无删减完整版_bttags
   else
     title #{title}
 
@@ -54,13 +57,13 @@ block content
           li
             a(href="/") 首页
           if movie
-            li.active #{movie.title}在线播放
+            li.active #{movie.title}在线观看
           else
-            li.active 通用在线播放
+            li.active 通用在线观看
         if movie
-          h1 #{movie.title}在线播放
+          h1 #{movie.title}在线观看
         else
-          h1 通用在线播放
+          h1 通用在线观看
         .play-content
         if movie
           .panel.panel-default
