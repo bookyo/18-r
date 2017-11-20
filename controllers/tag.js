@@ -49,15 +49,12 @@ function getTagsFromRedis(cb) {
 }
 
 exports.gettags= function(req,res) {
-  Category.getCategoriesByRedis(function(err,categories){
     res.render('tags', {
       user: req.session.user,
       tags: req.tags,
-      categories: categories,
       error: req.flash('error'),
       success: req.flash('success').toString()
     })
-  })
       
   }
 

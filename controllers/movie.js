@@ -826,7 +826,7 @@ function getRemoviesFromMongo(movie, cb) {
   }
   
   Movie.find(query)
-              .where('year').gt(movie.year-8).lt(movie.year+8)
+              .where('year').gt(movie.year-3).lt(movie.year+3)
               .where({'review': 3})
               .select('_id title img country types')
               .limit(50)
@@ -837,6 +837,7 @@ function getRemoviesFromMongo(movie, cb) {
                 var count = listmovies.length;
                 var groupmoviesArr = [];
                 if(count>= listcounts){
+                  listmovies.sort(function () { return 0.5 - Math.random() });
                   var weightArr = quanObj(movie, listmovies);
                   var groupweightObj= _.sortBy(weightArr, function(data) {
                     return - data.quanzhong;
@@ -890,7 +891,9 @@ function getRemoviesFromMongo(movie, cb) {
     if(listmovie.country == movie.country) {
       quanzhong++;
     }
-    
+    if(listmovie.year == movie.year) {
+      quanzhong++;
+    }
     obj.quanzhong = quanzhong;
     obj.arr = listmovie;
     return obj;
