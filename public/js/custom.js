@@ -205,7 +205,17 @@ $(".btn-get").click(function(e) {
         var img = data.images.large;
         var types = data.genres;
         var aka = data.aka;
+        var ratings_count = data.ratings_count;
+        var rating = data.rating.average;
+        var title = data.title;
         var original_title = data.original_title;
+        var today = new Date();
+        var yyyy = today.getFullYear();
+        var mm = today.getMonth() + 1;
+        var dd = today.getDate();
+        if(rating) {
+          summary = '截止' + yyyy + '年' + mm + '月' + dd + '日' + '共有' + ratings_count + '人对' + "《" + title + "》评分，豆瓣评分"+rating+'分。\n'+summary;
+        }
         if(original_title || aka) {
           summary = '电影名：'+ original_title +'  '+ aka.join('  ') + '\n' + summary;
         }
