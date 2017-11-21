@@ -68,9 +68,13 @@ block content
         if movie
           .panel.panel-default
             .panel-heading #{movie.title}剧情简介
-            - var summary = movie.summary;
+            - var types = [];
+            each type in movie.types
+              - types.push(type.tag);
+            - var summary = "《"+movie.title+"》是"+movie.year+"年由"+movie.doctor+"导演，"+movie.players+"等主演的"+movie.country+types.join('、')+'电影。\n'+movie.summary;
             - var newsummary = summary.replace(/\r?\n/g,"<br />");
-            .panel-body!=newsummary
+            dd.summary!= newsummary 
+            dd.summary-hidden!=newsummary
           a.btn.btn-default.btn-block(href="/movie/#{movie._id}") 返回#{movie.title}
           if movieintopics.length
             .movie-topics

@@ -608,6 +608,7 @@ exports.play = function(req, res) {
     async.parallel({
       movie: function (callback) {
         Movie.findByIdAndUpdate(id, { $inc: { pv: 1 } })
+          .populate('types', '_id tag')
           .exec(function (err, movie) {
             if (err) console.log(err);
             callback(null, movie);
