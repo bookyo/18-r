@@ -218,7 +218,7 @@ block content
                 ul.list-group
                   each zaixian,i in zaixians
                     li.list-group-item
-                      a(href="/movie/#{movie._id}/play?url=#{zaixian.resource}" target="_blank") 在线观看#{i+1}
+                      a(href="/movie/#{movie._id}/play/#{zaixian._id}" target="_blank") 在线观看#{i+1}
             if user
               a.btn.btn-default.btn-block(href="/resource/#{movie._id}/add") 添加本电影资源
             if movieintopics.length

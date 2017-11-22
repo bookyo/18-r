@@ -594,16 +594,8 @@ exports.search = function(req, res) {
 }
 
 exports.play = function(req, res) {
-  var url = req.query.url;
+  var resid = req.params.resid;
   var id = req.params.id;
-  if (url) {
-    var purlurl = url.replace(/\s/g, "");
-  } else {
-    return res.status(404).send('错误的播放地址！');
-  }
-  if (!/^(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/.test(purlurl)) {
-    return res.status(404).send('错误的播放地址！');
-  }
   if(id) {
     async.parallel({
       movie: function (callback) {
@@ -625,6 +617,16 @@ exports.play = function(req, res) {
             }
             callback(null, topics);
           })
+      },
+      playurl: function (callback) {
+        Resource.findOne({_id: resid})
+          .select('resource _id')
+          .exec(function (err, resource) {
+            if(err) {
+              console.log(err);
+            }
+            callback(null, resource);
+          })
       }
     },
       function (err, results) {
@@ -633,6 +635,9 @@ exports.play = function(req, res) {
         }
         if (results.movie.review == 1 || results.movie.review == 2) {
           return res.status(404).send('此页面已经不存在了！');
+        }
+        if (!results.playurl) {
+          return res.status(404).send('错误的播放链接');
         }
         recommendByRedis(results.movie, function (err, removies) {
           if (err) {
@@ -644,7 +649,7 @@ exports.play = function(req, res) {
           return res.render('play',{
             hots: req.hots,
             tags: req.tags,
-            url: purlurl,
+            url: results.playurl.resource,
             csrfToken: req.csrfToken(),
             user: req.session.user,
             movieintopics: movieintopics,
@@ -657,16 +662,6 @@ exports.play = function(req, res) {
 
       }
     );
-  }else{
-    res.render('play', {
-      title: '通用在线播放',
-      url: purlurl,
-      tags: req.tags,
-      hots: req.hots,
-      user: req.session.user,
-      success: req.flash('success').toString(),
-      error: req.flash('error')
-    })
   }
   
   
