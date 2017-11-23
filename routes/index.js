@@ -120,7 +120,7 @@ module.exports = function(app) {
   app.post('/notice/:id/update', checkLogin, AdminController.isAdmin, NoticeController.postupdate);
   app.delete('/notice/delete', checkLogin, AdminController.isAdmin, NoticeController.delete);
   
-  app.get('/movie/:id/play/:resid', csrfProtection, Tagcontroller.tagsByRedis, MovieController.hotsByRedis, MovieController.play);
+  app.get('/play/:id', csrfProtection, Tagcontroller.tagsByRedis, MovieController.hotsByRedis, MovieController.play);
   app.get('/userranks', Tagcontroller.tagsByRedis,MovieController.hotsByRedis, UserController.userranks);
   app.use(function (err, req, res, next) {
     if (err.code !== 'EBADCSRFTOKEN') return next(err);

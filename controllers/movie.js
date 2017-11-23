@@ -594,77 +594,56 @@ exports.search = function(req, res) {
 }
 
 exports.play = function(req, res) {
-  var resid = req.params.resid;
   var id = req.params.id;
-  if(id) {
-    async.parallel({
-      movie: function (callback) {
-        Movie.findByIdAndUpdate(id, { $inc: { pv: 1 } })
-          .populate('types', '_id tag')
-          .exec(function (err, movie) {
-            if (err) console.log(err);
-            callback(null, movie);
-          });
-      },
-      movieintopics: function (callback) {
-        Topic.find({ movies: id })
-          .select('topic _id')
-          .sort('-pv')
-          .limit(10)
-          .exec(function (err, topics) {
-            if (err) {
-              console.log(err);
-            }
-            callback(null, topics);
-          })
-      },
-      playurl: function (callback) {
-        Resource.findOne({_id: resid})
-          .select('resource _id')
-          .exec(function (err, resource) {
-            if(err) {
-              console.log(err);
-            }
-            callback(null, resource);
-          })
+  Resource.findOne({_id: id})
+    .exec(function(err, resource) {
+      if(err) {
+        console.log(err);
       }
-    },
-      function (err, results) {
-        if (!results.movie) {
-          return res.status(404).send('此页面已经不存在了！');
-        }
-        if (results.movie.review == 1 || results.movie.review == 2) {
-          return res.status(404).send('此页面已经不存在了！');
-        }
-        if (!results.playurl) {
-          return res.status(404).send('错误的播放链接');
-        }
-        recommendByRedis(results.movie, function (err, removies) {
-          if (err) {
+      if (!resource || resource.typeid != 5) {
+        return res.status(404).send('错误的播放链接');
+      }
+      Topic.find({ movies: resource.tomovie})
+        .select('topic _id')
+        .sort('-pv')
+        .limit(10)
+        .exec(function (err, topics) {
+          if(err) {
             console.log(err);
           }
-          var pubdate = moment(results.movie.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
-          var movie = results.movie;
-          var movieintopics = results.movieintopics;
-          return res.render('play',{
-            hots: req.hots,
-            tags: req.tags,
-            url: results.playurl.resource,
-            csrfToken: req.csrfToken(),
-            user: req.session.user,
-            movieintopics: movieintopics,
-            removies: removies,
-            movie: movie,
-            error: req.flash('error'),
-            success: req.flash('success').toString()
-          });
-        });
-
-      }
-    );
-  }
-  
-  
+          Movie.findOne({ _id: resource.tomovie })
+            .select('_id types title year summary doctor players country review')
+            .populate('types', '_id tag')
+            .exec(function (err, movie) {
+              if (err) {
+                console.log(err);
+              }
+              if (!movie) {
+                return res.status(404).send('此页面已经不存在了！');
+              }
+              if (movie.review == 1 || movie.review == 2) {
+                return res.status(404).send('此页面已经不存在了！');
+              }
+              recommendByRedis(movie, function (err, removies) {
+                if (err) {
+                  console.log(err);
+                }
+                return res.render('play', {
+                  hots: req.hots,
+                  tags: req.tags,
+                  url: resource.resource,
+                  csrfToken: req.csrfToken(),
+                  user: req.session.user,
+                  movieintopics: topics,
+                  removies: removies,
+                  movie: movie,
+                  error: req.flash('error'),
+                  success: req.flash('success').toString()
+                });
+              });
+            });
+        })
+    })
 }
 
  exports.checkLimitPost = function(req, res, next) {

@@ -56,10 +56,9 @@ block content
         ol.breadcrumb
           li
             a(href="/") 首页
-          if movie
-            li.active #{movie.title}在线观看
-          else
-            li.active 通用在线观看
+          li
+            a(href="/movie/#{movie._id}") #{movie.title}
+          li.active 在线观看
         if movie
           h1 #{movie.title}在线观看
         else
