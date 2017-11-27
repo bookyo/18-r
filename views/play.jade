@@ -64,7 +64,18 @@ block content
         else
           h1 通用在线观看
         .play-content
+          .mask 视频加载中，稍安勿躁，若不能播放，请刷新尝试。。。
         if movie
+          .panel.panel-default
+            .panel-heading 在线观看(bttags云播)
+            ul.list-group
+              each zaixian,i in resources
+                if zaixian.resource==url
+                  li.list-group-item.playactive
+                    a(href="/play/#{zaixian._id}") 在线观看#{i+1}
+                else
+                  li.list-group-item
+                    a(href="/play/#{zaixian._id}") 在线观看#{i+1}
           .panel.panel-default
             .panel-heading #{movie.title}剧情简介
             - var types = [];
@@ -90,4 +101,4 @@ block content
                     a(href="/movie/#{movie._id}" title="#{movie.title}")= movie.title
 append footerjs
   script(src="/ckplayer/ckplayer/ckplayer.js")
-  <script type="text/javascript">var videoObject = {container: '.play-content',variable: 'player',autoplay:false,video:'#{url}'};var player=new ckplayer(videoObject);</script>
+  <script type="text/javascript">var url="";$.get("/api?url=#{url}",function(data,status){url = data; var videoObject = {container: '.play-content',variable: 'player',autoplay:false,video:data};var player=new ckplayer(videoObject);});</script>

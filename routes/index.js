@@ -7,6 +7,7 @@ var ResourceController = require('../controllers/resource');
 var TopicController = require('../controllers/topic');
 var NoticeController = require('../controllers/notice');
 var ImgController = require('../controllers/image');
+var JiexiController = require('../controllers/jiexi');
 var multer = require('multer');
 var csrf = require('csurf');
 var csrfProtection = csrf();
@@ -122,6 +123,8 @@ module.exports = function(app) {
   
   app.get('/play/:id', csrfProtection, Tagcontroller.tagsByRedis, MovieController.hotsByRedis, MovieController.play);
   app.get('/userranks', Tagcontroller.tagsByRedis,MovieController.hotsByRedis, UserController.userranks);
+  app.get('/api', JiexiController.jiexi);
+  
   app.use(function (err, req, res, next) {
     if (err.code !== 'EBADCSRFTOKEN') return next(err);
     // handle CSRF token errors here

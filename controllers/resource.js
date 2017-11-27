@@ -82,16 +82,18 @@ exports.getadd =  function(req,res) {
 
  function checkResTypeId( resource) {
     if( /pan.baidu.com\/s\/[\s\S]{8}/i.test(resource)){
-          return 1;
-        }else if(/magnet:\?xt=urn:btih:[\s\S]{40}/.test(resource)){
-          return 2;
-        }else if(/^ed2k:\/\/\|file\|(.*)\|\/$/.test(resource)){
-          return 3;
-        }else if(/yunpan.cn\/[\s\S]{13}/i.test(resource)){
-          return 4;
-        }else if(/^(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?\.m3u8$/.test(resource)){
-          return 5;
-        }else{
-          return false;
-        }
+      return 1;
+    }else if(/magnet:\?xt=urn:btih:[\s\S]{40}/.test(resource)){
+      return 2;
+    }else if(/^ed2k:\/\/\|file\|(.*)\|\/$/.test(resource)){
+      return 3;
+    }else if(/yunpan.cn\/[\s\S]{13}/i.test(resource)){
+      return 4;
+    }else if(/^(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?\.m3u8$/.test(resource)){
+      return 5;
+    }else if (/^(http|https):\/\/.+\/share\/\w{16}$/.test(resource)) {
+      return 5;
+    } else {
+      return false;
+    }
   }

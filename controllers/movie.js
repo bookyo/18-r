@@ -612,7 +612,8 @@ exports.play = function(req, res) {
             console.log(err);
           }
           Movie.findOne({ _id: resource.tomovie })
-            .select('_id types title year summary doctor players country review')
+            .select('_id types resources title year summary doctor players country review')
+            .populate('resources', '_id resource typeid')
             .populate('types', '_id tag')
             .exec(function (err, movie) {
               if (err) {
@@ -624,6 +625,12 @@ exports.play = function(req, res) {
               if (movie.review == 1 || movie.review == 2) {
                 return res.status(404).send('此页面已经不存在了！');
               }
+              var playresources = [];
+              movie.resources.forEach(function(value, index) {
+                if(value.typeid==5) {
+                  playresources.push(value);
+                }
+              });
               recommendByRedis(movie, function (err, removies) {
                 if (err) {
                   console.log(err);
@@ -635,6 +642,7 @@ exports.play = function(req, res) {
                   csrfToken: req.csrfToken(),
                   user: req.session.user,
                   movieintopics: topics,
+                  resources: playresources,
                   removies: removies,
                   movie: movie,
                   error: req.flash('error'),
@@ -680,7 +688,9 @@ function checkResTypeId( resource) {
           return 4;
         } else if (/^(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?\.m3u8$/.test(resource)) {
           return 5;
-        }else {
+        } else if (/^(http|https):\/\/.+\/share\/\w{16}$/.test(resource)) {
+          return 5;
+        } else {
           return false;
         }
   }
