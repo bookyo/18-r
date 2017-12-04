@@ -122,6 +122,7 @@ module.exports = function(app) {
   app.delete('/notice/delete', checkLogin, AdminController.isAdmin, NoticeController.delete);
   
   app.get('/play/:id', csrfProtection, Tagcontroller.tagsByRedis, MovieController.hotsByRedis, MovieController.play);
+  app.get('/xfplay/:id', Tagcontroller.tagsByRedis, MovieController.hotsByRedis, MovieController.xfplay);
   app.get('/userranks', Tagcontroller.tagsByRedis,MovieController.hotsByRedis, UserController.userranks);
   app.get('/api', JiexiController.jiexi);
   

@@ -20,10 +20,10 @@ exports.jiexi = function(req, res) {
             var re = /"\/.*\.m3u8/;
             var jiexiurl = '';
             if(body.match(re)) {
-                var newurl = body.match(re)[0].replace('"',"");
+                var newurl = body.match(re)[0].replace('"', "");
                 jiexiurl = newurl;
             } else {
-                jiexiurl = body.match(re1)[0];
+                jiexiurl = body.match(re1)[0];  
             }
             var m3u8url = jiexiurl.replace('1.jpg','index.m3u8');
             res.status(200).send(host+m3u8url);

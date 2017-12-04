@@ -138,6 +138,7 @@ block content
             - var dianlvres = [];
             - var qihures = [];
             - var zaixians = [];
+            - var xianfengs = [];
             - var urlreg = /(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-)+)/g;
             each resource in movie.resources
               if resource.typeid == 1
@@ -150,6 +151,8 @@ block content
                 - qihures.push(resource);
               else if resource.typeid == 5
                 - zaixians.push(resource);
+              else if resource.typeid == 6
+                - xianfengs.push(resource);
             if baidures.length
               .panel.panel-default
                 .panel-heading 百度云网盘资源
@@ -219,6 +222,13 @@ block content
                   each zaixian,i in zaixians
                     li.list-group-item
                       a(href="/play/#{zaixian._id}" target="_blank") 在线观看#{i+1}
+            if xianfengs.length
+              .panel.panel-default
+                .panel-heading 影音先锋在线
+                ul.list-group
+                  each xianfeng,i in xianfengs
+                    li.list-group-item
+                      a(href="/xfplay/#{xianfeng._id}" target="_blank") 影音先锋在线#{i+1}
             if user
               a.btn.btn-default.btn-block(href="/resource/#{movie._id}/add") 添加本电影资源
             if movieintopics.length

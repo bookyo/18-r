@@ -654,6 +654,66 @@ exports.play = function(req, res) {
     })
 }
 
+exports.xfplay = function (req, res) {
+  var id = req.params.id;
+  Resource.findOne({ _id: id })
+    .exec(function (err, resource) {
+      if (err) {
+        console.log(err);
+      }
+      if (!resource || resource.typeid != 6) {
+        return res.status(404).send('错误的播放链接');
+      }
+      Topic.find({ movies: resource.tomovie })
+        .select('topic _id')
+        .sort('-pv')
+        .limit(10)
+        .exec(function (err, topics) {
+          if (err) {
+            console.log(err);
+          }
+          Movie.findOne({ _id: resource.tomovie })
+            .select('_id types resources title year summary doctor players country review')
+            .populate('resources', '_id resource typeid')
+            .populate('types', '_id tag')
+            .exec(function (err, movie) {
+              if (err) {
+                console.log(err);
+              }
+              if (!movie) {
+                return res.status(404).send('此页面已经不存在了！');
+              }
+              if (movie.review == 1 || movie.review == 2) {
+                return res.status(404).send('此页面已经不存在了！');
+              }
+              var playresources = [];
+              movie.resources.forEach(function (value, index) {
+                if (value.typeid == 6) {
+                  playresources.push(value);
+                }
+              });
+              recommendByRedis(movie, function (err, removies) {
+                if (err) {
+                  console.log(err);
+                }
+                return res.render('xfplay', {
+                  hots: req.hots,
+                  tags: req.tags,
+                  url: resource.resource,
+                  user: req.session.user,
+                  movieintopics: topics,
+                  resources: playresources,
+                  removies: removies,
+                  movie: movie,
+                  error: req.flash('error'),
+                  success: req.flash('success').toString()
+                });
+              });
+            });
+        })
+    })
+}
+
  exports.checkLimitPost = function(req, res, next) {
     if (req.session.user.isadmin) {
       return next();
@@ -690,6 +750,8 @@ function checkResTypeId( resource) {
           return 5;
         } else if (/^(http|https):\/\/.+\/share\/\w{16}$/.test(resource)) {
           return 5;
+        } else if (/^xfplay:\/\/dna=\w{54}|dx=\d+|mz=.+|zx=\w+$/.test(resource)) {
+          return 6;
         } else {
           return false;
         }

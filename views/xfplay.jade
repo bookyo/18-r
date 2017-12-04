@@ -2,10 +2,10 @@ extends layout
 
 append title
   if movie
-    meta(name="keywords",content="#{movie.title},在线观看,无删减完整版")
+    meta(name="keywords",content="#{movie.title},影音先锋在线观看,无删减完整版")
     - var description = movie.summary.replace(/\r?\n/g,"").substring(0,100)
     meta(name="description" content="#{description}")
-    title #{movie.title}(#{movie.year}年电影)_在线观看_无删减完整版_bttags
+    title #{movie.title}(#{movie.year}年电影)_影音先锋在线观看_无删减完整版_bttags
   else
     title #{title}
 
@@ -58,24 +58,27 @@ block content
             a(href="/") 首页
           li
             a(href="/movie/#{movie._id}") #{movie.title}
-          li.active 在线观看
+          li.active 影音先锋在线观看
         if movie
-          h1 #{movie.title}在线观看
+          h1 #{movie.title}影音先锋在线
         else
           h1 通用在线观看
-        .play-content
-          .mask 视频加载中，稍安勿躁，若不能播放，请刷新尝试。。。
+        .play-content.xfplay-content
+          iframe#xfplay(src="/xfplay/xfplay.html" width="100%" height="100%" scrolling="no" frameborder="0")
+          script.
+            var xfplayframe = document.getElementById('xfplay');
+            xfplayframe.contentWindow.xfurl = "#{url}";
         if movie
           .panel.panel-default
-            .panel-heading 在线观看(bttags云播，若无法观看，请多刷新几次！)
+            .panel-heading 影音先锋在线观看(xfplay播放，需下载影音先锋播放器！)
             ul.list-group
               each zaixian,i in resources
                 if zaixian.resource==url
                   li.list-group-item.playactive
-                    a(href="/play/#{zaixian._id}") 在线观看#{i+1}
+                    a(href="/play/#{zaixian._id}") 影音先锋在线观看#{i+1}
                 else
                   li.list-group-item
-                    a(href="/play/#{zaixian._id}") 在线观看#{i+1}
+                    a(href="/play/#{zaixian._id}") 影音先锋在线观看#{i+1}
           .panel.panel-default
             .panel-heading #{movie.title}剧情简介
             - var types = [];
@@ -99,6 +102,3 @@ block content
                     img.img-responsive.lazy(data-original="/uploads/400/#{movie.img}" alt="#{movie.title}")
                   h4 
                     a(href="/movie/#{movie._id}" title="#{movie.title}")= movie.title
-append footerjs
-  script(src="/ckplayer/ckplayer/ckplayer.js")
-  <script type="text/javascript">var url="";$.get("/api?url=#{url}",function(data,status){url = data; var videoObject = {container: '.play-content',variable: 'player',autoplay:false,video:data};var player=new ckplayer(videoObject);});</script>

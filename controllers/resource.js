@@ -93,6 +93,8 @@ exports.getadd =  function(req,res) {
       return 5;
     }else if (/^(http|https):\/\/.+\/share\/\w{16}$/.test(resource)) {
       return 5;
+    }else if (/^xfplay:\/\/dna=\w{54}|dx=\d+|mz=.+|zx=\w+$/.test(resource)) {
+      return 6;
     } else {
       return false;
     }
