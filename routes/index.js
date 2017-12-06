@@ -35,9 +35,9 @@ var upload = multer({
 module.exports = function(app) {
   app.get('/', Tagcontroller.tagsByRedis, MovieController.hotsByRedis, IndexController.index);
 
-  app.get('/post', checkLogin, csrfProtection, Tagcontroller.tagsByRedis, AdminController.rolesByRedis, MovieController.checkLimitPost, MovieController.new);
+  app.get('/post', checkLogin, Tagcontroller.tagsByRedis, AdminController.rolesByRedis, MovieController.checkLimitPost, MovieController.new);
 
-  app.post('/post', checkLogin, AdminController.rolesByRedis, MovieController.checkLimitPost, upload.single('img'), csrfProtection, MovieController.post);
+  app.post('/post', checkLogin, AdminController.rolesByRedis, MovieController.checkLimitPost, upload.single('img'), MovieController.post);
 
   app.get('/movie/:id', csrfProtection, Tagcontroller.tagsByRedis,MovieController.hotsByRedis,MovieController.getMovie );
   app.delete('/movie/delete', checkLogin, AdminController.isAdmin, MovieController.delete);
