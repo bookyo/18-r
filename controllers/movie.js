@@ -610,7 +610,6 @@ exports.search = function(req, res) {
 
 exports.play = function(req, res) {
   var id = req.params.id;
-  var m3u8 = 1;
   Resource.findOne({_id: id})
     .exec(function(err, resource) {
       if(err) {
@@ -618,9 +617,6 @@ exports.play = function(req, res) {
       }
       if (!resource || resource.typeid != 5) {
         return res.status(404).send('错误的播放链接');
-      }
-      if (/^(http|https):\/\/.+\/share\/\w{16}$/.test(resource.resource)) {
-        m3u8 = 0;
       }
       Topic.find({ movies: resource.tomovie})
         .select('topic _id')
@@ -658,7 +654,6 @@ exports.play = function(req, res) {
                   hots: req.hots,
                   tags: req.tags,
                   url: resource.resource,
-                  m3u8: m3u8,
                   csrfToken: req.csrfToken(),
                   user: req.session.user,
                   movieintopics: topics,

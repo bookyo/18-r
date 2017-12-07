@@ -64,9 +64,7 @@ block content
         else
           h1 通用在线观看
         .play-content
-          if !m3u8
-            .mask 视频加载中，稍安勿躁，若不能播放，请刷新尝试。。。
-            iframe#shareplay(src="#{url}" width="100%" height="300" scrolling="no" frameborder="0")
+          .mask 视频加载中，稍安勿躁，若不能播放，请刷新尝试。。。
         if movie
           .panel.panel-default
             .panel-heading 在线观看(bttags云播，若无法观看，请多刷新几次！)
@@ -102,6 +100,13 @@ block content
                   h4 
                     a(href="/movie/#{movie._id}" title="#{movie.title}")= movie.title
 append footerjs
-  if m3u8
-    script(src="/ckplayer/ckplayer/ckplayer.js")
-    <script type="text/javascript">var videoObject = {container: '.play-content',variable: 'player',autoplay:false,video:'#{url}'};var player=new ckplayer(videoObject);</script>
+  script(src="/ckplayer/ckplayer/ckplayer.js")
+  script.
+    $.get("/api?url=#{url}",function(data,status){
+      var videoObject = {
+        container: '.play-content',
+        variable: 'player',
+        autoplay:false,
+        video:data};
+      var player=new ckplayer(videoObject);
+    });

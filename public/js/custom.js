@@ -254,10 +254,6 @@ $(".btn-get").click(function(e) {
   })
 });
 
-setTimeout(function() {
-  $(".mask").hide();
-  $("#shareplay").show();
-}, 2000);
 
 
 });
