@@ -234,6 +234,10 @@ exports.post = function(req, res) {
 exports.getMovie = function(req, res) {
     var id =  req.params.id;
     var userid;
+    var mip=0;
+    if (/^\/mip\/movie\/.+$/.test(req.url)) {
+      mip=1;
+    }
     if (req.session.user) {
       userid = req.session.user._id;
     }
@@ -318,7 +322,8 @@ exports.getMovie = function(req, res) {
             var topics = results.userstopics;
             var movieintopics = results.movieintopics;
             var images = results.images;
-            res.render('article', {
+            if(!mip) {
+              res.render('article', {
                 hots: req.hots,
                 buy: count,
                 user: req.session.user,
@@ -332,7 +337,25 @@ exports.getMovie = function(req, res) {
                 images: images,
                 error: req.flash('error'),
                 success: req.flash('success').toString()
-            });
+              });
+            } else {
+              res.render('miparticle', {
+                hots: req.hots,
+                buy: count,
+                user: req.session.user,
+                pubdate: pubdate,
+                csrfToken: req.csrfToken(),
+                topics: topics,
+                movieintopics: movieintopics,
+                removies: removies,
+                tags: tags,
+                movie: movie,
+                images: images,
+                error: req.flash('error'),
+                success: req.flash('success').toString()
+              })
+            }
+            
           });
           
         }

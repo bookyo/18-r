@@ -1,0 +1,447 @@
+doctype html
+html(mip lang="zh-CN")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width,minimum-scale=1,initial-scale=1")
+    link(href="https://mipcache.bdstatic.com/static/v1/mip.css", rel='stylesheet')
+    link(rel="canonical" href="https://bttags.com/movie/#{movie._id}")
+    meta(name="keywords",content="#{movie.title},#{movie.title}迅雷下载,#{movie.title}百度云网盘,#{movie.title}bt磁力链接,#{movie.title}电驴ed2k")
+    - var description = movie.summary.replace(/\r?\n/g,"").substring(0,100)
+    meta(name="description" content="#{description}")
+    - var classarr = [];
+    each type in movie.types
+      - classarr.push(type.tag);
+    - var classes=classarr.join("");
+    title #{movie.title}(#{movie.year}年电影)_迅雷下载/百度云网盘_#{movie.country}#{classes}
+    style(mip-custom).
+      .mip-nav-wrapper{border: 1px solid transparent;background-color: #f8f8f8;border-color: #e7e7e7;}
+      .navbar-header{padding-left:15px;padding-right:15px;}
+      a {
+       color: #00B7FF;
+      }
+      .tags {background: #FAFAFA;padding: 10px;}
+      .tags .tag{
+        border:1px solid #f0f0f0;
+        border-radius: 4px;
+        padding:3px 10px;
+        margin:5px;
+        float:left;
+        text-decoration: none;
+      }
+      .tags .tag:hover{
+        background:#87B824;
+        color:#fff;
+      }
+      .tags .current{
+        background:#87B824;
+        color:#fff;
+      }
+      .breadcrumb {
+          margin-bottom: 10px;
+          margin-top: 10px;
+          padding: 8px 15px;
+          margin-bottom: 10px;
+          list-style: none;
+          background-color: #FAFAFA;
+          border-radius: 4px;
+      }
+      .breadcrumb>li {
+          display: inline-block;
+      }
+      .breadcrumb>.active {
+          color: #777;
+      }
+      .breadcrumb>li+li:before {
+          padding: 0 5px;
+          color: #ccc;
+          content: "/\00a0";
+      }
+      .clearfix:before{
+          display: table;
+          content: " ";
+      }
+      .clearfix:after,.panel-body:after{clear:both;display: table; content: " ";}
+      .movie-main{margin-bottom:10px;}
+      .movie-container{padding:0 15px;}
+      .movie-container h1{font-size:16px;margin-top: 10px;margin-bottom: 5px;}
+      .movie-haibao{width:30%;float:left;}
+      .movie-info{width:65%;float:right;}
+      .movie-info dt {
+          padding-right: 15px;
+      }
+      .movie-info dd, .movie-info dt {
+          float: left;
+      }
+      dt {
+          font-weight: 700;
+      }
+      dd, dt {
+          line-height: 1.42857143;
+      }
+      .movie-info dl {
+        margin-bottom: 5px;
+      }
+      .mip-showmore-btn {
+          position: relative;
+          float:right;
+          padding:2px;
+      }
+
+      .moreshow {
+          display: none;
+      }
+
+      .morehidden {
+          display: block;
+      }
+
+      .mip-showmore-open .moreshow {
+          display: block;
+      }
+
+      .mip-showmore-open .morehidden {
+          display: none;
+      }
+      
+      .panel {
+          margin-bottom: 20px;
+          background-color: #fff;
+          border: 1px solid transparent;
+          border-radius: 4px;
+          -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+          box-shadow: 0 1px 1px rgba(0,0,0,.05);
+      }
+      .panel-default {
+          border-color: #ddd;
+      }
+      .panel-default>.panel-heading {
+          color: #333;
+          background-color: #f5f5f5;
+          border-color: #ddd;
+      }
+      .panel-heading {
+          padding: 10px 15px;
+          border-bottom: 1px solid transparent;
+          border-top-left-radius: 3px;
+          border-top-right-radius: 3px;
+      }
+      .panel-body {
+          padding: 15px;
+      }
+      .movie-img {
+          float: left;
+          max-width: 33.33%;
+      }
+      .list-group-item {
+          position: relative;
+          display: block;
+          padding: 10px 15px;
+          margin-bottom: -1px;
+          background-color: #fff;
+          border: 1px solid #ddd;
+      }
+      .btn-info {
+          color: #fff;
+          background-color: #5bc0de;
+          border-color: #46b8da;
+      }
+      .btn {
+          display: inline-block;
+          padding: 6px 12px;
+          margin-bottom: 0;
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 1.42857143;
+          text-align: center;
+          white-space: nowrap;
+          vertical-align: middle;
+          -ms-touch-action: manipulation;
+          touch-action: manipulation;
+          cursor: pointer;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          background-image: none;
+          border: 1px solid transparent;
+          border-radius: 4px;
+      }
+      .btn-block {
+          display: block;
+      }
+      .btn-default {
+          color: #333;
+          background-color: #fff;
+          border-color: #ccc;
+      }
+      .coltopic {
+          font-size: 16px;
+          margin-top:20px;
+          margin-bottom:10px;
+      } 
+      .interests a {
+          color: #42BD56;
+          height: 50px;
+          line-height: 50px;
+          padding: 0 1.55rem;
+          letter-spacing: .1em;
+          overflow: auto;
+          display: block;
+          text-align: center;
+      }
+      .interests li {
+          float:left;
+          margin: 0 0 8px 8px;
+          font-size: .94rem;
+          display: inline-block;
+          border-radius: .25rem;
+          border: solid 1px #42BD56;
+          vertical-align: middle;
+      }
+      .col-xs-6 {
+          min-height:1px;
+          position: relative;
+          width: 50%;
+          float:left;
+      }
+      .movie-box{
+        padding-left:10px;
+        padding-right:10px;
+      }
+      .movie-box h2, h4 {
+          font-size: 16px;
+          height: 20px;
+          overflow: hidden;
+          margin-top:10px;
+          margin-bottom:15px;
+      }
+      .footer {
+          width: 100%;
+          padding-top: 10px;
+          padding-bottom: 10px;
+          background-color: #f8f8f8;
+          margin-top: 20px;
+      }
+      .foot-title {
+          font-size: 14px;
+          margin-bottom: 0;
+          margin-top: 10px;
+          text-align: center;
+          color: #777;
+      }
+      .footer p {
+          text-align: center;
+          margin: 0;
+          color: #777;
+      }
+  body
+    div.mip-nav-wrapper
+      mip-nav-slidedown.mip-element-sidebar.container(data-id="bs-navbar" data-showbrand="1" data-brandname="bttags")
+        nav#bs-navbar.navbar-collapse.collapse.navbar.navbar-static-top
+          ul.nav.navbar-nav.navbar-right
+            li
+              a(href="/") 首页
+            li
+              a(href="/tags") 电影分类
+            li
+              a(href="/hots") 电影排行榜
+            li
+              a(href="/topics") 电影专题
+            li.navbar-wise-close
+              span#navbar-wise-close-btn
+    section.tags.clearfix
+      a.tag.current(href="/" title="bttags") 全部
+      each tag in tags 
+        a.tag(href="/tag/#{tag._id}" title="#{tag.tag}电影大全") #{tag.tag}
+    ol.breadcrumb
+      li
+        a(href="/") 首页
+      li.active 电影详情页
+    .movie-container
+      h1 #{movie.title}
+      .movie-main.clearfix
+        .movie-haibao
+          mip-img(layout="responsive" width="400" height="400" src="/uploads/400/#{movie.img}" alt="#{movie.title}")
+        .movie-info
+          dl.clearfix
+            dt 导演:  
+            dd #{movie.doctor}
+          dl.clearfix
+            dt 主演: 
+            dd #{movie.players}
+          dl.clearfix
+            dt 电影类型: 
+            dd
+              each type in movie.types
+                a(href="/tag/#{type._id}" title="#{type.tag}电影大全")
+                  span.category #{type.tag}
+          dl.clearfix
+            dt 制片地区: 
+            dd #{movie.country}
+          dl.clearfix
+            dt 上映年份: 
+            dd #{movie.year}
+          dl.clearfix
+            dt 电影剧情简介: 
+            - var types = [];
+            each type in movie.types
+              - types.push(type.tag);
+            - var summary = "《"+movie.title+"》是"+movie.year+"年由"+movie.doctor+"导演，"+movie.players+"等主演的"+movie.country+types.join('、')+'电影。\n'+movie.summary;
+            - var newsummary = summary.replace(/\r?\n/g,"<br />");
+            mip-showmore#showmore1(maxheight='80' animatetime='.3')
+              div.summary!= newsummary
+            div.mip-showmore-btn(on="tap:showmore1.toggle" data-closeclass="mip-showmore-open")
+              span.moreshow 收起
+              span.morehidden 显示全部
+
+      .col-md-12
+        .panel.panel-default
+          .panel-heading #{movie.title}的图片( 
+            a(href="/movie/#{movie._id}/images") 全部图片
+            |  | 
+            a(href="/movie/#{movie._id}/uploadimgs") 添加图片
+            |  )
+          .panel-body
+            .movie-imgs
+              mip-img.movie-img(layout="responsive" width="400" height="400" src="/uploads/400/#{movie.img}" popup alt="#{movie.title}")
+              each image in images
+                mip-img.movie-img(layout="responsive" width="600" height="600" popup src="/uploads/#{image.originalimg}")
+        - var baidures = [];
+        - var cilires = [];
+        - var dianlvres = [];
+        - var qihures = [];
+        - var zaixians = [];
+        - var xianfengs = [];
+        - var urlreg = /(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-)+)/g;
+        each resource in movie.resources
+          if resource.typeid == 1
+            - baidures.push(resource);
+          else if resource.typeid == 2
+            - cilires.push(resource);
+          else if resource.typeid == 3
+            - dianlvres.push(resource);
+          else if resource.typeid == 4
+            - qihures.push(resource);
+          else if resource.typeid == 5
+            - zaixians.push(resource);
+          else if resource.typeid == 6
+            - xianfengs.push(resource);
+        if baidures.length
+          .panel.panel-default
+            .panel-heading 百度云网盘资源
+            ul.list-group
+              each baidure in baidures
+                - var baiduyun = baidure.resource.replace(urlreg,"<a href='$1$2' target='_blank'>$1$2</a>")
+                if buy
+                  li.list-group-item!= baiduyun
+                else
+                  li.list-group-item
+                    form.form.form-res(method="post",action="/movie/buy")
+                      input(name="id", type="hidden", value="#{movie._id}")
+                      input(name="_csrf", type="hidden", value="#{csrfToken}")
+                      button(type="submit").btn.btn-info.btn-resources 查看资源
+        if cilires.length
+          .panel.panel-default
+            .panel-heading bt磁力链接
+            ul.list-group
+              each cilire in cilires
+                - var cilireg = /magnet:\?xt=urn:btih:[\s\S]{40}/;
+                - var cili = cilire.resource.match(cilireg);
+                if buy
+                  li.list-group-item
+                    a(href="#{cili}" target="_blank") 磁力链接
+                else
+                  li.list-group-item
+                    form.form.form-res(method="post",action="/movie/buy")
+                      input(name="id", type="hidden", value="#{movie._id}")
+                      input(name="_csrf", type="hidden", value="#{csrfToken}")
+                      button(type="submit").btn.btn-info.btn-resources 查看资源
+        if dianlvres.length
+          .panel.panel-default
+            .panel-heading 电驴ed2k链接
+            ul.list-group
+              each dianlvre in dianlvres
+                - var dianlv = dianlvre.resource.split('|');
+                - var restitle = decodeURI(dianlv[2]);
+                if buy
+                  li.list-group-item 
+                    a(href="#{dianlvre.resource}" target='_blank')  #{restitle}
+                else
+                  li.list-group-item
+                    form.form.form-res(method="post",action="/movie/buy")
+                      input(name="id", type="hidden", value="#{movie._id}")
+                      input(name="_csrf", type="hidden", value="#{csrfToken}")
+                      button(type="submit").btn.btn-info.btn-resources 查看资源
+        if qihures.length
+          .panel.panel-default
+            .panel-heading 360云网盘资源
+            ul.list-group
+              each qihure in qihures
+                - var qihu = qihure.resource.replace(urlreg,"<a href='$1$2' target='_blank'>$1$2</a>")
+                if buy
+                  li.list-group-item!= qihu
+                else
+                  li.list-group-item
+                    form.form.form-res(method="post",action="/movie/buy")
+                      input(name="id", type="hidden", value="#{movie._id}")
+                      input(name="_csrf", type="hidden", value="#{csrfToken}")
+                      button(type="submit").btn.btn-info.btn-resources 查看资源
+        if zaixians.length
+          .panel.panel-default
+            .panel-heading 在线观看
+            ul.list-group
+              each zaixian,i in zaixians
+                li.list-group-item
+                  a(href="/play/#{zaixian._id}" target="_blank") 在线观看#{i+1}
+        if xianfengs.length
+          .panel.panel-default
+            .panel-heading 影音先锋在线
+            ul.list-group
+              each xianfeng,i in xianfengs
+                li.list-group-item
+                  a(href="/xfplay/#{xianfeng._id}" target="_blank") 影音先锋在线#{i+1}
+        if user
+          a.btn.btn-default.btn-block(href="/resource/#{movie._id}/add") 添加本电影资源
+        if movieintopics.length
+          .movie-topics.clearfix
+            h3.coltopic 收录于以下专题
+            .interests
+              each movieintopic in movieintopics
+                li
+                  a(href="/topic/#{movieintopic._id}" title="#{movieintopic.topic}").btn.btn-primary #{movieintopic.topic}
+        .recommands.clearfix
+          h3.coltopic 同类型电影推荐
+          each movie in removies
+            .col-xs-6
+              .movie-box
+                a(href="/movie/#{movie._id}" title="#{movie.title}")
+                  mip-img(layout="responsive" height="400" width="400" src="/uploads/400/#{movie.img}" alt="#{movie.title}")
+                h4 
+                  a(href="/movie/#{movie._id}" title="#{movie.title}")= movie.title
+    .footer
+      .container
+        .row
+          .col-md-12
+            - var years = [];
+            - var countries = [];
+            each category in locals.categories
+              if category.class == 'year'
+                - years.push(category);
+              else if category.class == 'country'
+                - countries.push(category);
+            h3.foot-title 电影年份检索
+            section.tags.tagsfoot.clearfix
+              .year-tags.clearfix
+                each year in years
+                  a.tag(href='/year/#{year.name}') #{year.name}
+            h3.foot-title 制片地区检索
+            section.tags.tagsfoot.clearfix
+              .country-tags.clearfix
+                each country in countries
+                  a.tag(href='/country/#{country.name}') #{country.name}
+      p
+        | &copy;  2017 bttags   
+        | 本站不提供任何视听上传服务，所有内容均来自电影分享站点所提供的公开引用资源
+    script(src="https://mipcache.bdstatic.com/static/v1/mip.js")
+    script(src="https://mipcache.bdstatic.com/static/v1/mip-nav-slidedown/mip-nav-slidedown.js")
+    script(src="https://mipcache.bdstatic.com/static/v1/mip-showmore/mip-showmore.js")

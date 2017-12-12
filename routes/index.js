@@ -40,6 +40,7 @@ module.exports = function(app) {
   app.post('/post', checkLogin, AdminController.rolesByRedis, MovieController.checkLimitPost, upload.single('img'), MovieController.post);
 
   app.get('/movie/:id', csrfProtection, Tagcontroller.tagsByRedis,MovieController.hotsByRedis,MovieController.getMovie );
+  app.get('/mip/movie/:id', csrfProtection, Tagcontroller.tagsByRedis, MovieController.hotsByRedis, MovieController.getMovie);
   app.delete('/movie/delete', checkLogin, AdminController.isAdmin, MovieController.delete);
   app.get('/movie/:id/update', checkLogin,AdminController.isAdmin, Tagcontroller.tagsByRedis,MovieController.getupdate);
   app.post('/movie/:id/update', checkLogin, AdminController.isAdmin, upload.single('img'),  MovieController.postupdate);
