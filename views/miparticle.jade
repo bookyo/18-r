@@ -336,7 +336,7 @@ html(mip lang="zh-CN")
                   li.list-group-item!= baiduyun
                 else
                   li.list-group-item
-                    form.form.form-res(method="post",action="/movie/buy")
+                    mip-form.form.form-res(method="post",url="https://bttags.com/movie/buy")
                       input(name="id", type="hidden", value="#{movie._id}")
                       input(name="_csrf", type="hidden", value="#{csrfToken}")
                       button(type="submit").btn.btn-info.btn-resources 查看资源
@@ -352,7 +352,7 @@ html(mip lang="zh-CN")
                     a(href="#{cili}" target="_blank") 磁力链接
                 else
                   li.list-group-item
-                    form.form.form-res(method="post",action="/movie/buy")
+                    mip-form.form.form-res(method="post",url="https://bttags.com/movie/buy")
                       input(name="id", type="hidden", value="#{movie._id}")
                       input(name="_csrf", type="hidden", value="#{csrfToken}")
                       button(type="submit").btn.btn-info.btn-resources 查看资源
@@ -368,7 +368,7 @@ html(mip lang="zh-CN")
                     a(href="#{dianlvre.resource}" target='_blank')  #{restitle}
                 else
                   li.list-group-item
-                    form.form.form-res(method="post",action="/movie/buy")
+                    mip-form.form.form-res(method="post",url="https://bttags.com/movie/buy")
                       input(name="id", type="hidden", value="#{movie._id}")
                       input(name="_csrf", type="hidden", value="#{csrfToken}")
                       button(type="submit").btn.btn-info.btn-resources 查看资源
@@ -382,7 +382,7 @@ html(mip lang="zh-CN")
                   li.list-group-item!= qihu
                 else
                   li.list-group-item
-                    form.form.form-res(method="post",action="/movie/buy")
+                    mip-form.form.form-res(method="post",url="https://bttags.com/movie/buy")
                       input(name="id", type="hidden", value="#{movie._id}")
                       input(name="_csrf", type="hidden", value="#{csrfToken}")
                       button(type="submit").btn.btn-info.btn-resources 查看资源
@@ -445,3 +445,4 @@ html(mip lang="zh-CN")
     script(src="https://mipcache.bdstatic.com/static/v1/mip.js")
     script(src="https://mipcache.bdstatic.com/static/v1/mip-nav-slidedown/mip-nav-slidedown.js")
     script(src="https://mipcache.bdstatic.com/static/v1/mip-showmore/mip-showmore.js")
+    script(src="https://mipcache.bdstatic.com/static/v1/mip-form/mip-form.js")
