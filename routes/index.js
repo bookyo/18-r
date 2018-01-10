@@ -126,6 +126,7 @@ module.exports = function(app) {
   app.get('/xfplay/:id', Tagcontroller.tagsByRedis, MovieController.hotsByRedis, MovieController.xfplay);
   app.get('/userranks', Tagcontroller.tagsByRedis,MovieController.hotsByRedis, UserController.userranks);
   app.get('/api', JiexiController.jiexi);
+  app.get('/mip-access/authorization', UserController.mipauth);
   
   app.use(function (err, req, res, next) {
     if (err.code !== 'EBADCSRFTOKEN') return next(err);
@@ -145,7 +146,7 @@ module.exports = function(app) {
   function checkNotLogin(req, res, next) {
     if(req.session.user) {
       req.flash('error', {'msg': '已经登陆'});
-       return res.redirect('back');
+       return res.redirect('/');
     }
     next();
   }

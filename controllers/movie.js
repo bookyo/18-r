@@ -157,7 +157,6 @@ exports.post = function(req, res) {
           console.log(err);
         }
         if (movie.length) {
-          console.log(movie);
           req.flash('error', { 'msg': '已经有人发布过此电影，请核实之后再发布！' });
           return res.redirect('/post');
         } else {
