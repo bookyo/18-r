@@ -300,8 +300,9 @@ exports.getreg = function(req, res) {
   }
 
   exports.mipauth = function(req, res) {
-    if (req.headers.origin == 'https://mipcdn.com' || req.headers.origin == 'https://mipcache.bdstatic.com' || req.headers.origin == 'https://bttags.com') {
+    if (req.headers.origin == 'https://mipcache.bdstatic.com' || req.headers.origin == 'https://mipcdn.com' || req.headers.origin == 'https://bttags.com') {
       res.header("Access-Control-Allow-Origin", req.headers.origin);
+      res.header("Access-Control-Allow-Credentials", true);
       res.header('Access-Control-Allow-Methods', 'POST, GET');
       res.header('Access-Control-Allow-Headers', 'X-Requested-With');
       res.header('Access-Control-Allow-Headers', 'Content-Type');
