@@ -104,6 +104,7 @@ module.exports = function(app) {
   app.get('/topic/new', checkLogin, AdminController.canaddres, TopicController.getNew);
   app.post('/topic/new', checkLogin, AdminController.canaddres, TopicController.postNew);
   app.get('/topic/:id', TopicController.topicsByRedis, TopicController.getTopic);
+  app.get('/mip/topic/:id', TopicController.getTopic);
   app.get('/topic/:id/update', checkLogin, TopicController.editTopic);
   app.post('/topic/:id/update', checkLogin, TopicController.updateTopic);
   app.delete('/topic/delete', checkLogin, AdminController.isAdmin, TopicController.delete);

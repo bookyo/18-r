@@ -175,6 +175,10 @@ exports.updateTopic = function(req, res) {
 }
 exports.getTopic = function(req, res) {
   var id = req.params.id;
+  var mip=0;
+  if (/^\/mip\/topic\/.+$/.test(req.url)) {
+    mip=1;
+  }
   Topic.findByIdAndUpdate(id,{$inc:{pv: 1}})
              .populate('creator','_id name avatar')
              .exec(function(err, topic) {
@@ -198,17 +202,32 @@ exports.getTopic = function(req, res) {
                                             if(err) {
                                               console.log(err);
                                             }
-                                            res.render('topic', {
-                                              topic:topic,
-                                              hottopics: req.topics,
-                                              movies: movies,
-                                              page: page,
-                                              pages: Math.ceil(count/perPage),
-                                              user: req.session.user,
-                                              pubdate: pubdate,
-                                              error: req.flash('error'),
-                                              success: req.flash('success').toString()
-                                            });
+                                            if(!mip) {
+                                              res.render('topic', {
+                                                topic:topic,
+                                                hottopics: req.topics,
+                                                movies: movies,
+                                                page: page,
+                                                pages: Math.ceil(count/perPage),
+                                                user: req.session.user,
+                                                pubdate: pubdate,
+                                                error: req.flash('error'),
+                                                success: req.flash('success').toString()
+                                              })
+                                            } else {
+                                              res.render('miptopic',{
+                                                topic:topic,
+                                                hottopics: req.topics,
+                                                movies: movies,
+                                                page: page,
+                                                pages: Math.ceil(count/perPage),
+                                                user: req.session.user,
+                                                pubdate: pubdate,
+                                                error: req.flash('error'),
+                                                success: req.flash('success').toString()
+                                              })
+                                            }
+                                            
                                           })
                               
                             });

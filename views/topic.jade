@@ -7,7 +7,7 @@ append head
   meta(name="keywords" content="#{topic.topic},#{topic.topic}迅雷下载")
   - var description = topic.summary.replace(/\r?\n/g,"").substring(0,100)
   meta(name="description" content="#{description}")
-
+  link(rel="miphtml" href="https://bttags.com/mip/topic/#{topic._id}")
 block content
   .container
     .row

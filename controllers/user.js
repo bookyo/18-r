@@ -300,10 +300,12 @@ exports.getreg = function(req, res) {
   }
 
   exports.mipauth = function(req, res) {
-    res.header("Access-Control-Allow-Origin", '*');
-    res.header('Access-Control-Allow-Methods', 'POST, GET');
-    res.header('Access-Control-Allow-Headers', 'X-Requested-With');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    if (req.headers.origin == 'https://*.mipcdn.com' || req.headers.origin == 'https://mipcache.bdstatic.com' || req.headers.origin == 'https://bttags.com') {
+      res.header("Access-Control-Allow-Origin", req.headers.origin);
+      res.header('Access-Control-Allow-Methods', 'POST, GET');
+      res.header('Access-Control-Allow-Headers', 'X-Requested-With');
+      res.header('Access-Control-Allow-Headers', 'Content-Type');
+    }
     if (!req.session.user) {
       return res.json({
         "login": false

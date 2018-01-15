@@ -421,13 +421,13 @@ html(mip lang="zh-CN")
             .interests
               each movieintopic in movieintopics
                 li
-                  a(href="/topic/#{movieintopic._id}" title="#{movieintopic.topic}").btn.btn-primary #{movieintopic.topic}
+                  a(data-type="mip" href="/mip/topic/#{movieintopic._id}" title="#{movieintopic.topic}").btn.btn-primary #{movieintopic.topic}
         .recommands.clearfix
           h3.coltopic 同类型电影推荐
           each movie in removies
             .col-xs-6
               .movie-box
-                a(href="/movie/#{movie._id}" title="#{movie.title}")
+                a(data-type="mip" href="/mip/movie/#{movie._id}" title="#{movie.title}")
                   mip-img(layout="responsive" height="400" width="400" src="/uploads/400/#{movie.img}" alt="#{movie.title}")
                 h4 
                   a(href="/movie/#{movie._id}" title="#{movie.title}")= movie.title

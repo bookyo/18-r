@@ -1,0 +1,252 @@
+doctype html
+html(mip lang="zh-CN")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width,minimum-scale=1,initial-scale=1")
+    link(href="https://mipcache.bdstatic.com/static/v1/mip.css", rel='stylesheet')
+    link(rel="canonical" href="https://bttags.com/topic/#{topic._id}")
+    meta(name="keywords" content="#{topic.topic},#{topic.topic}迅雷下载")
+    - var description = topic.summary.replace(/\r?\n/g,"").substring(0,100)
+    meta(name="description" content="#{description}")
+    title #{topic.topic}_bttags
+    style(mip-custom).
+      .mip-nav-wrapper{border: 1px solid transparent;background-color: #f8f8f8;border-color: #e7e7e7;}
+      .navbar-header{padding-left:15px;padding-right:15px;}
+      a {
+       color: #00B7FF;
+      }
+      .tags {background: #FAFAFA;padding: 10px;}
+      .tags .tag{
+        border:1px solid #f0f0f0;
+        border-radius: 4px;
+        padding:3px 10px;
+        margin:5px;
+        float:left;
+        text-decoration: none;
+      }
+      .tags .tag:hover{
+        background:#87B824;
+        color:#fff;
+      }
+      .tags .current{
+        background:#87B824;
+        color:#fff;
+      }
+      .breadcrumb {
+          margin-bottom: 10px;
+          margin-top: 10px;
+          padding: 8px 15px;
+          margin-bottom: 10px;
+          list-style: none;
+          background-color: #FAFAFA;
+          border-radius: 4px;
+      }
+      .breadcrumb>li {
+          display: inline-block;
+      }
+      .breadcrumb>.active {
+          color: #777;
+      }
+      .breadcrumb>li+li:before {
+          padding: 0 5px;
+          color: #ccc;
+          content: "/\00a0";
+      }
+      .clearfix:before{
+          display: table;
+          content: " ";
+      }
+      .clearfix:after,.panel-body:after{clear:both;display: table; content: " ";}
+      .topic-container{
+          padding:0 15px;
+      }
+      .topic-info{
+          margin-bottom:10px;
+      }
+      .topic-info h1{
+          font-size:18px;
+          font-weight:bold;
+          margin-top:0px;
+          margin-bottom:5px;
+      }
+      .author mip-img {
+          display: inline-block;
+          vertical-align: middle;
+          margin-right: 5px;
+      }
+      .author-info {
+          margin-right: 15px;
+          font-size:12px;
+      }
+      .author span {
+          display: inline-block;
+          vertical-align: middle;
+      }
+      .topic-info p{
+        margin-top:10px;
+      }
+      .movie-list{
+        margin-bottom: 15px;
+        border: 2px solid #f0f0f0;
+        padding: 10px;
+      }
+      .imgbox{
+        width:90px;
+        float:left;
+        margin-right:15px
+      }
+      .movieinfo{
+        margin-left:105px;
+      }
+      .movie-title{
+        color: #494949;
+        font-size: 16px;
+        line-height: 1.3;
+        font-weight: 500;
+        margin-top:0;
+        margin-bottom:10px
+      }
+      .info{
+        margin-bottom:10px;
+      }
+      .showmore-btn{
+        float:left;
+        font-size:13px;
+        padding: 2px;
+        border: 1px solid #ddd;
+      }
+      .pages {
+          text-align: center;
+          clear: both;
+      }
+      .pagination {
+          display: inline-block;
+          padding-left: 0;
+          margin: 20px 0;
+          border-radius: 4px;
+      }
+      .pagination>li {
+          display: inline;
+      }
+      .pagination>li:first-child>a, .pagination>li:first-child>span {
+          margin-left: 0;
+          border-top-left-radius: 4px;
+          border-bottom-left-radius: 4px;
+      }
+      .pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+          z-index: 3;
+          color: #fff;
+          cursor: default;
+          background-color: #337ab7;
+          border-color: #337ab7;
+      }
+      .pagination>li>a, .pagination>li>span {
+          position: relative;
+          float: left;
+          padding: 6px 12px;
+          margin-left: -1px;
+          line-height: 1.42857143;
+          color: #337ab7;
+          text-decoration: none;
+          background-color: #fff;
+          border: 1px solid #ddd;
+      }
+      .footer {
+          width: 100%;
+          padding-top: 10px;
+          padding-bottom: 10px;
+          background-color: #f8f8f8;
+          margin-top: 20px;
+      }
+      .foot-title {
+          font-size: 14px;
+          margin-bottom: 0;
+          margin-top: 10px;
+          text-align: center;
+          color: #777;
+      }
+      .footer p {
+          text-align: center;
+          margin: 0;
+          color: #777;
+      }
+  body
+    div.mip-nav-wrapper
+      mip-nav-slidedown.mip-element-sidebar.container(data-id="bs-navbar" data-showbrand="1" data-brandname="bttags")
+        nav#bs-navbar.navbar-collapse.collapse.navbar.navbar-static-top
+          ul.nav.navbar-nav.navbar-right
+            li
+              a(href="/") 首页
+            li
+              a(href="/tags") 电影分类
+            li
+              a(href="/hots") 电影排行榜
+            li
+              a(href="/topics") 电影专题
+            li.navbar-wise-close
+              span#navbar-wise-close-btn
+    ol.breadcrumb
+      li
+        a(href="/") 首页
+      li.active 专题详情页
+    .topic-container
+      .topic-info
+        h1 #{topic.topic}
+        .author
+          a.author-info(href="/user/#{topic.creator._id}" title="#{topic.creator.name}")
+            mip-img(width="30" height="30" src="/upload/avatar/avatar-#{topic.creator.avatar}.jpg" alt="#{topic.creator.name}")
+            span #{topic.creator.name}
+          span.pubdate 发布于 #{pubdate}
+        - var newsummary = topic.summary.replace(/\r?\n/g,"<br />");
+        p!= newsummary
+      each movie,i in movies
+        .movie-list.clearfix
+          .info.clearfix
+            .imgbox
+              a(href="/movie/#{movie._id}" title="#{movie.title}")
+                mip-img(src="/uploads/400/#{movie.img}" width="90" height="90" alt="#{movie.title}")
+            .movieinfo
+              h2.movie-title
+                a(href="/movie/#{movie._id}" title="#{movie.title}") #{movie.title}
+              .movie-info
+                | #{movie.doctor}(导演)/#{movie.players}(主演)/#{movie.country}/#{movie.year}
+                each type in movie.types
+                  |/
+                  a(href="/tag/#{type._id}" title="#{type.tag}电影大全")
+                    span.category #{type.tag}
+          .movie-summary
+            mip-showmore(id="showmore#{i}" maxheight='60' animatetime='.3')
+              p 介绍：#{movie.summary}
+            .showmore-btn(on="tap:showmore#{i}.toggle" data-closetext="收起") 显示全部
+    nav.pages
+      if( pages> 1) 
+        ul.pagination
+          != createPagination(pages, page)
+    .footer
+      .container
+        .row
+          .col-md-12
+            - var years = [];
+            - var countries = [];
+            each category in locals.categories
+              if category.class == 'year'
+                - years.push(category);
+              else if category.class == 'country'
+                - countries.push(category);
+            h3.foot-title 电影年份检索
+            section.tags.tagsfoot.clearfix
+              .year-tags.clearfix
+                each year in years
+                  a.tag(href='/year/#{year.name}') #{year.name}
+            h3.foot-title 制片地区检索
+            section.tags.tagsfoot.clearfix
+              .country-tags.clearfix
+                each country in countries
+                  a.tag(href='/country/#{country.name}') #{country.name}
+      p
+        | &copy;  2017-2018 bttags   
+        | 本站不提供任何视听上传服务，所有内容均来自电影分享站点所提供的公开引用资源
+    script(src="https://mipcache.bdstatic.com/static/v1/mip.js")
+    script(src="https://mipcache.bdstatic.com/static/v1/mip-nav-slidedown/mip-nav-slidedown.js")
+    script(src="https://mipcache.bdstatic.com/static/v1/mip-showmore/mip-showmore.js")
+  
