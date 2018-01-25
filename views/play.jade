@@ -2,10 +2,10 @@ extends layout
 
 append title
   if movie
-    meta(name="keywords",content="#{movie.title},在线观看,无删减完整版")
+    meta(name="keywords",content="#{movie.title},云播,在线观看,无删减完整版")
     - var description = movie.summary.replace(/\r?\n/g,"").substring(0,100)
     meta(name="description" content="#{description}")
-    title #{movie.title}(#{movie.year}年电影)_在线观看_无删减完整版_bttags
+    title #{movie.title}(#{movie.year}年电影)_云播在线观看_无删减完整版_bttags
   else
     title #{title}
 
