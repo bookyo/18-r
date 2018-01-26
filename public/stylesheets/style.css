@@ -182,5 +182,6 @@ a {
 .mask{background:#000;text-align:center;padding-top:50px;padding-left:10px;padding-right:10px;height:300px;color:#fff;font-size:20px;}
 .playactive a{color:red;font-weight:bold;}
 .xfplay-content{height:400px;}
+.readmore{margin-top:-10px;}
 @media (max-width:991px){.movie-info{margin-top:20px;} .pc-search{display:none;}}
 @media(max-width:767px) {.author{display:none;}.movie-haibao{margin-top:10px;}.movie-info{margin-top:10px;font-size:14px;}.movie-info dl{margin-bottom:5px;}.movie-img{float:left;max-width:33.33%;padding:2px;}.breadcrumb{margin-bottom:10px;margin-top:10px;}.article h1{font-size:16px;margin-top:10px;margin-bottom:5px;}.hot-title{font-size:16px;} .notice{display:none;} .hots{display:none;}.side-ranks{display:none;}.wapserach{display:table;}.categories-tags{display:none;}}

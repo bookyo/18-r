@@ -95,13 +95,22 @@ block content
                           span.category #{type.tag}
                   dl.collec-summary
                     dt 电影剧情：
-                    if movie.summary.length > 100
-                      - var summary = movie.summary.substring(0,100)+ "..." ;
-                      dd #{summary}
-                    else
-                      dd #{movie.summary}
+                    //- if movie.summary.length > 100
+                    //-   - var summary = movie.summary.substring(0,100)+ "..." ;
+                    //-   dd #{summary}
+                    //- else
+                    dd #{movie.summary}
                 
         nav.pages
           if( pages> 1) 
             ul.pagination
               != createPagination(pages, page)
+append footerjs
+  script(src="https://cdn.bootcss.com/Readmore.js/2.2.0/readmore.min.js")
+  script.
+    $('.collec-summary').readmore({
+      speed: 75,
+      lessLink: '<a class="readmore" href="#">收起内容&#8593;</a>',
+      moreLink: '<a class="readmore" href="#">显示更多&#8595;</a>',
+      collapsedHeight:80
+    });
