@@ -5,14 +5,14 @@ html(mip lang="zh-CN")
     meta(name="viewport", content="width=device-width,minimum-scale=1,initial-scale=1")
     link(href="https://mipcache.bdstatic.com/static/v1/mip.css", rel='stylesheet')
     link(rel="canonical" href="https://bttags.com/movie/#{movie._id}")
-    meta(name="keywords",content="#{movie.title},bt种子下载,百度云网盘,完整版电影")
+    meta(name="keywords",content="#{movie.title},bt种子下载,百度云网盘,磁力下载,完整版电影")
     - var description = movie.summary.replace(/\r?\n/g,"").substring(0,100)
     meta(name="description" content="#{description}")
     - var classarr = [];
     each type in movie.types
       - classarr.push(type.tag);
     - var classes=classarr.join("");
-    title #{movie.title}(#{movie.year}年完整版电影)_百度云网盘/bt下载_#{movie.country}#{classes}
+    title #{movie.title}(#{movie.year}年完整版电影)_百度云网盘/bt磁力下载_#{movie.country}#{classes}
     style(mip-custom).
       .mip-nav-wrapper{border: 1px solid transparent;background-color: #f8f8f8;border-color: #e7e7e7;}
       .navbar-header{padding-left:15px;padding-right:15px;}

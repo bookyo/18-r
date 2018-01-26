@@ -1,7 +1,7 @@
 extends layout
 
 append head
-  meta(name="keywords" content="#{movie.title},bt种子下载,百度云网盘,完整版电影")
+  meta(name="keywords" content="#{movie.title},bt种子下载,百度云网盘,磁力下载,完整版电影")
   - var description = movie.summary.replace(/\r?\n/g,"").substring(0,100)
   meta(name="description" content="#{description}")
   meta(property="og:type" content="videolist")
@@ -25,7 +25,7 @@ append title
   each type in movie.types
     - classarr.push(type.tag);
   - var classes=classarr.join("");
-  title #{movie.title}(#{movie.year}年完整版电影)_百度云网盘/bt下载_#{movie.country}#{classes}
+  title #{movie.title}(#{movie.year}年完整版电影)_百度云网盘/bt磁力下载_#{movie.country}#{classes}
 
 
 block content
