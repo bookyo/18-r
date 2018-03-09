@@ -50,23 +50,25 @@ block content
           div.btn-group.text-center
             each notice in locals.notices
               a.btn.btn-default.btn-do(href="/notice/#{notice._id}" title="#{notice.title}") #{notice.title}
-      .col-md-9
+      .col-md-6
         style.
-          .index-topic-info{height:80px;overflow:hidden;}
-          .index-topic-info h3{font-size:14px;display:inline;font-weight:bold;}
+          .waterfall-movieimg{width:100px;float:left;padding-right:15px;}
+          .waterfall-moviebox{margin-bottom:10px;}
+          .waterfall-movieinfo h2{font-size:16px;margin-top:5px;margin-bottom:10px;}
         section#main-body.clearfix
-          if topics
-            each topic in topics
-              .col-md-3.col-sm-4.col-xs-6
-                .movie-box
-                  a(href="/topic/#{topic._id}" title="#{topic.topic}")
-                    if(topic.movies[0])
-                      img.img-responsive.lazy(data-original="/uploads/400/#{topic.movies[0].img}" alt="#{topic.topic}")
-                    else 
-                      img.img-responsive.lazy(data-original="/upload/avatar/avatar-1.jpg" alt="#{topic.topic}")
-                  h2 
-                    a(href="/topic/#{topic._id}" title="#{topic.topic}")= topic.topic
-                  .index-topic-info
-                    h3 影单简介：
-                    span #{topic.summary}
-          include movie
+          each movie in movies
+            .movie-waterfall
+              .movie-waterfall-box
+                .clearfix.waterfall-moviebox
+                  .waterfall-movieimg
+                    a(href="/movie/#{movie._id}" title="#{movie.title}")
+                      img.img-responsive.lazy(data-original="/uploads/400/#{movie.img}" alt="#{movie.title}")
+                  .waterfall-movieinfo
+                    h2
+                      a(href="/movie/#{movie._id}" title="#{movie.title}")= movie.title
+                    p 
+                      | #{movie.doctor}(导演)/#{movie.players}(主演)/#{movie.country}/#{movie.year}
+                      each type in movie.types
+                        |/
+                        a(href="/tag/#{type._id}" title="#{type.tag}电影大全")
+                          span #{type.tag}
