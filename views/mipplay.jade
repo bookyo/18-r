@@ -1,0 +1,344 @@
+doctype html
+html(mip lang="zh-CN")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width,minimum-scale=1,initial-scale=1")
+    link(href="https://mipcache.bdstatic.com/static/v1/mip.css", rel='stylesheet')
+    link(rel="canonical" href="https://bttags.com/play/#{id}")
+    meta(name="keywords",content="#{movie.title},云播,在线观看,无删减完整版")
+    - var description = movie.summary.replace(/\r?\n/g,"").substring(0,100)
+    meta(name="description" content="#{description}")
+    title #{movie.title}(#{movie.year}年电影)_云播在线观看_无删减完整版_bttags
+    style(mip-custom).
+      .mip-nav-wrapper{border: 1px solid transparent;background-color: #f8f8f8;border-color: #e7e7e7;}
+      .navbar-header{padding-left:15px;padding-right:15px;}
+      a {
+       color: #00B7FF;
+      }
+      .tags {background: #FAFAFA;padding: 10px;}
+      .tags .tag{
+        border:1px solid #f0f0f0;
+        border-radius: 4px;
+        padding:3px 10px;
+        margin:5px;
+        float:left;
+        text-decoration: none;
+      }
+      .tags .tag:hover{
+        background:#87B824;
+        color:#fff;
+      }
+      .tags .current{
+        background:#87B824;
+        color:#fff;
+      }
+      .breadcrumb {
+          margin-bottom: 10px;
+          margin-top: 10px;
+          padding: 8px 15px;
+          margin-bottom: 10px;
+          list-style: none;
+          background-color: #FAFAFA;
+          border-radius: 4px;
+      }
+      .breadcrumb>li {
+          display: inline-block;
+      }
+      .breadcrumb>.active {
+          color: #777;
+      }
+      .breadcrumb>li+li:before {
+          padding: 0 5px;
+          color: #ccc;
+          content: "/\00a0";
+      }
+      .clearfix:before{
+          display: table;
+          content: " ";
+      }
+      .clearfix:after,.panel-body:after{clear:both;display: table; content: " ";}
+      .movie-main{margin-bottom:10px;}
+      .movie-container{padding:0 15px;}
+      .movie-container h1{font-size:16px;margin-top: 10px;margin-bottom: 5px;}
+      .movie-haibao{width:30%;float:left;}
+      .movie-info{width:65%;float:right;}
+      .movie-info dt {
+          padding-right: 15px;
+      }
+      .movie-info dd, .movie-info dt {
+          float: left;
+      }
+      dt {
+          font-weight: 700;
+      }
+      dd, dt {
+          line-height: 1.42857143;
+      }
+      .movie-info dl {
+        margin-bottom: 5px;
+      }
+      .mip-showmore-btn {
+          position: relative;
+          float:right;
+          padding:2px;
+      }
+
+      .moreshow {
+          display: none;
+      }
+
+      .morehidden {
+          display: block;
+      }
+
+      .mip-showmore-open .moreshow {
+          display: block;
+      }
+
+      .mip-showmore-open .morehidden {
+          display: none;
+      }
+      
+      .panel {
+          margin-bottom: 20px;
+          background-color: #fff;
+          border: 1px solid transparent;
+          border-radius: 4px;
+          -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+          box-shadow: 0 1px 1px rgba(0,0,0,.05);
+      }
+      .panel-default {
+          border-color: #ddd;
+      }
+      .panel-default>.panel-heading {
+          color: #333;
+          background-color: #f5f5f5;
+          border-color: #ddd;
+      }
+      .panel-heading {
+          padding: 10px 15px;
+          border-bottom: 1px solid transparent;
+          border-top-left-radius: 3px;
+          border-top-right-radius: 3px;
+      }
+      .panel-body {
+          padding: 15px;
+      }
+      .movie-img {
+          float: left;
+          max-width: 33.33%;
+      }
+      .list-group-item {
+          position: relative;
+          display: block;
+          padding: 10px 15px;
+          margin-bottom: -1px;
+          background-color: #fff;
+          border: 1px solid #ddd;
+      }
+      .btn-info {
+          color: #fff;
+          background-color: #5bc0de;
+          border-color: #46b8da;
+      }
+      .btn {
+          display: inline-block;
+          padding: 6px 12px;
+          margin-bottom: 0;
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 1.42857143;
+          text-align: center;
+          white-space: nowrap;
+          vertical-align: middle;
+          -ms-touch-action: manipulation;
+          touch-action: manipulation;
+          cursor: pointer;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          background-image: none;
+          border: 1px solid transparent;
+          border-radius: 4px;
+      }
+      .btn-block {
+          display: block;
+      }
+      .btn-default {
+          color: #333;
+          background-color: #fff;
+          border-color: #ccc;
+      }
+      .coltopic {
+          font-size: 16px;
+          margin-top:20px;
+          margin-bottom:10px;
+      } 
+      .interests a {
+          color: #42BD56;
+          height: 50px;
+          line-height: 50px;
+          padding: 0 1.55rem;
+          letter-spacing: .1em;
+          overflow: auto;
+          display: block;
+          text-align: center;
+      }
+      .interests li {
+          float:left;
+          margin: 0 0 8px 8px;
+          font-size: .94rem;
+          display: inline-block;
+          border-radius: .25rem;
+          border: solid 1px #42BD56;
+          vertical-align: middle;
+      }
+      .col-xs-6 {
+          min-height:1px;
+          position: relative;
+          width: 50%;
+          float:left;
+      }
+      .movie-box{
+        padding-left:10px;
+        padding-right:10px;
+      }
+      .movie-box h2, h4 {
+          font-size: 16px;
+          height: 20px;
+          overflow: hidden;
+          margin-top:10px;
+          margin-bottom:15px;
+      }
+      .footer {
+          width: 100%;
+          padding-top: 10px;
+          padding-bottom: 10px;
+          background-color: #f8f8f8;
+          margin-top: 20px;
+      }
+      .foot-title {
+          font-size: 14px;
+          margin-bottom: 0;
+          margin-top: 10px;
+          text-align: center;
+          color: #777;
+      }
+      .footer p {
+          text-align: center;
+          margin: 0;
+          color: #777;
+      }
+      .playactive a {
+          color: red;
+          font-weight: bold;
+      }
+      .play-content{
+        height:250px;
+        background:#000;
+        margin-bottom:20px;
+      }
+      .mask{
+        color:#fff;
+        text-align:center;
+        font-size:16px;
+        padding-top:50px;
+      }
+      .mask a{
+        padding:5px;
+        border:2px dashed #fff;
+      }
+  body
+    div.mip-nav-wrapper
+      mip-nav-slidedown.mip-element-sidebar.container(data-id="bs-navbar" data-showbrand="1" data-brandname="bttags")
+        nav#bs-navbar.navbar-collapse.collapse.navbar.navbar-static-top
+          ul.nav.navbar-nav.navbar-right
+            li
+              a(href="/") 首页
+            li
+              a(href="/tags") 电影分类
+            li
+              a(href="/hots") 电影排行榜
+            li
+              a(href="/topics") 电影专题
+            li.navbar-wise-close
+              span#navbar-wise-close-btn
+    section.tags.clearfix
+      a.tag.current(href="/" title="bttags") 全部
+      each tag in tags 
+        a.tag(href="/tag/#{tag._id}" title="#{tag.tag}电影大全") #{tag.tag}
+    ol.breadcrumb
+      li
+        a(href="/") 首页
+      li
+        a(href="/movie/#{movie._id}") #{movie.title}
+      li.active 在线观看
+    .movie-container
+      h1 #{movie.title}在线云播观看
+      .play-content
+        .mask 
+          a(href="/play/#{id}") 此页面为mip缓存页，请点击前往原页面观看
+      .col-md-12
+        .panel.panel-default
+          .panel-heading 在线观看(bttags云播，若无法观看，请多刷新几次！)
+          ul.list-group
+            each zaixian,i in resources
+              if zaixian.resource==url
+                li.list-group-item.playactive
+                  a(href="/play/#{zaixian._id}") 在线观看#{i+1}
+              else
+                li.list-group-item
+                  a(href="/play/#{zaixian._id}") 在线观看#{i+1}
+        .panel.panel-default
+          .panel-heading #{movie.title}剧情简介
+          - var types = [];
+          each type in movie.types
+            - types.push(type.tag);
+          - var summary = "《"+movie.title+"》是"+movie.year+"年由"+movie.doctor+"导演，"+movie.players+"等主演的"+movie.country+types.join('、')+'电影。\n'+movie.summary;
+          - var newsummary = summary.replace(/\r?\n/g,"<br />");
+          .panel-body!=newsummary
+        a.btn.btn-default.btn-block(href="/movie/#{movie._id}") 返回#{movie.title}
+        if movieintopics.length
+          .movie-topics.clearfix
+            h3.coltopic 收录于以下专题
+            .interests
+              each movieintopic in movieintopics
+                li
+                  a(data-type="mip" href="/mip/topic/#{movieintopic._id}" title="#{movieintopic.topic}").btn.btn-primary #{movieintopic.topic}
+        .recommands.clearfix
+          h3.coltopic 同类型电影推荐
+          each movie in removies
+            .col-xs-6
+              .movie-box
+                a(data-type="mip" href="/mip/movie/#{movie._id}" title="#{movie.title}")
+                  mip-img(layout="responsive" height="400" width="400" src="/uploads/400/#{movie.img}" alt="#{movie.title}")
+                h4 
+                  a(href="/movie/#{movie._id}" title="#{movie.title}")= movie.title
+    .footer
+      .container
+        .row
+          .col-md-12
+            - var years = [];
+            - var countries = [];
+            each category in locals.categories
+              if category.class == 'year'
+                - years.push(category);
+              else if category.class == 'country'
+                - countries.push(category);
+            h3.foot-title 电影年份检索
+            section.tags.tagsfoot.clearfix
+              .year-tags.clearfix
+                each year in years
+                  a.tag(href='/year/#{year.name}') #{year.name}
+            h3.foot-title 制片地区检索
+            section.tags.tagsfoot.clearfix
+              .country-tags.clearfix
+                each country in countries
+                  a.tag(href='/country/#{country.name}') #{country.name}
+      p
+        | &copy;  2017 bttags   
+        | 本站不提供任何视听上传服务，所有内容均来自电影分享站点所提供的公开引用资源
+    script(src="https://mipcache.bdstatic.com/static/v1/mip.js")
+    script(src="https://mipcache.bdstatic.com/static/v1/mip-nav-slidedown/mip-nav-slidedown.js")
+  

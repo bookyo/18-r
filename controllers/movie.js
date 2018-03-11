@@ -632,6 +632,10 @@ exports.search = function(req, res) {
 
 exports.play = function(req, res) {
   var id = req.params.id;
+  var mip=0;
+  if (/^\/mip\/play\/.+$/.test(req.url)) {
+    mip=1;
+  }
   Resource.findOne({_id: id})
     .exec(function(err, resource) {
       if(err) {
@@ -672,19 +676,32 @@ exports.play = function(req, res) {
                 if (err) {
                   console.log(err);
                 }
-                return res.render('play', {
-                  hots: req.hots,
-                  tags: req.tags,
-                  url: resource.resource,
-                  csrfToken: req.csrfToken(),
-                  user: req.session.user,
-                  movieintopics: topics,
-                  resources: playresources,
-                  removies: removies,
-                  movie: movie,
-                  error: req.flash('error'),
-                  success: req.flash('success').toString()
-                });
+                if (!mip) {
+                  return res.render('play', {
+                    hots: req.hots,
+                    tags: req.tags,
+                    url: resource.resource,
+                    csrfToken: req.csrfToken(),
+                    user: req.session.user,
+                    movieintopics: topics,
+                    resources: playresources,
+                    removies: removies,
+                    movie: movie,
+                    error: req.flash('error'),
+                    success: req.flash('success').toString()
+                  });
+                } else {
+                  return res.render('mipplay', {
+                    id: id,
+                    tags: req.tags,
+                    url: resource.resource,
+                    movieintopics: topics,
+                    resources: playresources,
+                    removies: removies,
+                    movie: movie
+                  })
+                }
+                
               });
             });
         })
