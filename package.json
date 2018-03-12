@@ -8,6 +8,7 @@
   "dependencies": {
     "async": "^2.0.1",
     "body-parser": "~1.13.2",
+    "cheerio": "^1.0.0-rc.2",
     "compression": "^1.6.2",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^1.2.1",
@@ -26,7 +27,8 @@
     "multer": "^1.1.0",
     "qiniu": "^6.1.13",
     "redis": "^2.6.2",
-    "request": "^2.81.0",
+    "request": "^2.84.0",
+    "request-promise": "^4.2.2",
     "serve-favicon": "~2.3.0",
     "sharp": "^0.15.1",
     "ueditor": "^1.2.1",

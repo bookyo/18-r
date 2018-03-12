@@ -5,10 +5,16 @@ var Resource = require('../models/resource');
 var User = require('../models/user');
 var UserBuyMovie = require('../models/userbuymovie');
 var Category = require('../models/category');
+var Topic = require('../models/topic');
 var Image = require('../models/image');
 var redis = require("redis");
 var xss = require('xss');
 var client = redis.createClient();
+var cheerio = require('cheerio');
+var request = require('request');
+var rp = require('request-promise');
+var async = require('async');
+var _ = require("underscore");
 
 exports.getaddtags = function(req, res) {
     res.render('addtag', {
@@ -513,6 +519,64 @@ exports.getimages = function(req, res) {
     })
 }
 
+exports.gettopic = function (req, res) {
+  res.render('admingettopic', {
+    user: req.session.user
+  })
+}
+
+exports.cheertopic = function (req, res) {
+  var url = req.body.url;
+  request(url, function(err, response, body) {
+      if(err) {
+          console.log(err);
+      }
+      if (response && response.statusCode == 200) {
+        $ = cheerio.load(body);
+        var title = $('h1').text();
+        var urls = [];
+        $('.page_css a').each(function(i, el) {
+          var url = $(this).attr('href');
+          urls[i] = url;
+        });
+        urls = _.uniq(urls);
+        async.map(urls, function(url, callback) {
+          var $2 = cheerio.load(body);
+          var options = {
+            uri: url,
+            transform: function(body) {
+              return cheerio.load(body)
+            }
+          }
+          rp(options)
+            .then(function($2) {
+              $2('.page_css').remove();
+              var contentarr = []; 
+              $2('.Mid2L_con p').each(function(i, el) {
+                contentarr[i] = $(this).text().replace(/\s+/g, "");
+              });
+              callback(err, contentarr.join('\n'));
+            })
+            .catch(function(err) {
+              console.log(err);
+            });
+        },function(err, results) {
+          var topicObj = {
+            topic: title,
+            summary: results.join(''),
+            creator: req.session.user
+          }
+          var newtopic = new Topic(topicObj);
+          newtopic.save(function(err, topic) {
+            if(err) {
+              console.log(err);
+            }
+            res.redirect('/topic/' + topic._id);
+          });
+        })
+      }
+  })
+}
 exports.rolesByRedis = function(req, res, next) {
   getRolesFromRedis(function(err, roles) {
     if(err) return next(err);
@@ -634,6 +698,8 @@ exports.addCounts = function(userid, counts, roles) {
                       });
                     });
 }
+
+
 
 
 

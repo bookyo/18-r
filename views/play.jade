@@ -6,6 +6,7 @@ append title
     - var description = movie.summary.replace(/\r?\n/g,"").substring(0,100)
     meta(name="description" content="#{description}")
     title #{movie.title}(#{movie.year}年电影)_云播在线观看_无删减完整版_bttags
+    link(rel="miphtml" href="https://bttags.com/mip/play/#{id}")
   else
     title #{title}
 

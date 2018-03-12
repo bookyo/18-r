@@ -93,7 +93,8 @@ module.exports = function(app) {
   app.post('/18r/category/add', checkLogin, AdminController.isAdmin, AdminController.postaddcategory);
   app.delete('/18r/category/delete', checkLogin, AdminController.isAdmin, AdminController.delcategory);
   app.get('/18r/images', checkLogin, AdminController.isAdmin, AdminController.getimages);
-
+  app.get('/18r/gettopic', checkLogin, AdminController.isAdmin, AdminController.gettopic);
+  app.post('/18r/gettopic', checkLogin, AdminController.isAdmin, AdminController.cheertopic);
   app.get('/tags', Tagcontroller.tagsByRedis,Tagcontroller.gettags);
  
   app.get('/tag/:id', Tagcontroller.tagsByRedis,MovieController.hotsByRedis,Tagcontroller.gettag);

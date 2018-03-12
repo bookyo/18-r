@@ -1,0 +1,17 @@
+extends adminlayout
+
+append title
+  title 后台专题采集系统
+
+block content
+  .container
+    .row
+      .col-md-12
+        form.form-horizontal(method="post")
+          .form-group
+            label.col-sm-3.control-label(for="url") 输入采集链接
+            .col-sm-9
+              input#url.form-control(type="text" name="url" placeholder="输入需要采集的链接(目前支持游民）")
+          .form-group
+            .col-sm-offset-3.col-sm-8
+              button(type="submit").btn.btn-default.addrow 确认

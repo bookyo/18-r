@@ -680,6 +680,7 @@ exports.play = function(req, res) {
                   return res.render('play', {
                     hots: req.hots,
                     tags: req.tags,
+                    id: id,
                     url: resource.resource,
                     csrfToken: req.csrfToken(),
                     user: req.session.user,
