@@ -5,10 +5,10 @@ html(mip lang="zh-CN")
     meta(name="viewport", content="width=device-width,minimum-scale=1,initial-scale=1")
     link(href="https://mipcache.bdstatic.com/static/v1/mip.css", rel='stylesheet')
     link(rel="canonical" href="https://bttags.com/topic/#{topic._id}")
-    meta(name="keywords" content="#{topic.topic},#{topic.topic}迅雷下载")
+    meta(name="keywords" content="#{topic.topic},#{topic.topic}影单推荐")
     - var description = topic.summary.replace(/\r?\n/g,"").substring(0,100)
     meta(name="description" content="#{description}")
-    title #{topic.topic}_bttags
+    title #{topic.topic}_电影影单_bttags
     style(mip-custom).
       .mip-nav-wrapper{border: 1px solid transparent;background-color: #f8f8f8;border-color: #e7e7e7;}
       .navbar-header{padding-left:15px;padding-right:15px;}
@@ -182,13 +182,13 @@ html(mip lang="zh-CN")
             li
               a(href="/hots") 电影排行榜
             li
-              a(href="/topics") 电影专题
+              a(href="/topics") 电影影单
             li.navbar-wise-close
               span#navbar-wise-close-btn
     ol.breadcrumb
       li
         a(href="/") 首页
-      li.active 专题详情页
+      li.active 影单详情页
     .topic-container
       .topic-info
         h1 #{topic.topic}

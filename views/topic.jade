@@ -1,10 +1,10 @@
 extends layout
 
 append title
-  title #{topic.topic}_迅雷下载/百度云网盘_bttags
+  title #{topic.topic}_电影影单_bttags
 
 append head
-  meta(name="keywords" content="#{topic.topic},#{topic.topic}迅雷下载")
+  meta(name="keywords" content="#{topic.topic},#{topic.topic}影单推荐")
   - var description = topic.summary.replace(/\r?\n/g,"").substring(0,100)
   meta(name="description" content="#{description}")
   link(rel="miphtml" href="https://bttags.com/mip/topic/#{topic._id}")
@@ -12,9 +12,9 @@ block content
   .container
     .row
       .col-md-3
-        a.btn.btn-info.btn-topic(href="/topic/new" title="创建电影专题") 创建电影专题
+        a.btn.btn-info.btn-topic(href="/topic/new" title="创建电影专题") 创建电影影单
         section.hots
-          h3.hot-title 热门专题推荐
+          h3.hot-title 热门影单推荐
           div.list-group
             each hottopic,i in hottopics
               a.list-group-item(href="/topic/#{hottopic._id}" title="#{hottopic.topic}") #{hottopic.topic}
@@ -51,7 +51,7 @@ block content
         ol.breadcrumb.clearfix
           li
             a(href="/") 首页
-          li.active 专题详情页
+          li.active 影单详情页
         section#main-body.clearfix
           .col-md-12.topic-body
             .topic-info

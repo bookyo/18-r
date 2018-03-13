@@ -1,19 +1,19 @@
 extends layout
 
 append title
-  title 电影专题_bttags
+  title 电影影单_bttags
 
 append head
-  meta(name="keywords" content="bt老司机电影专题")
-  meta(name="description" content="电影专题是用户根据自己的喜好创建的电影聚合专题，包罗万象，分门别类！")
+  meta(name="keywords" content="bt老司机电影影单")
+  meta(name="description" content="电影专题是用户根据自己的喜好创建的电影聚合影单，包罗万象，分门别类！")
 
 block content
   .container
     .row
       .col-md-3
-        a.btn.btn-info.btn-topic(href="/topic/new" title="创建电影专题") 创建电影专题
+        a.btn.btn-info.btn-topic(href="/topic/new" title="创建电影专题") 创建电影影单
         section.hots
-          h3.hot-title 专题热门推荐
+          h3.hot-title 影单热门推荐
           div.list-group
             each hottopic in hottopics
               a.list-group-item(href="/topic/#{hottopic._id}" title="#{hottopic.topic}") #{hottopic.topic}
@@ -50,7 +50,7 @@ block content
         ol.breadcrumb.clearfix
           li
             a(href="/") 首页
-          li.active 电影专题
+          li.active 电影影单
         section#main-body.clearfix
           each topic in topics
             .col-md-4.col-sm-6.col-xs-12
