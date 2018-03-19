@@ -603,6 +603,7 @@ exports.addsitemap = function(req, res) {
     movies: function(callback) {
       Movie.find()
         .select("_id")
+        .sort('-meta.updateAt')
         .exec(function(err, movies) {
           if(err) console.log(err);
           callback(null, movies);
@@ -611,6 +612,7 @@ exports.addsitemap = function(req, res) {
     topics: function(callback) {
       Topic.find()
         .select("_id")
+        .sort('-meta.updateAt')
         .exec(function(err, topics) {
           if(err) console.log(err);
           callback(null, topics);
