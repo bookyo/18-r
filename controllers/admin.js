@@ -8,6 +8,7 @@ var Category = require('../models/category');
 var Topic = require('../models/topic');
 var Image = require('../models/image');
 var redis = require("redis");
+var fs = require('fs');
 var xss = require('xss');
 var client = redis.createClient();
 var cheerio = require('cheerio');
@@ -577,6 +578,83 @@ exports.cheertopic = function (req, res) {
       }
   })
 }
+
+exports.sitemap = function(req, res) {
+  res.render('adminsitemap', {
+    user: req.session.user
+  })
+}
+
+exports.addsitemap = function(req, res) {
+  var host = "https://bttags.com";
+  var tagsurl = host + "/tags";
+  var topicsurl = host + "/topics";
+  async.parallel({
+    tags: function (callback) {
+      Tag.find()
+        .select('_id')
+        .exec(function(err,tags) {
+          if(err) {
+            console.log(err);
+          }
+          callback(null,tags);
+        });
+      },
+    movies: function(callback) {
+      Movie.find()
+        .select("_id")
+        .exec(function(err, movies) {
+          if(err) console.log(err);
+          callback(null, movies);
+        });
+    },
+    topics: function(callback) {
+      Topic.find()
+        .select("_id")
+        .exec(function(err, topics) {
+          if(err) console.log(err);
+          callback(null, topics);
+        });
+    },
+    categories: function(callback) {
+      Category.getCategoriesByRedis(function(err, categories) {
+        if(err) console.log(err);
+        callback(null, categories);
+      });
+    } 
+  }, function(err, results) {
+    var countryobj = _.where(results.categories, {class: "country"});
+    var yearobj = _.where(results.categories, {class: "year"});
+    var countrynamearr = _.pluck(countryobj, 'name');
+    var yearnamearr = _.pluck(yearobj, 'name');
+    var movieidarr = _.pluck(results.movies, '_id');
+    var tagidarr = _.pluck(results.tags, '_id');
+    var topicidarr = _.pluck(results.topics, '_id');
+    var sitemapurl = "";
+    sitemapurl += host + '\r\n'+ tagsurl + '\r\n' + topicsurl + '\r\n';
+    addurl(countrynamearr, 'country');
+    addurl(yearnamearr, 'year');
+    addurl(movieidarr, 'movie');
+    addurl(tagidarr, 'tag');
+    addurl(topicidarr, 'topic');
+    var path = './public/sitemap.txt';
+    fs.writeFile(path, sitemapurl, function(err) {
+      if(err) console.log(err);
+      return res.redirect('/sitemap.txt');
+    });
+
+    function addurl(arr, str) {
+      arr.forEach(function(v) {
+        var url = host + '/' + str + '/' + v + '\r\n';
+        sitemapurl += url;
+      })  
+    }
+  });
+  
+  
+
+}
+
 exports.rolesByRedis = function(req, res, next) {
   getRolesFromRedis(function(err, roles) {
     if(err) return next(err);

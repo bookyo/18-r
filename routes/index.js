@@ -95,6 +95,9 @@ module.exports = function(app) {
   app.get('/18r/images', checkLogin, AdminController.isAdmin, AdminController.getimages);
   app.get('/18r/gettopic', checkLogin, AdminController.isAdmin, AdminController.gettopic);
   app.post('/18r/gettopic', checkLogin, AdminController.isAdmin, AdminController.cheertopic);
+  app.get('/18r/sitemap', checkLogin, AdminController.isAdmin, AdminController.sitemap);
+  app.post('/18r/sitemap', checkLogin, AdminController.isAdmin, AdminController.addsitemap);
+  
   app.get('/tags', Tagcontroller.tagsByRedis,Tagcontroller.gettags);
  
   app.get('/tag/:id', Tagcontroller.tagsByRedis,MovieController.hotsByRedis,Tagcontroller.gettag);
