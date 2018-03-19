@@ -1,4 +1,4 @@
 # robots.txt
 User-agent: *
-Disallow: /user/*
+Disallow: /user
 Disallow: /login
