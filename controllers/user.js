@@ -282,6 +282,9 @@ exports.getreg = function(req, res) {
                                 })
                     
                   })
+    } else {
+      req.flash('error', {'msg': '对不起，没有输入查询条件！'});
+      return res.redirect('/');
     }
 
   }

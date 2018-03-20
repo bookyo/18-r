@@ -49,7 +49,7 @@ function getTagsFromRedis(cb) {
 }
 
 exports.gettags= function(req,res) {
-    res.render('tags', {
+    res.render('tagsmain', {
       user: req.session.user,
       tags: req.tags,
       error: req.flash('error'),

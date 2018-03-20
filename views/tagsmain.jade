@@ -1,0 +1,52 @@
+extends layoutnolocals
+
+append title
+  title 电影检索分类信息_bttags
+
+append head
+  meta(name="keywords" content="电影分类检索")
+  meta(name="description" content="bttags电影分类查询，可以根据年份，类型或者国家进行分类查询！")
+
+block content
+  .container
+    .row
+      ol.breadcrumb.clearfix
+        if !navname
+          li
+            a(href="/") 首页
+          li.active 电影分类
+        else
+          li
+            a(href="/") 首页
+          li
+            a(href="/tags") 电影分类
+          li.active #{navname}
+      .categories-tags-main
+        h2.hots-title 按电影类型分类
+        section.tags.tagsbody.clearfix
+          .movie-tags.clearfix
+            each tag in tags
+              a.tag(href="/tag/#{tag._id}" title="#{tag.tag}电影大全") #{tag.tag}
+        - var years = [];
+        - var countries = [];
+        each category in locals.categories
+          if category.class == 'year'
+            - years.push(category);
+          else if category.class == 'country'
+            - countries.push(category);
+        h2.hots-title 按电影年份分类
+        section.tags.tagsbody.clearfix
+          .year-tags.clearfix
+            each year in years
+              if navname && navname == year.name
+                a.tag.current(href='/year/#{year.name}') #{year.name}
+              else
+                a.tag(href='/year/#{year.name}') #{year.name}
+        h2.hots-title 按制片地区分类
+        section.tags.tagsbody.clearfix
+          .country-tags.clearfix
+            each country in countries
+              if navname && navname==country.name
+                a.tag.current(href='/country/#{country.name}') #{country.name}
+              else
+                a.tag(href='/country/#{country.name}') #{country.name}
