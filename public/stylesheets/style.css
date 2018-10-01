@@ -111,7 +111,7 @@ a {
 .movieinfo h2{font-size:18px;margin-top:10px;}
 .topic-info{padding:0 15px;margin-bottom:20px;}
 .topic-info h1{font-size:20px;font-weight:bold;margin-top:0;}
-.movieinfo .collec-summary{line-height:auto;height:auto;overflow:visible ;}
+.movieinfo .collec-summary{line-height:auto;height:auto;overflow:hidden;}
 .col-lists{line-height:25px;height:25px;overflow: hidden;}
 
 .coltopic{font-size:16px;}
