@@ -177,7 +177,7 @@ $(".btn-get").click(function(e) {
   var idreg = /subject\/(\d+)\//;
   var id = url.match(idreg);
   $.ajax({
-    url: 'https://api.douban.com/v2/movie/subject/'+id[1],
+    url: 'https://api.douban.com/v2/movie/subject/' + id[1] + '?apikey=0b2bdeda43b5688921839c8ecb20399b',
     type: 'GET',
     dataType: 'jsonp',
     crossDomain: true,
