@@ -245,14 +245,19 @@ exports.getMovie = function(req, res) {
            callback(null, req.tags);
       },
       movie: function(callback) {
-          Movie.findByIdAndUpdate(id, {$inc: {pv: 1}})
-                      .populate('types','_id tag')
-                      .populate('creator', '_id name avatar')
-                      .populate('resources', '_id resource typeid')
-                      .exec(function(err,movie) {
-                        if(err) console.log(err);
-                         callback(null,movie);
-                      });
+          Movie.updateOne({_id: id}, {$inc: {pv: 1}}, function(err) {
+            if(err) {
+              console.log(err)
+            }
+            Movie.findById(id)
+              .populate('types','_id tag')
+              .populate('creator', '_id name avatar')
+              .populate('resources', '_id resource typeid')
+              .exec(function(err,movie) {
+                if(err) console.log(err);
+                callback(null,movie);
+              });
+          })
       },
       userbuymovie: function(callback) {
         UserBuyMovie.find({movieid: id, userid: userid})
