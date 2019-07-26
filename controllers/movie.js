@@ -249,7 +249,7 @@ exports.getMovie = function(req, res) {
             if(err) {
               console.log(err)
             }
-            Movie.findById(id)
+            Movie.findOne({_id: id})
               .populate('types','_id tag')
               .populate('creator', '_id name avatar')
               .populate('resources', '_id resource typeid')
