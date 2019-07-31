@@ -190,7 +190,7 @@ exports.getTopic = async function(req, res) {
     .populate('types','_id tag')
     .skip(perPage * (page-1))
     .sort('-meta.updateAt')
-  const count = await Movie.countDocuments({_id: { $in: topic.movies}})
+  const count = await Movie.count({_id: { $in: topic.movies}})
   if(!mip) {
     res.render('topic', {
       topic:topic,
