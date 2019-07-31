@@ -173,66 +173,49 @@ exports.updateTopic = function(req, res) {
                });
              });
 }
-exports.getTopic = function(req, res) {
+exports.getTopic = async function(req, res) {
   var id = req.params.id;
   var mip=0;
   if (/^\/mip\/topic\/.+$/.test(req.url)) {
     mip=1;
   }
-  Topic.findByIdAndUpdate(id,{$inc:{pv: 1}})
-             .populate('creator','_id name avatar')
-             .exec(function(err, topic) {
-                if(err) {
-                  console.log(err);
-                }
-                var pubdate = moment(topic.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
-                var perPage = 10;
-                var page = req.query.page > 0 ? req.query.page : 1;
-                Movie.find({_id: { $in: topic.movies }})
-                            .limit(perPage)
-                            .populate('types','_id tag')
-                            .skip(perPage * (page-1))
-                            .sort('-meta.updateAt')
-                            .exec(function(err, movies){
-                              if(err) {
-                                console.log(err);
-                              }
-                              Movie.find({_id: { $in: topic.movies}})
-                                          .count(function(err, count) {
-                                            if(err) {
-                                              console.log(err);
-                                            }
-                                            if(!mip) {
-                                              res.render('topic', {
-                                                topic:topic,
-                                                hottopics: req.topics,
-                                                movies: movies,
-                                                page: page,
-                                                pages: Math.ceil(count/perPage),
-                                                user: req.session.user,
-                                                pubdate: pubdate,
-                                                error: req.flash('error'),
-                                                success: req.flash('success').toString()
-                                              })
-                                            } else {
-                                              res.render('miptopic',{
-                                                topic:topic,
-                                                hottopics: req.topics,
-                                                movies: movies,
-                                                page: page,
-                                                pages: Math.ceil(count/perPage),
-                                                user: req.session.user,
-                                                pubdate: pubdate,
-                                                error: req.flash('error'),
-                                                success: req.flash('success').toString()
-                                              })
-                                            }
-                                            
-                                          })
-                              
-                            });
-                
-             });
+  await Topic.updateOne({_id: id}, {$inc: {pv: 1}});
+  const topic = await Topic.findById(id)
+    .populate('creator','_id name avatar')
+  const pubdate = moment(topic.meta.createAt).format('YYYY-MM-DD HH:mm:ss');
+  const perPage = 10;
+  const page = req.query.page > 0 ? req.query.page : 1;
+  const movies = await Movie.find({_id: { $in: topic.movies }})
+    .limit(perPage)
+    .populate('types','_id tag')
+    .skip(perPage * (page-1))
+    .sort('-meta.updateAt')
+  const count = await Movie.countDocuments({_id: { $in: topic.movies}})
+  if(!mip) {
+    res.render('topic', {
+      topic:topic,
+      hottopics: req.topics,
+      movies: movies,
+      page: page,
+      pages: Math.ceil(count/perPage),
+      user: req.session.user,
+      pubdate: pubdate,
+      error: req.flash('error'),
+      success: req.flash('success').toString()
+    })
+  } else {
+    res.render('miptopic',{
+      topic:topic,
+      hottopics: req.topics,
+      movies: movies,
+      page: page,
+      pages: Math.ceil(count/perPage),
+      user: req.session.user,
+      pubdate: pubdate,
+      error: req.flash('error'),
+      success: req.flash('success').toString()
+    })
+  }
 }
 
 exports.delete = function(req, res) {
