@@ -261,33 +261,23 @@ exports.delmovie = function(req, res) {
   }
 }
 
-exports.addmovie = function(req, res) {
+exports.addmovie = async function(req, res) {
   var movieid = req.body.movieid;
   var topicid = req.body.topicid;
   if(movieid && topicid) {
-    Topic.findOne({_id: topicid})
-               .exec(function(err, topic) {
-                if(err) {
-                  console.log(err);
-                }
-                if(topic.creator != req.session.user._id) {
-                  req.flash('error', {'msg': '对不起，您没有权限修改！'});
-                  return res.json({'success': 0});
-                }
-                var index = topic.movies.indexOf(movieid);
-                if(index>-1) {
-                  req.flash('error', {'msg': '此电影已经存在！'});
-                  return res.json({'success': 0});
-                }
-                topic.movies.push(movieid);
-                topic.save(function(err,topic) {
-                  if(err) {
-                    console.log(err);
-                  }
-                  req.flash('success', '添加电影到专题成功！');
-                  res.json({'success': 1});
-                })
-               })
+    const topic = await Topic.findById(topicid);
+    if(topic.creator != req.session.user._id) {
+      req.flash('error', {'msg': '对不起，您没有权限修改！'});
+      return res.json({'success': 0});
+    }
+    var index = topic.movies.indexOf(movieid);
+    if(index>-1) {
+      req.flash('error', {'msg': '此电影已经存在！'});
+      return res.json({'success': 0});
+    }
+    await Topic.updateOne({_id: topicid}, { $push: { movies: movieid }});
+    req.flash('success', '添加电影到专题成功！');
+    res.json({'success': 1});
   }
 }
 

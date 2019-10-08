@@ -43,7 +43,9 @@ exports.postupload = function(req, res) {
             var originalimg = file.filename;    
             sharp(path)
               .resize(250,250)
-              .quality(90)
+              .jpeg({
+                quality: 80,
+              })
               .toFile(destination + '/250/' + filename , function(err) {
                 if(err) throw err;
               });

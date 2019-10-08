@@ -85,7 +85,9 @@ exports.post = function(req, res) {
         stream.on('finish', function() {
           sharp(path)
             .resize(400,400)
-            .quality(70)
+            .jpeg({
+              quality: 80,
+            })
             .toFile(destination + '/400/' + filename , function(err) {
               if(err) throw err;
               var filepath = destination + '/400/' + filename;
@@ -98,13 +100,19 @@ exports.post = function(req, res) {
       path = req.file.path;
       destination = req.file.destination;
       filename = req.file.filename;
+      var filenamearr = filename.split('.');
+      filenamearr.pop();
+      var newfilename = filenamearr.join('.');
+      const lastfile = newfilename + '.jpg';
       sharp(path)
         .resize(400,400)
-        .quality(70)
-        .toFile(destination + '/400/' + filename , function(err) {
+        .jpeg({
+          quality: 80,
+        })
+        .toFile(destination + '/400/' + lastfile , function(err) {
           if(err) throw err;
-          var filepath = destination + '/400/' + filename;
-          var tofilepath = toqiniudes + '/400/' + filename;
+          var filepath = destination + '/400/' + lastfile;
+          var tofilepath = toqiniudes + '/400/' + lastfile;
           qiniuapi.uploadImg(tofilepath, filepath);
         });
     }
@@ -137,22 +145,10 @@ exports.post = function(req, res) {
       stripIgnoreTagBody: ['script']
     });
     var user= req.session.user;
-    var movieObj = {
-      title: title,
-      doctor: doctor,
-      players: players,
-      country: country,
-      year: year,
-      types: req.body.types,
-      summary: htmlsummary,
-      img: filename,
-      creator: user._id
-    };
-    var newmovie = new Movie(movieObj);
     Movie.find({ title: title })
       .where('year').equals(year)
       .select('_id')
-      .exec(function (err, movie) {
+      .exec(async function (err, movie) {
         if (err) {
           console.log(err);
         }
@@ -160,69 +156,48 @@ exports.post = function(req, res) {
           req.flash('error', { 'msg': '已经有人发布过此电影，请核实之后再发布！' });
           return res.redirect('/post');
         } else {
-          newmovie.save(async function (err, movie) {
-            if (err) {
-              console.log(err);
+          let resources_id = [];
+          for (var i = 0; i < resources.length; i++) {
+            var resource = resources[i];
+            resource = xss(resource);
+            var typeid = checkResTypeId(resource);
+            var resourceObj = {
+              resource: resource,
+              typeid: typeid,
+              tomovie: movie._id,
+              creator: user._id
             }
-            var resources_id = [];
-            for (var i = 0; i < resources.length; i++) {
-              var resource = resources[i];
-              resource = xss(resource);
-              var typeid = checkResTypeId(resource);
-              var resourceObj = {
-                resource: resource,
-                typeid: typeid,
-                tomovie: movie._id,
-                creator: user._id
-              }
-              const newresource = await Resource.create(resourceObj);
-              resources_id.push(newresource._id);
-            }
-
-            Movie.findById(movie._id, function (err, themovie) {
-              for (var i = 0; i < resources_id.length; i++) {
-                themovie.resources.push(resources_id[i]);
-              }
-              if (!req.session.user.isadmin && req.session.user.role.isexam) {
-                themovie.review = 1;
-              }
-              themovie.save(function (err) {
-                if (err) {
-                  console.log(err);
-                }
-                adminController.addCounts(req.session.user._id, 3, req.roles);
-                // var uri = 'http://data.zz.baidu.com/urls?site=https://bttags.com&token=iqs1eByPNQ45en6A';
-                // var url = 'https://bttags.com/movie/'+movie._id;
-                // request({
-                //   url: uri,
-                //   method: "POST",
-                //   headers: {
-                //     "content-type": "text/plain"
-                //   },
-                //   body: url
-                // }, function(error, response, body) {
-                //   if(error) {
-                //     console.log(error);
-                //   }
-                //   if(response.statusCode != 200) {
-                //     console.log(body);
-                //   }
-                // });
-                if (req.session.user.isadmin) {
-                  req.flash('success', '恭喜，发布电影成功！');
-                  return res.redirect('/movie/' + movie._id);
-                }
-                if (!req.session.user.role.isexam) {
-                  req.flash('success', '恭喜，发布电影成功！');
-                  res.redirect('/movie/' + movie._id);
-                } else {
-                  req.flash('success', '新人！您的帖子进入审核区，审核通过即可成为正式会员，享受特权！');
-                  res.redirect('/');
-                }
-              });
-            });
-
-          });
+            const newresource = await Resource.create(resourceObj);
+            resources_id.push(newresource._id);
+          }
+          var movieObj = {
+            title: title,
+            doctor: doctor,
+            players: players,
+            country: country,
+            year: year,
+            types: req.body.types,
+            summary: htmlsummary,
+            img: filename,
+            resources: resources_id,
+            creator: user._id
+          };
+          if (!req.session.user.isadmin && req.session.user.role.isexam) {
+            movieObj.review = 1;
+          }
+          const newmovie = await Movie.create(movieObj);
+          adminController.addCounts(req.session.user._id, 3, req.roles);
+          if (req.session.user.isadmin) {
+            req.flash('success', '恭喜，发布电影成功！');
+            return res.redirect('/movie/' + newmovie._id);
+          }
+          if (!req.session.user.role.isexam) {
+            req.flash('success', '恭喜，发布电影成功！');
+            res.redirect('/movie/' + newmovie._id);
+          } else {
+            req.flash('success', '新人！您的帖子进入审核区，审核通过即可成为正式会员，享受特权！');
+            res.redirect('/');
+          }
         }
       });
     
@@ -574,16 +549,23 @@ exports.new = function(req, res) {
     if(req.file === undefined) {
       img = req.body.eimg;
     }else{
+      var filename = req.file.filename;
+      var filenamearr = filename.split('.');
+      filenamearr.pop();
+      var newfilename = filenamearr.join('.');
+      const lastfile = newfilename + '.jpg';
       sharp(req.file.path)
         .resize(400,400)
-        .quality(70)
-        .toFile(req.file.destination + '/400/' + req.file.filename , function(err) {
+        .jpeg({
+          quality: 80,
+        })
+        .toFile(req.file.destination + '/400/' + lastfile , function(err) {
           if(err) throw err;
-          var filepath = req.file.destination + '/400/' + req.file.filename;
-          var tofilepath = 'uploads/400/' + req.file.filename;
+          var filepath = req.file.destination + '/400/' + lastfile;
+          var tofilepath = 'uploads/400/' + lastfile;
           qiniuapi.uploadImg(tofilepath, filepath);
         });
-        img = req.file.filename;
+        img = lastfile;
     }
     var htmlsummary = xss(summary, {
       whiteList: [],

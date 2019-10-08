@@ -178,13 +178,20 @@ exports.getaddtags = function(req, res) {
     if(req.file === undefined) {
       img = req.body.eimg;
     }else{
+      var filename = req.file.filename;
+      var filenamearr = filename.split('.');
+      filenamearr.pop();
+      var newfilename = filenamearr.join('.');
+      const lastfile = newfilename + '.jpg';
       sharp(req.file.path)
         .resize(400,400)
-        .quality(70)
-        .toFile(req.file.destination + '/400/' + req.file.filename , function(err) {
+        .jpeg({
+          quality: 80,
+        })
+        .toFile(req.file.destination + '/400/' + lastfile , function(err) {
           if(err) throw err;
         });
-        img = req.file.filename;
+        img = lastfile;
     }
     var summary = req.body.summary;
     var htmlsummary = xss(summary, {

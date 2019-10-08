@@ -57,7 +57,7 @@ app.use(session({
   key: "movie",
   cookie: {maxAge: 1000 * 60 * 60 * 24 * 30},//30day
   store: new MongoStore({
-    url: 'mongodb://xiezixing:qyquyue@127.0.0.1/bted2k'
+    url: 'mongodb://bted2k:bted2k@127.0.0.1/bted2k'
   })
 }));
 

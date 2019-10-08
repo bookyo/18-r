@@ -41,17 +41,9 @@ exports.getadd =  function(req,res) {
           }
           if (typeid) {
             var resource = new Resource(resourceObj);
-            resource.save(function(err, resource) {
-              Movie.findOne({_id: movieid})
-                          .exec(function(err, movie) {
-                           movie.resources.push(resource);
-                            movie.save(function(err, movie) {
-                              if(err) {
-                                console.log(err);
-                              }
-                              adminController.addCounts(req.session.user._id, 1, req.roles);
-                            });
-                          });
+            resource.save(async function(err, resource) {
+              await Movie.updateOne({_id: movieid}, {$push: { resources: resource._id }})
+              adminController.addCounts(req.session.user._id, 1, req.roles);
             });
           } else {
             req.flash('error', {'msg': '输入的资源类型有误,本站只支持百度云，磁力和电驴'});
