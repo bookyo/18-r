@@ -107,7 +107,7 @@ module.exports = function(app) {
   app.get('/topics', TopicController.topicsByRedis,  TopicController.getTopics);
   app.get('/topic/new', checkLogin, AdminController.canaddres, TopicController.getNew);
   app.post('/topic/new', checkLogin, AdminController.canaddres, TopicController.postNew);
-  app.get('/topic/:id', TopicController.topicsByRedis, TopicController.getTopic);
+  app.get('/topic/:id', checkId, TopicController.topicsByRedis, TopicController.getTopic);
   app.get('/mip/topic/:id', TopicController.getTopic);
   app.get('/topic/:id/update', checkLogin, TopicController.editTopic);
   app.post('/topic/:id/update', checkLogin, TopicController.updateTopic);
@@ -157,7 +157,11 @@ module.exports = function(app) {
     next();
   }
 
-
-
-
+  function checkId(req, res, next) {
+    var reg = /^[a-f0-9]{24}$/;
+    if(!reg.test(req.params.id)) {
+      return res.status(404).send('此页面已经不存在了！');
+    }
+    next();
+  }
 }

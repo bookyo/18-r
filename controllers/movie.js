@@ -160,7 +160,7 @@ exports.post = function(req, res) {
           req.flash('error', { 'msg': '已经有人发布过此电影，请核实之后再发布！' });
           return res.redirect('/post');
         } else {
-          newmovie.save(function (err, movie) {
+          newmovie.save(async function (err, movie) {
             if (err) {
               console.log(err);
             }
@@ -175,10 +175,8 @@ exports.post = function(req, res) {
                 tomovie: movie._id,
                 creator: user._id
               }
-              var newresource = new Resource(resourceObj);
-              newresource.save(function (err, resource) {
-                resources_id.push(resource._id);
-              });
+              const newresource = await Resource.create(resourceObj);
+              resources_id.push(newresource._id);
             }
 
             Movie.findById(movie._id, function (err, themovie) {
@@ -313,8 +311,10 @@ exports.getMovie = function(req, res) {
             return res.status(404).send( '此页面已经不存在了！');
           }
           var count = results.userbuymovie;
-          if(results.movie.creator._id == userid) {
-            count = 1;
+          if (results.movie.creator) {
+            if(results.movie.creator._id == userid) {
+              count = 1;
+            }
           }
           recommendByRedis(results.movie, function(err, removies) {
             if(err) {
