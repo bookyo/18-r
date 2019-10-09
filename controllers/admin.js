@@ -157,7 +157,7 @@ exports.getaddtags = function(req, res) {
       'year': {
         notEmpty: true,
         isInt: {
-          options: [{ min: 1900, max: 2020 }]
+          options: [{ min: 1900, max: 2025 }]
         },
         errorMessage: '请输入正确的上映年份'
       },

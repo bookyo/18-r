@@ -39,7 +39,7 @@ exports.post = function(req, res) {
       'year': {
         notEmpty: true,
         isInt: {
-          options: [{ min: 1900, max: 2020 }]
+          options: [{ min: 1900, max: 2025 }]
         },
         errorMessage: '请输入正确的上映年份'
       },
@@ -186,6 +186,10 @@ exports.post = function(req, res) {
             movieObj.review = 1;
           }
           const newmovie = await Movie.create(movieObj);
+          for (let index = 0; index < resources_id.length; index++) {
+            const resourceid = resources_id[index];
+            await Resource.updateOne({_id: resourceid}, { $set: { tomovie: newmovie._id }});
+          }
           adminController.addCounts(req.session.user._id, 3, req.roles);
           if (req.session.user.isadmin) {
             req.flash('success', '恭喜，发布电影成功！');
@@ -527,7 +531,7 @@ exports.new = function(req, res) {
       'year': {
         notEmpty: true,
         isInt: {
-          options: [{ min: 1900, max: 2020 }]
+          options: [{ min: 1900, max: 2025 }]
         },
         errorMessage: '请输入正确的上映年份'
       },
