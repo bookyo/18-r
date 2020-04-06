@@ -21,7 +21,7 @@
     "express-validator": "^2.20.8",
     "jade": "~1.11.0",
     "moment": "^2.14.1",
-    "mongoose": "^4.5.1",
+    "mongoose": ">=5.7.5",
     "morgan": ">=1.9.1",
     "multer": "^1.1.0",
     "qiniu": "^6.1.13",
