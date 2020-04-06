@@ -5,3 +5,4 @@ config
 dump.rdb
 package-lock.json
 .DS_Store
+yarn.lock

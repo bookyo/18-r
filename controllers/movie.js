@@ -104,6 +104,7 @@ exports.post = function(req, res) {
       filenamearr.pop();
       var newfilename = filenamearr.join('.');
       const lastfile = newfilename + '.jpg';
+      filename = lastfile;
       sharp(path)
         .resize(400,400)
         .jpeg({
